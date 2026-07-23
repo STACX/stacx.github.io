@@ -1,0 +1,1199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Inference Backend — STACX Documentation</title>
+  <style>
+/* STACX Documentation — Shared Stylesheet
+   Dark theme */
+
+:root {
+  --bg: #ffffff;
+  --surface: #f6f8fa;
+  --surface2: #eaeef2;
+  --border: #d1d9e0;
+  --text: #1f2328;
+  --text-dim: #57606a;
+  --accent-blue: #0550ae;
+  --accent-green: #116329;
+  --accent-orange: #953800;
+  --accent-purple: #6e40c9;
+  --accent-red: #cf222e;
+  --accent-cyan: #0c5a6d;
+  --nav-width: 260px;
+}
+
+[data-theme="dark"] {
+  --bg: #0d1117;
+  --surface: #161b22;
+  --surface2: #1c2128;
+  --border: #30363d;
+  --text: #e6edf3;
+  --text-dim: #8b949e;
+  --accent-blue: #58a6ff;
+  --accent-green: #3fb950;
+  --accent-orange: #d29922;
+  --accent-purple: #bc8cff;
+  --accent-red: #f85149;
+  --accent-cyan: #56d4dd;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', system-ui, sans-serif;
+  line-height: 1.6;
+}
+
+/* ── Navigation Sidebar ────────────────────────────────── */
+
+.nav-sidebar {
+  position: fixed;
+  top: 0; left: 0;
+  width: var(--nav-width);
+  height: 100vh;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  padding: 24px 0;
+  overflow-y: auto;
+  z-index: 100;
+}
+
+.nav-logo {
+  padding: 0 20px;
+  margin-bottom: 24px;
+}
+
+.nav-logo h2 {
+  font-size: 18px;
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.nav-logo .version {
+  font-size: 11px;
+  color: var(--text-dim);
+  margin-top: 2px;
+}
+
+.nav-section {
+  padding: 0 12px;
+  margin-bottom: 8px;
+}
+
+.nav-section-title {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--text-dim);
+  padding: 8px 8px 4px 8px;
+}
+
+.nav-link {
+  display: block;
+  padding: 6px 12px;
+  border-radius: 6px;
+  color: var(--text-dim);
+  text-decoration: none;
+  font-size: 13px;
+  transition: all 0.15s;
+}
+
+.nav-link:hover {
+  background: var(--surface2);
+  color: var(--text);
+}
+
+.nav-link.active {
+  background: rgba(56, 139, 253, 0.12);
+  color: var(--accent-blue);
+  font-weight: 500;
+}
+
+.nav-link .placeholder-tag {
+  font-size: 9px;
+  padding: 1px 5px;
+  border-radius: 3px;
+  background: rgba(139, 148, 158, 0.15);
+  color: var(--text-dim);
+  margin-left: 6px;
+  vertical-align: middle;
+}
+
+/* ── Main Content ──────────────────────────────────────── */
+
+.main-content {
+  margin-left: var(--nav-width);
+  padding: 48px 48px 80px 48px;
+  max-width: 960px;
+}
+
+h1 {
+  font-size: 32px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.page-subtitle {
+  color: var(--text-dim);
+  font-size: 15px;
+  margin-bottom: 40px;
+}
+
+h2 {
+  font-size: 22px;
+  font-weight: 600;
+  margin: 48px 0 16px 0;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+h2 .num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--accent-blue);
+  color: var(--bg);
+  font-size: 14px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+h3 {
+  font-size: 17px;
+  font-weight: 600;
+  margin: 28px 0 10px 0;
+  color: var(--accent-blue);
+}
+
+h4 {
+  font-size: 14px;
+  font-weight: 600;
+  margin: 16px 0 6px 0;
+  color: var(--accent-green);
+}
+
+p { margin-bottom: 12px; font-size: 14px; }
+
+ul, ol {
+  margin: 8px 0 16px 24px;
+  font-size: 14px;
+}
+
+li { margin-bottom: 4px; }
+
+/* ── Cards ─────────────────────────────────────────────── */
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 20px 24px;
+  margin-bottom: 16px;
+}
+
+.card.blue   { border-left: 3px solid var(--accent-blue); }
+.card.green  { border-left: 3px solid var(--accent-green); }
+.card.orange { border-left: 3px solid var(--accent-orange); }
+.card.purple { border-left: 3px solid var(--accent-purple); }
+.card.red    { border-left: 3px solid var(--accent-red); }
+.card.cyan   { border-left: 3px solid var(--accent-cyan); }
+
+.card h4 { margin-top: 0; }
+.card p:last-child { margin-bottom: 0; }
+
+/* ── Callout Grid ──────────────────────────────────────── */
+
+.callout-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px;
+  margin: 16px 0 24px 0;
+}
+
+.callout {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.callout h4 {
+  font-size: 14px;
+  font-weight: 600;
+  margin: 0 0 4px 0;
+}
+
+.callout p {
+  font-size: 13px;
+  color: var(--text-dim);
+  margin: 0;
+}
+
+/* ── Code ──────────────────────────────────────────────── */
+
+code {
+  font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+  font-size: 12px;
+  background: rgba(110, 118, 129, 0.15);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+pre {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px 20px;
+  overflow-x: auto;
+  font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+  font-size: 12px;
+  line-height: 1.6;
+  margin: 10px 0 16px 0;
+  color: var(--text);
+}
+
+pre code {
+  background: none;
+  padding: 0;
+  font-size: inherit;
+}
+
+.code-ref {
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  font-size: 12px;
+  color: var(--accent-orange);
+  background: rgba(210, 153, 34, 0.1);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.file-ref {
+  color: var(--text-dim);
+  font-size: 12px;
+  font-style: italic;
+}
+
+/* syntax coloring in pre blocks */
+.kw { color: var(--accent-purple); }
+.fn { color: var(--accent-blue); }
+.cm { color: var(--text-dim); }
+.st { color: var(--accent-green); }
+.ar { color: var(--accent-orange); font-weight: 600; }
+
+/* ── Tables ────────────────────────────────────────────── */
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 12px 0 24px 0;
+  font-size: 13px;
+}
+
+th {
+  text-align: left;
+  padding: 10px 12px;
+  border-bottom: 2px solid var(--border);
+  color: var(--accent-blue);
+  font-weight: 600;
+}
+
+td {
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+tr:hover td {
+  background: rgba(56, 139, 253, 0.04);
+}
+
+/* ── Flow Diagrams ─────────────────────────────────────── */
+
+.diagram {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 24px;
+  margin: 16px 0;
+  overflow-x: auto;
+}
+
+.diagram pre {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  color: var(--text-dim);
+}
+
+/* ── Tags / Badges ─────────────────────────────────────── */
+
+.tag {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.tag-blue   { background: rgba(56, 139, 253, 0.15); color: var(--accent-blue); }
+.tag-green  { background: rgba(63, 185, 80, 0.15); color: var(--accent-green); }
+.tag-orange { background: rgba(210, 153, 34, 0.15); color: var(--accent-orange); }
+.tag-purple { background: rgba(188, 140, 255, 0.15); color: var(--accent-purple); }
+.tag-red    { background: rgba(248, 81, 73, 0.15); color: var(--accent-red); }
+
+/* ── Feature Grid ──────────────────────────────────────── */
+
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+  margin: 16px 0 24px 0;
+}
+
+.feature-item {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.feature-item h4 {
+  margin: 0 0 4px 0;
+  font-size: 13px;
+}
+
+.feature-item p {
+  font-size: 12px;
+  color: var(--text-dim);
+  margin: 0;
+}
+
+/* ── SVG Diagram ───────────────────────────────────────── */
+
+.svg-diagram {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 24px;
+  margin: 16px 0 24px 0;
+  overflow-x: auto;
+  text-align: center;
+}
+
+.svg-diagram svg {
+  max-width: 100%;
+  height: auto;
+}
+
+/* ── Comparison Grid ───────────────────────────────────── */
+
+.comparison-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin: 16px 0 24px 0;
+}
+
+/* ── Responsive ────────────────────────────────────────── */
+
+@media (max-width: 900px) {
+  .nav-sidebar { display: none; }
+  .main-content { margin-left: 0; padding: 24px; }
+  .comparison-grid { grid-template-columns: 1fr; }
+}
+
+.theme-toggle {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  z-index: 200;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 6px 12px;
+  color: var(--text);
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+.theme-toggle:hover {
+  background: var(--surface2);
+  border-color: var(--accent-blue);
+}
+
+/* page-local */
+.fig-caption {
+  text-align: center;
+  font-size: 12px;
+  color: var(--text-dim);
+  font-style: italic;
+  margin: -8px auto 22px auto;
+  max-width: 620px;
+}
+.stack-note {
+  font-size: 12px;
+  color: var(--text-dim);
+  margin: 8px 0 18px 0;
+}
+  /* shared: readable content links in both themes */
+.main-content a, .main-content a code { color: var(--accent-blue); }
+.main-content a:hover { color: var(--accent-cyan); }
+
+/* ── Refinement layer: typography, response, materials ── */
+
+html { scroll-behavior: smooth; scroll-padding-top: 24px; }
+
+body {
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  font-optical-sizing: auto;
+}
+
+::selection { background: rgba(56, 139, 253, 0.22); }
+
+/* Type — size-specific tracking and leading */
+h1 {
+  background: none;
+  -webkit-text-fill-color: var(--text);
+  color: var(--text);
+  letter-spacing: -0.022em;
+  line-height: 1.15;
+  text-wrap: balance;
+}
+h2 { letter-spacing: -0.015em; text-wrap: balance; }
+h3 { letter-spacing: -0.008em; }
+p { font-size: 14.5px; line-height: 1.65; }
+ul, ol { font-size: 14.5px; }
+li { line-height: 1.6; }
+.page-subtitle { font-size: 16px; text-wrap: pretty; }
+
+/* Quieter chrome — tint instead of fill, neutral table headers */
+h2 .num {
+  background: rgba(56, 139, 253, 0.13);
+  color: var(--accent-blue);
+  font-weight: 650;
+}
+th {
+  color: var(--text-dim);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+table { font-variant-numeric: tabular-nums; }
+
+/* Gentle depth on resting surfaces */
+.card, .diagram, .comparison-col { box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04); }
+
+/* Response — feedback on press, not just hover */
+.nav-link, .theme-toggle, .hero-card, .view-toggle-btn {
+  transition: background 0.15s ease-out, color 0.15s ease-out,
+              border-color 0.15s ease-out, transform 0.15s ease-out;
+}
+.nav-link:active, .view-toggle-btn:active { transform: scale(0.98); transition-duration: 0.05s; }
+.theme-toggle:active { transform: scale(0.96); transition-duration: 0.05s; }
+.hero-card:active { transform: translateY(0) scale(0.99); transition-duration: 0.05s; }
+.main-content a:active { opacity: 0.65; }
+
+:focus-visible { outline: 2px solid var(--accent-blue); outline-offset: 2px; border-radius: 4px; }
+
+.nav-sidebar { scrollbar-width: thin; }
+
+/* Floating chrome reads as material — content scrolls beneath it */
+.theme-toggle {
+  background: color-mix(in srgb, var(--surface) 72%, transparent);
+  backdrop-filter: blur(12px) saturate(180%);
+  -webkit-backdrop-filter: blur(12px) saturate(180%);
+  box-shadow: 0 1px 3px rgba(16, 24, 40, 0.07);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { transition-duration: 0.01ms !important; animation: none !important; }
+}
+@media (prefers-reduced-transparency: reduce) {
+  .theme-toggle {
+    background: var(--surface);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+}
+
+/* ── Refinement layer v2: beauty pass ── */
+
+/* Sidebar — calmer rhythm, tactile links */
+.nav-sidebar { padding: 20px 0 28px; }
+.nav-sidebar::-webkit-scrollbar { width: 8px; }
+.nav-sidebar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+.nav-logo { padding: 4px 20px 0; margin-bottom: 20px; }
+.nav-section { margin-bottom: 14px; }
+.nav-section-title { padding: 10px 10px 6px; }
+.nav-link { padding: 6px 10px; border-radius: 7px; }
+.nav-link.active { font-weight: 600; }
+
+/* Section rules — the divider fades out instead of cutting across */
+h2 { border-bottom: none; padding-bottom: 10px; position: relative; margin-top: 52px; }
+h2::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 1px;
+  background: linear-gradient(90deg, var(--border) 55%, transparent);
+}
+
+/* Surfaces — rounder, softer */
+.card, .diagram, .comparison-col { border-radius: 12px; }
+pre, .callout { border-radius: 10px; }
+
+/* Tables — enclosed, rounded, quiet */
+table {
+  border-collapse: separate; border-spacing: 0;
+  border: 1px solid var(--border); border-radius: 10px; overflow: hidden;
+}
+th { background: var(--surface); border-bottom: 1px solid var(--border); padding: 10px 14px; }
+td { padding: 9px 14px; }
+tr:last-child td { border-bottom: none; }
+th:first-child { border-top-left-radius: 9px; }
+th:last-child { border-top-right-radius: 9px; }
+tr:last-child td:first-child { border-bottom-left-radius: 9px; }
+tr:last-child td:last-child { border-bottom-right-radius: 9px; }
+
+/* Floating toggle as a pill */
+.theme-toggle { border-radius: 999px; padding: 7px 14px; font-weight: 600; }
+
+/* Landing hero — faint atmospheric wash, icon chips, deeper card lift */
+.hero { position: relative; }
+.hero::before {
+  content: ""; position: absolute; inset: -48px -80px 0; z-index: -1; pointer-events: none;
+  background:
+    radial-gradient(55% 45% at 50% 0%, rgba(56, 139, 253, 0.07), transparent 70%),
+    radial-gradient(35% 35% at 82% 12%, rgba(188, 140, 255, 0.05), transparent 70%);
+}
+.hero h1 { font-size: 54px; letter-spacing: -0.03em; }
+.hero .tagline { font-size: 19px; text-wrap: pretty; }
+.hero-card {
+  border-radius: 14px; padding: 26px 24px;
+  box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04);
+}
+.hero-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 28px rgba(16, 24, 40, 0.08);
+}
+.hero-card .icon {
+  width: 46px; height: 46px; display: inline-grid; place-items: center;
+  background: var(--surface2); border-radius: 12px;
+  font-size: 22px; margin-bottom: 14px;
+}
+
+/* ── Refinement v3: professional pass (external design review) ── */
+
+html { color-scheme: light; }
+[data-theme="dark"] { color-scheme: dark; }
+
+/* Type scale — larger, less compressed */
+body { font-size: 15.5px; }
+p, ul, ol { font-size: inherit; }
+h1 { font-size: 36px; line-height: 1.12; }
+h2 { font-size: 23px; margin: 56px 0 20px; }
+h3 { font-size: 18px; margin: 32px 0 12px; }
+h4 { font-size: 15px; }
+.page-subtitle { font-size: 17px; line-height: 1.55; max-width: 70ch; margin-bottom: 48px; }
+
+/* One accent — headings are neutral ink */
+h3, h4 { color: var(--text); }
+
+/* Code — relative inline sizing, comfortable blocks */
+code { font-size: 0.875em; padding: 0.12em 0.35em; border-radius: 4px; }
+pre { font-size: 13.5px; line-height: 1.55; padding: 18px 20px; tab-size: 2; }
+pre code { font-size: inherit; padding: 0; }
+
+/* Tables scroll instead of squeezing */
+.table-scroll { overflow-x: auto; margin: 12px 0 24px; border: 1px solid var(--border); border-radius: 10px; }
+.table-scroll table { min-width: 640px; margin: 0; border: 0; }
+td { vertical-align: top; line-height: 1.55; }
+
+/* Diagrams — legible labels, editorial captions */
+.diagram svg, .arch-diagram svg { display: block; width: 100%; height: auto; }
+.diagram svg text[font-size="9"], .diagram svg text[font-size="10"],
+.arch-diagram svg text[font-size="9"], .arch-diagram svg text[font-size="10"] { font-size: 11px; }
+.fig-caption { font-style: normal; text-align: left; font-size: 12.5px; margin: 10px 0 12px; max-width: none; }
+
+/* Landing hero actions + icon chips */
+.hero-actions { display: flex; justify-content: center; gap: 10px; margin: 26px 0 8px; }
+.main-content a.button-primary, .main-content a.button-secondary {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 9px 16px; border-radius: 8px; font-size: 14px; font-weight: 600; text-decoration: none;
+  transition: background 0.15s ease-out, border-color 0.15s ease-out,
+              filter 0.15s ease-out, transform 0.15s ease-out;
+}
+.main-content a.button-primary { background: var(--accent-blue); color: #fff; }
+.main-content a.button-primary:hover { filter: brightness(1.1); color: #fff; }
+.main-content a.button-secondary { border: 1px solid var(--border); background: var(--surface); color: var(--text); }
+.main-content a.button-secondary:hover { border-color: var(--accent-blue); color: var(--text); }
+.main-content a.button-primary:active, .main-content a.button-secondary:active { transform: scale(0.97); }
+.hero-card .icon svg { width: 22px; height: 22px; color: var(--accent-blue); }
+
+/* Mobile navigation — header + slide-in sidebar */
+.mobile-header { display: none; }
+@media (max-width: 900px) {
+  .mobile-header {
+    display: flex; position: sticky; top: 0; z-index: 220; height: 52px;
+    align-items: center; justify-content: space-between; padding: 0 16px;
+    background: var(--bg);
+    background: color-mix(in srgb, var(--bg) 88%, transparent);
+    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+  .mobile-header .mh-brand { font-weight: 700; font-size: 16px; color: var(--text); text-decoration: none; }
+  .nav-toggle {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+    padding: 6px 14px; font: inherit; font-size: 13.5px; font-weight: 600;
+    color: var(--text); cursor: pointer;
+  }
+  .nav-sidebar {
+    display: block; z-index: 240; transform: translateX(-100%);
+    transition: transform 200ms cubic-bezier(0.23, 1, 0.32, 1);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.18);
+  }
+  .nav-sidebar[data-open="true"] { transform: none; }
+  .mobile-header ~ .theme-toggle { top: 62px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .nav-sidebar { transition: none; }
+}
+
+/* ── Coding font + chromeless figures ── */
+code, pre, .code-ref {
+  font-family: ui-monospace, "SF Mono", Menlo, "JetBrains Mono", "Fira Code", Consolas, monospace;
+}
+.diagram, .arch-diagram { background: none; border: none; box-shadow: none; padding: 12px 0; }
+
+/* ── Lighter surfaces for code blocks and callouts ── */
+pre, .callout {
+  background: var(--surface);
+  background: color-mix(in srgb, var(--surface) 55%, var(--bg));
+}
+
+/* svg-diagram wrappers: chromeless like .diagram */
+.svg-diagram { background: none; border: none; box-shadow: none; padding: 12px 0; }
+</style>
+<script>try{if(localStorage.getItem('stacx-theme')==='dark')document.documentElement.setAttribute('data-theme','dark');}catch(e){}</script>
+</head>
+<body>
+<header class="mobile-header"><a class="mh-brand" href="index.html">STACX</a><button class="nav-toggle" type="button" aria-controls="docsNav" aria-expanded="false">Menu</button></header>
+  <div class="layout">
+    <nav class="nav-sidebar" id="docsNav">
+      <div class="nav-logo">
+        <h2>STACX</h2>
+        <div class="version">v1.0 Documentation</div>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Overview</div>
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="getting-started.html" class="nav-link">Getting Started</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Trainer</div>
+        <a href="architecture.html" class="nav-link">Architecture</a>
+        <a href="backends.html" class="nav-link">Backends</a>
+        <a href="recipes.html" class="nav-link">Algorithm Recipes</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Rollout</div>
+        <a href="rollout.html" class="nav-link">Architecture</a>
+        <a href="rollout-scheduler.html" class="nav-link">Task Scheduler</a>
+        <a href="rollout-inference.html" class="nav-link active">Inference Backend</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Environment</div>
+        <a href="environment.html" class="nav-link">Architecture</a>
+        <a href="env-sandbox.html" class="nav-link">Sandbox Management</a>
+      </div>
+    </nav>
+
+    <div class="main-content">
+      <div class="page-header">
+        <h1>Inference Backend</h1>
+        <p class="page-subtitle">The generation layer: a pluggable backend protocol over SGLang, a frozen-teacher force-decode path for the K3 loss, a recording proxy that captures black-box scaffolds token-for-token, and the serving topologies that wire them together.</p>
+      </div>
+
+      <div class="callout-grid">
+        <div class="callout">
+          <h4>Backend protocol</h4>
+          <p>One <code>Protocol</code>, two modes: token-in/token-out SGLang for the student policy, text-level API clients for eval. §1–2.</p>
+        </div>
+        <div class="callout">
+          <h4>Teacher force-decode</h4>
+          <p>A frozen Qwen3-Coder-30B scores every student token to feed the K3 reverse-KL distillation loss. §3.</p>
+        </div>
+        <div class="callout">
+          <h4>Recording proxy</h4>
+          <p>An OpenAI-compatible shim that turns black-box scaffolds — OpenHands, Terminus-2 — into token-level training data. §4–5.</p>
+        </div>
+      </div>
+
+      <div class="callout" style="border-left:3px solid var(--accent-blue); margin-bottom:24px;">
+        <p style="margin:0; color:var(--text-dim); font-size:13px;">Ground truth lives under <span class="file-ref">rl_engine/rollout/backends/</span>, <span class="file-ref">proxy/</span>, and <span class="file-ref">agents/</span>. Related pages are linked in Quick Reference (§7).</p>
+      </div>
+
+      <!-- ── Section 1: Backend abstraction ── -->
+      <section>
+        <h2><span class="num">1</span> The Backend Abstraction</h2>
+        <p>Every LLM call in a rollout goes through a <strong>backend</strong> — an object turning a prompt into a completion, defined as a structural <code>Protocol</code> (<span class="file-ref">rl_engine/rollout/backends/base.py</span>), not a base class. Two modes coexist:</p>
+
+        <div class="callout-grid">
+          <div class="callout">
+            <h4>Token-level (SGLang)</h4>
+            <p>Accepts raw <code>input_ids</code>, returns <code>token_ids</code> + per-token <code>logprobs</code> — the exact tokens the policy emitted with their sampling logprobs, which is what RL training needs. <code>supports_token_ids = True</code>.</p>
+          </div>
+          <div class="callout">
+            <h4>Text-level (API)</h4>
+            <p>Accepts OpenAI <code>messages</code> + <code>tools</code>, returns text and optional <code>tool_calls</code>. No token IDs or logprobs — eval only, never training. <code>supports_token_ids = False</code>.</p>
+          </div>
+        </div>
+
+        <p>The agent loop reads <code>supports_token_ids</code> to pick the input type and whether to record tokens. Both return one dataclass, <code>GenerationResult</code>:</p>
+
+        <pre><code><span class="cm"># rl_engine/rollout/backends/base.py</span>
+<span class="kw">@dataclass</span>
+<span class="kw">class</span> <span class="fn">GenerationResult</span>:
+    text: <span class="kw">str</span>
+    token_ids: <span class="kw">list</span>[<span class="kw">int</span>] | <span class="kw">None</span> = <span class="kw">None</span>      <span class="cm"># SGLang only</span>
+    logprobs: <span class="kw">list</span>[<span class="kw">float</span>] | <span class="kw">None</span> = <span class="kw">None</span>    <span class="cm"># SGLang only</span>
+    tool_calls: <span class="kw">list</span>[<span class="kw">dict</span>] | <span class="kw">None</span> = <span class="kw">None</span>    <span class="cm"># API structured calls</span>
+    finish_reason: <span class="kw">str</span> = <span class="st">"stop"</span>              <span class="cm"># stop | length | abort | tool_calls | error:*</span>
+    usage: <span class="kw">dict</span>[<span class="kw">str</span>, <span class="kw">int</span>] | <span class="kw">None</span> = <span class="kw">None</span>  <span class="cm"># API token accounting</span>
+
+<span class="kw">class</span> <span class="fn">ModelBackend</span>(Protocol):
+    <span class="kw">async def</span> <span class="fn">generate</span>(<span class="kw">self</span>, *, input_ids=<span class="kw">None</span>, messages=<span class="kw">None</span>,
+                       tools=<span class="kw">None</span>, sampling_params) <span class="ar">-&gt;</span> GenerationResult: ...
+    <span class="kw">def</span> <span class="fn">tokenize</span>(<span class="kw">self</span>, text) <span class="ar">-&gt;</span> <span class="kw">list</span>[<span class="kw">int</span>]: ...   <span class="cm"># API backends raise NotImplementedError</span>
+    <span class="kw">def</span> <span class="fn">decode</span>(<span class="kw">self</span>, token_ids) <span class="ar">-&gt;</span> <span class="kw">str</span>: ...</code></pre>
+
+        <h3>The backends directory</h3>
+        <div class="table-scroll"><table>
+          <tr><th>File</th><th>Exports</th><th>Role</th></tr>
+          <tr><td><code>base.py</code></td><td><code>ModelBackend</code>, <code>GenerationResult</code></td><td>The Protocol + result dataclass. No logic.</td></tr>
+          <tr><td><code>sglang.py</code></td><td><code>SGLangBackend</code></td><td>Token-level <code>/generate</code> for the student policy (§2).</td></tr>
+          <tr><td><code>teacher.py</code></td><td><code>TeacherBackend</code></td><td>Wraps an SGLang server hosting the frozen teacher (§3).</td></tr>
+          <tr><td><code>openai_chat.py</code></td><td><code>OpenAIChatBackend</code></td><td>Text-level OpenAI-compatible client (Gemini, GPT, or a chat-endpoint SGLang) — eval only, with RPM/TPM/concurrency rate-limiting and 429-aware backoff.</td></tr>
+          <tr><td><code>token_tracker.py</code></td><td><code>TokenTracker</code></td><td>Per-trajectory aligned arrays: <code>tokens</code>, <code>logprobs</code>, <code>loss_mask</code>, <code>obs_boundaries</code> (§4).</td></tr>
+          <tr><td><code>dagger_tracker.py</code></td><td><code>DAggerTracker</code></td><td>Per-turn <code>(context, target)</code> training pairs for the DAgger relabel path.</td></tr>
+          <tr><td><code>api_pricing.py</code></td><td><code>MODEL_PRICING</code></td><td>USD-per-million-token table for API cost accounting.</td></tr>
+        </table></div>
+      </section>
+
+      <!-- ── Section 2: SGLang student backend ── -->
+      <section>
+        <h2><span class="num">2</span> The SGLang Student Backend</h2>
+        <p><code>SGLangBackend</code> (<span class="file-ref">backends/sglang.py</span>) is the student policy's generation path — token-in / token-out. It reads the exact sampled token IDs and their logprobs from SGLang's native <code>/generate</code>: no re-tokenization, no chat-template round-trip, so the tokens the model emitted are the tokens training sees.</p>
+
+        <pre><code><span class="cm"># SGLangBackend.generate — the request</span>
+url = <span class="st">f"{self._sglang_url}/generate"</span>
+payload = {
+    <span class="st">"input_ids"</span>: input_ids,
+    <span class="st">"sampling_params"</span>: sampling_params,
+    <span class="st">"return_logprob"</span>: <span class="kw">True</span>,
+}
+output = <span class="kw">await</span> <span class="fn">self._post_fn</span>(url, payload)
+
+<span class="cm"># finish_reason == "abort" -&gt; empty result (SGLang killed the request)</span>
+<span class="cm"># else read meta_info["output_token_logprobs"] as (logprob, token_id) pairs</span>
+token_ids = [item[<span class="ar">1</span>] <span class="kw">for</span> item <span class="kw">in</span> meta[<span class="st">"output_token_logprobs"</span>]]
+logprobs  = [item[<span class="ar">0</span>] <span class="kw">for</span> item <span class="kw">in</span> meta[<span class="st">"output_token_logprobs"</span>]]</code></pre>
+
+        <p>A <code>post_fn</code> argument overrides the HTTP transport: everything uses slime's pooled <code>post</code> except the recording proxy, which injects its own loop-local <code>httpx</code> client (§4).</p>
+
+        <h3>Where the URL comes from</h3>
+        <p>The backend is built lazily inside the in-house SWE agent (<span class="file-ref">swe_agent.py</span>) from <code>context.sglang_url</code>, which the Evaluator sets to <code>http://{sglang_router_ip}:{sglang_router_port}</code> (<span class="file-ref">scheduler/evaluator.py</span>). Those router args come from two places:</p>
+        <ul>
+          <li><strong>Colocated training</strong> — slime stands up its own SGLang router alongside the Megatron workers and sets the args automatically. Nothing to configure.</li>
+          <li><strong>External / eval</strong> — <span class="file-ref">eval.sh</span> passes <code>--rollout-external --rollout-external-engine-addrs</code> plus explicit <code>--sglang-router-ip/--sglang-router-port</code>, from <code>ROLLOUT_EXTERNAL_ENGINE_ADDRS</code> (default <code>0.0.0.0:9001</code>); the engine is a standalone server (§6).</li>
+        </ul>
+
+        <h3>Weight sync between iterations</h3>
+        <p>In colocated training the SGLang engines share GPUs with the trainer, so updated weights must reach them before the next rollout. The main loop calls <code>trainer.update_weights()</code> before training and after each iteration (<span class="file-ref">rl_engine/train.py</span>), fanning out only to policy workers (roles with <code>sync_to_rollout</code>). Colocated runs hand off via CPU shared memory (dodging CUDA-IPC failures under Ray fractional-GPU placement), otherwise NCCL broadcast; trainer-side mechanics are on the <a href="backends.html" style="color:var(--accent-blue)">Backends</a> page.</p>
+
+        <h3>Serving knobs</h3>
+        <div class="table-scroll"><table>
+          <tr><th>Knob</th><th>Default</th><th>Wiring</th><th>Effect</th></tr>
+          <tr><td><code>SGLANG_MEM_FRACTION</code></td><td>0.55 train · 0.7 (4B) · 0.5 (8B)</td><td><code>--sglang-mem-fraction-static</code></td><td>Static KV-cache fraction of remaining VRAM. Lower it to leave room for Megatron activations + optimizer state in colocated mode.</td></tr>
+          <tr><td><code>MAX_CONTEXT_LEN</code></td><td>65536 (train.sh export)</td><td>agent context cap</td><td>Per-trajectory token budget for the agent loop.</td></tr>
+          <tr><td><code>SGLANG_ALLOW_OVERWRITE_LONGER_CONTEXT_LEN</code></td><td>1</td><td>SGLang-native</td><td>Lets the engine serve a context longer than the checkpoint's declared <code>max_position_embeddings</code>.</td></tr>
+          <tr><td><code>CONTEXT_LEN</code></td><td>262144</td><td><code>--context-length</code> (serve_sglang.sh)</td><td>Context window of the standalone eval server.</td></tr>
+          <tr><td><code>TOOL_CALL_PARSER</code></td><td><code>qwen3_coder</code></td><td><code>--tool-call-parser</code></td><td>SGLang server-side tool-call parser; use <code>qwen25</code> for Hermes-format models such as the 4B student.</td></tr>
+        </table></div>
+        <p class="stack-note">The installed-scaffold factory (<span class="file-ref">evaluator_factory.py</span>) caps agent context at a fixed <code>131072</code> rather than reading <code>MAX_CONTEXT_LEN</code> — that env var applies only to the in-house SWE-agent path.</p>
+      </section>
+
+      <!-- ── Section 3: Teacher backend ── -->
+      <section>
+        <h2><span class="num">3</span> The Teacher Backend</h2>
+        <p><code>TeacherBackend</code> (<span class="file-ref">backends/teacher.py</span>) wraps an external SGLang server hosting the <strong>frozen</strong> Qwen3-Coder-30B teacher. Because the teacher speaks a different chat template and tool syntax than the student, it loads its <em>own</em> tokenizer (CPU-only) and resolves its <em>own</em> tool-call format. It never acts in the environment, and any failure returns <code>None</code> without touching the student's trajectory. It plays two roles.</p>
+
+        <h3>Role A — per-turn action labelling (DAgger / AggreVaTe rollin)</h3>
+        <p>When a turn is teacher-executed, <code>label_turn(history, task_prompt, system_prompt)</code> renders a prompt in the teacher's format (<code>include_reasoning=True</code>, so it sees its own prior chain-of-thought) and parses the reply into a <code>CanonicalAction</code>; the lower-level <code>generate_from_tokens(input_ids)</code> takes a pre-built token sequence instead. The rollin protocols live in <span class="file-ref">dagger_agent.py</span> — see <a href="recipes.html" style="color:var(--accent-blue)">Algorithm Recipes</a>.</p>
+
+        <h3>Role B — post-rollout force-decode for the K3 loss</h3>
+        <p>After a rollout is collected and finish-filtered, each kept trajectory is <strong>force-decoded</strong> by the teacher to recover its probability of every student-emitted token — the <code>log p_t</code> term the K3 reverse-KL needs. Orchestration is <code>_apply_distillation_capture</code> (<span class="file-ref">rollout_manager.py</span>), calling <code>score_response_with_topk</code> (<span class="file-ref">distill_capture.py</span>).</p>
+
+        <div class="svg-diagram">
+          <svg viewBox="0 0 960 400" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="tfd-title" font-family="system-ui, sans-serif">
+            <title id="tfd-title">Teacher force-decode path for the K3 loss</title>
+            <defs>
+              <marker id="tfd-arr" viewBox="0 0 10 7" refX="9" refY="3.5" markerWidth="8" markerHeight="6" orient="auto"><path d="M0,0 L10,3.5 L0,7z" style="fill:var(--text-dim)"/></marker>
+              <marker id="tfd-arr-orange" viewBox="0 0 10 7" refX="9" refY="3.5" markerWidth="8" markerHeight="6" orient="auto"><path d="M0,0 L10,3.5 L0,7z" style="fill:var(--accent-orange)"/></marker>
+            </defs>
+
+            <!-- Top row -->
+            <rect x="24" y="64" width="240" height="112" rx="10" fill="none" style="stroke:var(--border)" stroke-width="1.5"/>
+            <text x="144" y="92" text-anchor="middle" font-size="15" font-weight="700" style="fill:var(--text)">Kept trajectories</text>
+            <text x="144" y="114" text-anchor="middle" font-size="11" style="fill:var(--text-dim)">finish-only filter</text>
+            <text x="144" y="132" text-anchor="middle" font-size="11" style="fill:var(--text-dim)">prompt + response ids</text>
+            <text x="144" y="152" text-anchor="middle" font-size="11" style="fill:var(--text-dim)">student log p_s + action_mask</text>
+
+            <rect x="360" y="64" width="240" height="112" rx="10" fill="rgba(5,80,174,0.06)" style="stroke:var(--accent-blue)" stroke-width="1.5"/>
+            <text x="480" y="92" text-anchor="middle" font-size="15" font-weight="700" style="fill:var(--accent-blue)">distill_capture</text>
+            <text x="480" y="114" text-anchor="middle" font-size="11" style="fill:var(--text-dim)">score_response_with_topk</text>
+            <text x="480" y="132" text-anchor="middle" font-size="11" style="fill:var(--text-dim)">greedy · max_new_tokens=1</text>
+            <text x="480" y="152" text-anchor="middle" font-size="11" style="fill:var(--text-dim)">Semaphore · retries + backoff</text>
+
+            <rect x="696" y="64" width="240" height="112" rx="10" fill="rgba(149,56,0,0.06)" style="stroke:var(--accent-orange)" stroke-width="1.5"/>
+            <text x="816" y="92" text-anchor="middle" font-size="15" font-weight="700" style="fill:var(--accent-orange)">Teacher SGLang</text>
+            <text x="816" y="114" text-anchor="middle" font-size="11" style="fill:var(--text-dim)">frozen Qwen3-Coder-30B</text>
+            <text x="816" y="132" text-anchor="middle" font-size="11" style="fill:var(--text-dim)">TP=4 · GPUs 0-3</text>
+            <text x="816" y="152" text-anchor="middle" font-size="11" style="fill:var(--text-dim)">TEACHER_SGLANG_URL :30055</text>
+
+            <line x1="264" y1="120" x2="358" y2="120" style="stroke:var(--text-dim)" stroke-width="1.5" marker-end="url(#tfd-arr)"/>
+            <text x="311" y="112" text-anchor="middle" font-size="11" font-weight="600" style="fill:var(--text-dim)">per traj.</text>
+            <line x1="600" y1="120" x2="694" y2="120" style="stroke:var(--text-dim)" stroke-width="1.5" marker-end="url(#tfd-arr)"/>
+            <text x="647" y="112" text-anchor="middle" font-size="11" font-weight="600" style="fill:var(--text-dim)">/generate</text>
+
+            <!-- Down -->
+            <line x1="816" y1="176" x2="816" y2="222" style="stroke:var(--accent-orange)" stroke-width="1.5" marker-end="url(#tfd-arr-orange)"/>
+            <text x="806" y="203" text-anchor="end" font-size="11" font-weight="600" style="fill:var(--accent-orange)">return_logprob, top-K</text>
+
+            <!-- Bottom row -->
+            <rect x="696" y="224" width="240" height="112" rx="10" fill="rgba(149,56,0,0.06)" style="stroke:var(--accent-orange)" stroke-width="1.5"/>
+            <text x="816" y="252" text-anchor="middle" font-size="15" font-weight="700" style="fill:var(--accent-orange)">Teacher response</text>
+            <text x="816" y="274" text-anchor="middle" font-size="11" style="fill:var(--text-dim)">meta_info</text>
+            <text x="816" y="292" text-anchor="middle" font-size="11" style="fill:var(--text-dim)">input_token_logprobs → log p_t</text>
+            <text x="816" y="310" text-anchor="middle" font-size="11" style="fill:var(--text-dim)">input_top_logprobs → top-K</text>
+
+            <rect x="360" y="224" width="240" height="112" rx="10" fill="rgba(5,80,174,0.06)" style="stroke:var(--accent-blue)" stroke-width="1.5"/>
+            <text x="480" y="252" text-anchor="middle" font-size="15" font-weight="700" style="fill:var(--accent-blue)">K3 loss inputs</text>
+            <text x="480" y="276" text-anchor="middle" font-size="12" style="fill:var(--text-dim)">r = log p_t − log p_s</text>
+            <text x="480" y="296" text-anchor="middle" font-size="12" style="fill:var(--text-dim)">loss = exp(r) − r − 1</text>
+            <text x="480" y="314" text-anchor="middle" font-size="11" style="fill:var(--text-dim)">summed over action_mask</text>
+
+            <rect x="24" y="224" width="240" height="112" rx="10" fill="none" style="stroke:var(--border)" stroke-width="1.5"/>
+            <text x="144" y="258" text-anchor="middle" font-size="15" font-weight="700" style="fill:var(--text)">Trainer</text>
+            <text x="144" y="282" text-anchor="middle" font-size="11" style="fill:var(--text-dim)">mixed CE / K3</text>
+            <text x="144" y="300" text-anchor="middle" font-size="11" style="fill:var(--text-dim)">mixed_loss_dagger.py</text>
+
+            <line x1="696" y1="280" x2="602" y2="280" style="stroke:var(--text-dim)" stroke-width="1.5" marker-end="url(#tfd-arr)"/>
+            <text x="648" y="258" text-anchor="middle" font-size="11" font-weight="600" style="fill:var(--text-dim)">chosen +</text>
+            <text x="648" y="272" text-anchor="middle" font-size="11" font-weight="600" style="fill:var(--text-dim)">top-K</text>
+            <line x1="360" y1="280" x2="266" y2="280" style="stroke:var(--text-dim)" stroke-width="1.5" marker-end="url(#tfd-arr)"/>
+            <text x="313" y="258" text-anchor="middle" font-size="11" font-weight="600" style="fill:var(--text-dim)">per-token</text>
+            <text x="313" y="272" text-anchor="middle" font-size="11" font-weight="600" style="fill:var(--text-dim)">r_t</text>
+          </svg>
+        </div>
+        <p class="fig-caption">Teacher force-decode. Kept trajectories flow right to the frozen teacher, whose per-token chosen + top-K logprobs return along the bottom as K3 loss inputs.</p>
+
+        <p>The payload force-decodes the exact response — one greedy step over <code>prompt_ids + response_ids</code> with logprobs on:</p>
+
+        <pre><code><span class="cm"># distill_capture.py — score_response_with_topk (payload)</span>
+sampling_params = {
+    <span class="st">"max_new_tokens"</span>: <span class="ar">1</span>, <span class="st">"temperature"</span>: <span class="ar">0.0</span>, <span class="st">"top_p"</span>: <span class="ar">1.0</span>,
+    <span class="st">"top_k"</span>: <span class="ar">-1</span>, <span class="st">"no_stop_trim"</span>: <span class="kw">True</span>,
+}
+payload = {
+    <span class="st">"input_ids"</span>: prompt_ids + response_ids,   <span class="cm"># force-decode the exact response</span>
+    <span class="st">"sampling_params"</span>: sampling_params,
+    <span class="st">"return_logprob"</span>: <span class="kw">True</span>,
+    <span class="st">"logprob_start_len"</span>: start_len,           <span class="cm"># = prompt_len - 1</span>
+    <span class="st">"top_logprobs_num"</span>: K,                    <span class="cm"># STACX_DISTILL_TOPK (default 20)</span>
+}</code></pre>
+
+        <p>A persistent teacher failure is <strong>not</strong> swallowed — it propagates, failing the run loudly rather than silently emitting empty logprobs. The captured fields are pinned onto each <code>Sample</code> (<code>teacher_log_probs</code>, <code>teacher_topk_indices</code>, <code>teacher_topk_logprobs</code>), and <code>loss_mask</code> is overwritten with the action mask so the loss sees exactly the student-emitted tokens.</p>
+
+        <div class="card orange">
+          <h4>Greedy force-decode ≠ teacher sampling</h4>
+          <p>The force-decode is hard-coded greedy (<code>temperature=0.0</code>, <code>top_p=1.0</code>): it measures the teacher's probability of the student's tokens, so it must not sample. <code>TEACHER_TEMPERATURE</code> / <code>TEACHER_TOP_P</code> apply only to Role A, not here.</p>
+        </div>
+
+        <h3>Teacher &amp; distillation knobs</h3>
+        <div class="table-scroll"><table>
+          <tr><th>Env var</th><th>Default</th><th>Read at</th><th>Effect</th></tr>
+          <tr><td><code>TEACHER_SGLANG_URL</code></td><td><em>required</em></td><td><span class="file-ref">rollout_manager.py</span></td><td>Base URL of the teacher SGLang server. OPD / mixed runs raise if empty.</td></tr>
+          <tr><td><code>TEACHER_PORT</code></td><td>30055</td><td>launch scripts</td><td>Builds <code>TEACHER_SGLANG_URL=http://127.0.0.1:${TEACHER_PORT}</code>.</td></tr>
+          <tr><td><code>TEACHER_TEMPERATURE</code></td><td>0.0 <span class="tag tag-orange">scripts 0.7</span></td><td><span class="file-ref">teacher.py</span></td><td>Sampling temperature for Role-A teacher actions.</td></tr>
+          <tr><td><code>TEACHER_TOP_P</code></td><td>1.0 <span class="tag tag-orange">scripts 0.9</span></td><td><span class="file-ref">teacher.py</span></td><td>Sampling top-p for Role-A teacher actions.</td></tr>
+          <tr><td><code>TEACHER_FORMAT</code></td><td>"" (auto)</td><td><span class="file-ref">teacher.py</span></td><td>Force the teacher tool-call format when auto-detection misfires.</td></tr>
+          <tr><td><code>STACX_DISTILL_TOPK</code></td><td>20</td><td><span class="file-ref">rollout_manager.py</span> · <span class="file-ref">distill.py</span></td><td><code>top_logprobs_num</code> for the force-decode; must match the train-time K.</td></tr>
+          <tr><td><code>STACX_DISTILL_TEACHER_CONCURRENCY</code></td><td>4</td><td><span class="file-ref">rollout_manager.py</span></td><td>Max concurrent force-decode requests (Semaphore).</td></tr>
+          <tr><td><code>STACX_DISTILL_TEACHER_RETRIES</code> · <code>_BASE_DELAY</code></td><td>5 · 2.0</td><td><span class="file-ref">distill_capture.py</span></td><td>Retry attempts (total = retries + 1) and base seconds for <code>base · 2^attempt</code> backoff.</td></tr>
+          <tr><td><code>STACX_DISTILL_KL_MODE</code></td><td><code>k3_sample</code></td><td><span class="file-ref">distill.py</span></td><td>RKL estimator: <code>k3_sample</code> (any TP, default) or <code>topk</code> (full top-K RKL, TP=1 only).</td></tr>
+          <tr><td><code>STACX_DISTILL_DUMP_DIR</code></td><td>"" (off)</td><td><span class="file-ref">rollout_manager.py</span></td><td>If set, dumps per-iter teacher↔student token discrepancy data.</td></tr>
+          <tr><td><code>STACX_DISTILL_SKIP_TEACHER_GENERATE</code></td><td>0</td><td><span class="file-ref">dagger_agent.py</span></td><td>Skip the per-turn teacher generation under pure OPD (β=0), where it is wasted.</td></tr>
+        </table></div>
+      </section>
+
+      <!-- ── Section 4: Recording proxy ── -->
+      <section>
+        <h2><span class="num">4</span> The Recording Proxy</h2>
+        <p>The in-house SWE agent emits tokens natively; the <strong>black-box installed scaffolds</strong> — OpenHands, Terminus-2 — cannot. The <code>RecordingProxy</code> (<span class="file-ref">proxy/recording_proxy.py</span>) bridges the gap: an OpenAI-compatible façade between scaffold and SGLang that intercepts <code>/v1/chat/completions</code> and reconstructs a token-level trajectory <em>without touching the scaffold</em>. One proxy per task, on an auto-assigned port, torn down at task end.</p>
+
+        <div class="callout" style="border-left:3px solid var(--accent-purple);">
+          <p style="margin:0; font-size:13px; color:var(--text-dim);"><strong style="color:var(--accent-purple)">Context construction.</strong> The proxy keeps one running token series (a <code>TokenTracker</code>) across a task's chat calls; the series fed to the model <em>is</em> the stored trajectory, so the training sequence equals the conditioning context at every turn.</p>
+        </div>
+
+        <div class="svg-diagram">
+          <svg viewBox="0 0 1000 450" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="capf-title" font-family="system-ui, sans-serif">
+            <title id="capf-title">Token-capture data path</title>
+            <defs>
+              <marker id="capf-arr" viewBox="0 0 10 7" refX="9" refY="3.5" markerWidth="8" markerHeight="6" orient="auto"><path d="M0,0 L10,3.5 L0,7z" style="fill:var(--text-dim)"/></marker>
+            </defs>
+
+            <!-- Scaffold -->
+            <rect x="20" y="96" width="200" height="104" rx="10" fill="none" style="stroke:var(--border)" stroke-width="1.5"/>
+            <text x="120" y="124" text-anchor="middle" font-size="15" font-weight="700" style="fill:var(--text)">Scaffold</text>
+            <text x="120" y="148" text-anchor="middle" font-size="11" style="fill:var(--text-dim)">OpenHands · Terminus-2</text>
+            <text x="120" y="166" text-anchor="middle" font-size="11" style="fill:var(--text-dim)">OpenAI /v1/chat</text>
+            <text x="120" y="184" text-anchor="middle" font-size="11" style="fill:var(--text-dim)">completions client</text>
+
+            <!-- Proxy -->
+            <rect x="360" y="64" width="280" height="232" rx="10" fill="rgba(110,64,201,0.05)" stroke="none"/>
+            <text x="500" y="90" text-anchor="middle" font-size="16" font-weight="700" style="fill:var(--accent-purple)">Recording proxy</text>
+            <text x="500" y="108" text-anchor="middle" font-size="11" style="fill:var(--text-dim)">recording_proxy.py · one per task</text>
+
+            <rect x="376" y="122" width="248" height="42" rx="6" fill="rgba(110,64,201,0.06)" style="stroke:var(--border)" stroke-width="1"/>
+            <text x="500" y="140" text-anchor="middle" font-size="12" font-weight="600" style="fill:var(--text)">Append-only guard</text>
+            <text x="500" y="156" text-anchor="middle" font-size="11" style="fill:var(--text-dim)">_sync_series · _sig</text>
+
+            <rect x="376" y="182" width="248" height="42" rx="6" fill="rgba(110,64,201,0.06)" style="stroke:var(--border)" stroke-width="1"/>
+            <text x="500" y="200" text-anchor="middle" font-size="12" font-weight="600" style="fill:var(--text)">Incremental tokenizer</text>
+            <text x="500" y="216" text-anchor="middle" font-size="11" style="fill:var(--text-dim)">tokenize_messages_increment</text>
+
+            <rect x="376" y="242" width="248" height="42" rx="6" fill="rgba(110,64,201,0.06)" style="stroke:var(--border)" stroke-width="1"/>
+            <text x="500" y="260" text-anchor="middle" font-size="12" font-weight="600" style="fill:var(--text)">TokenTracker series</text>
+            <text x="500" y="276" text-anchor="middle" font-size="11" style="fill:var(--text-dim)">tokens · logprobs · loss_mask</text>
+
+            <!-- SGLang -->
+            <rect x="780" y="96" width="200" height="104" rx="10" fill="rgba(17,99,41,0.06)" style="stroke:var(--accent-green)" stroke-width="1.5"/>
+            <text x="880" y="132" text-anchor="middle" font-size="15" font-weight="700" style="fill:var(--accent-green)">SGLang server</text>
+            <text x="880" y="154" text-anchor="middle" font-size="12" style="fill:var(--text-dim)">/generate</text>
+            <text x="880" y="172" text-anchor="middle" font-size="11" style="fill:var(--text-dim)">token-in / token-out</text>
+
+            <!-- Scaffold <-> Proxy -->
+            <line x1="220" y1="126" x2="358" y2="126" style="stroke:var(--text-dim)" stroke-width="1.5" marker-end="url(#capf-arr)"/>
+            <text x="290" y="116" text-anchor="middle" font-size="11" font-weight="600" style="fill:var(--text-dim)">POST /v1/chat</text>
+            <line x1="360" y1="170" x2="222" y2="170" style="stroke:var(--text-dim)" stroke-width="1.5" marker-end="url(#capf-arr)"/>
+            <text x="290" y="188" text-anchor="middle" font-size="11" font-weight="600" style="fill:var(--text-dim)">ChatCompletion</text>
+
+            <!-- Proxy <-> SGLang -->
+            <line x1="640" y1="126" x2="778" y2="126" style="stroke:var(--text-dim)" stroke-width="1.5" marker-end="url(#capf-arr)"/>
+            <text x="710" y="116" text-anchor="middle" font-size="11" font-weight="600" style="fill:var(--text-dim)">/generate input_ids</text>
+            <line x1="780" y1="170" x2="642" y2="170" style="stroke:var(--text-dim)" stroke-width="1.5" marker-end="url(#capf-arr)"/>
+            <text x="710" y="188" text-anchor="middle" font-size="11" font-weight="600" style="fill:var(--text-dim)">tokens + logprobs</text>
+
+            <!-- Proxy -> sample -->
+            <line x1="500" y1="296" x2="500" y2="322" style="stroke:var(--text-dim)" stroke-width="1.5" marker-end="url(#capf-arr)"/>
+            <text x="512" y="314" text-anchor="start" font-size="11" font-weight="600" style="fill:var(--text-dim)">get_result_fields()</text>
+
+            <!-- Sample -->
+            <rect x="360" y="324" width="280" height="92" rx="10" fill="none" style="stroke:var(--border)" stroke-width="1.5"/>
+            <text x="500" y="352" text-anchor="middle" font-size="15" font-weight="700" style="fill:var(--text)">Training sample</text>
+            <text x="500" y="374" text-anchor="middle" font-size="12" style="fill:var(--text-dim)">(tokens, loss_mask, logprobs)</text>
+            <text x="500" y="392" text-anchor="middle" font-size="11" style="fill:var(--text-dim)">1 packed sample / trajectory</text>
+
+            <!-- Trainer -->
+            <rect x="780" y="336" width="200" height="64" rx="10" fill="none" style="stroke:var(--border)" stroke-width="1.5"/>
+            <text x="880" y="362" text-anchor="middle" font-size="15" font-weight="700" style="fill:var(--text)">Trainer</text>
+            <text x="880" y="382" text-anchor="middle" font-size="11" style="fill:var(--text-dim)">GRPO / SFT / K3</text>
+            <line x1="640" y1="368" x2="778" y2="368" style="stroke:var(--text-dim)" stroke-width="1.5" marker-end="url(#capf-arr)"/>
+            <text x="710" y="360" text-anchor="middle" font-size="11" font-weight="600" style="fill:var(--text-dim)">batch</text>
+
+            <!-- Legend -->
+            <line x1="40" y1="348" x2="78" y2="348" style="stroke:var(--text-dim)" stroke-width="2"/>
+            <text x="86" y="352" font-size="11" style="fill:var(--text-dim)">capture path</text>
+            <line x1="40" y1="372" x2="78" y2="372" style="stroke:var(--text-dim)" stroke-width="2" stroke-dasharray="5,3"/>
+            <text x="86" y="376" font-size="11" style="fill:var(--text-dim)">fail-safe: passthrough (capture off)</text>
+          </svg>
+        </div>
+        <p class="fig-caption">Token capture. The proxy builds one token series across a task's chat calls.</p>
+
+        <h3>The per-call cycle</h3>
+        <ol>
+          <li><strong>Sync the series</strong> — <code>_sync_series</code> finds the messages appended since the last turn, skipping the assistant turns the scaffold echoes back (already in the series).</li>
+          <li><strong>Tokenize the increment</strong> — new observation/tool messages go in mid-conversation via <code>tokenize_messages_increment</code> with <code>loss_mask = 0</code>; the first call renders the whole prompt.</li>
+          <li><strong>Generate</strong> — <code>/generate</code> runs on the exact series; the returned token IDs + logprobs are appended verbatim with <code>loss_mask = 1</code>.</li>
+          <li><strong>Reply</strong> — those tokens are decoded back into an OpenAI <code>ChatCompletion</code> (with <code>tool_calls</code>) so the scaffold acts as it would have.</li>
+        </ol>
+
+        <h3>The append-only guard</h3>
+        <p>The scheme assumes an <strong>append-only</strong> conversation. If a scaffold rewrites or summarizes its history, the stored series no longer matches — so <code>_sync_series</code> checks a per-message signature (<code>_sig</code>: role + content shape) against everything consumed so far. A shrunk or rewritten prefix raises <code>_AppendOnlyViolation</code>: capture is disabled and the request passes through, so the run completes but emits <strong>no</strong> token data. Semantics are pinned by <span class="file-ref">test_recording_proxy_guard.py</span>:</p>
+
+        <pre><code><span class="cm"># the guard, distilled from the tests</span>
+<span class="fn">_sig</span>(m)  <span class="ar">-&gt;</span>  (role, content_shape)         <span class="cm"># role or content change is detected</span>
+
+pure append (messages grow)      <span class="ar">-&gt;</span>  OK
+history shrank  (len drops)      <span class="ar">-&gt;</span>  raise _AppendOnlyViolation(<span class="st">"shrank"</span>)
+prefix rewritten (summary swap)  <span class="ar">-&gt;</span>  raise _AppendOnlyViolation(<span class="st">"rewritten at message i"</span>)</code></pre>
+
+        <p>Other failures are equally defensive: an SGLang <code>abort</code> or any unexpected exception flips <code>capture_valid</code> off and passes through, while <code>get_result_fields()</code> returns <code>None</code> on an invalid or length-inconsistent series (<code>logprobs</code>, mask, and tokens must align) — dropping the trajectory rather than risking a corrupt sample. The result matches the native SWE-agent shape: one completion region of <code>prompt_token_ids</code>, <code>completion_token_ids</code>, <code>logprobs</code>, and a <code>loss_mask</code> that is <code>1</code> on generated tokens (<code>append_generation</code>) and <code>0</code> on observations (<code>append_observation</code>).</p>
+      </section>
+
+      <!-- ── Section 5: Installed-scaffold path ── -->
+      <section>
+        <h2><span class="num">5</span> The Installed-Scaffold Path</h2>
+        <p><code>InstalledAgent</code> (<span class="file-ref">agents/installed.py</span>) runs a scaffold as a black-box CLI tool inside a ROCK container: it owns the container lifecycle, while a per-scaffold <code>InstalledScaffold</code> supplies the install/run commands and log/termination semantics — <em>shell commands in, files out</em>.</p>
+
+        <h3>The runner</h3>
+        <p><code>InstalledAgent.run()</code> executes a fixed per-task sequence: start ROCK sandbox → optionally start recording proxy → install scaffold → run it → freeze benchmark artifact → run verifier → parse trajectory → capture logs → classify termination → tear down. The proxy interposition is the switch that turns eval into training:</p>
+
+        <pre><code><span class="cm"># installed.py — _maybe_start_proxy (train vs eval, one branch)</span>
+<span class="kw">if not</span> <span class="kw">self</span>.capture_tokens:
+    <span class="kw">return</span> <span class="kw">None</span>                       <span class="cm"># eval: scaffold talks to SGLang directly</span>
+proxy = <span class="fn">RecordingProxy</span>(sglang_url=..., tokenizer_path=hf_checkpoint, ...)
+proxy.<span class="fn">start</span>()
+context.proxy_url = proxy.url          <span class="cm"># scaffold is pointed here instead</span></code></pre>
+
+        <p>The scaffold's base URL is then <code>context.proxy_url or context.sglang_url</code> — the proxy when capture is on, SGLang directly when off (as in eval). After teardown, <code>proxy.get_result_fields()</code> pulls the token series onto the <code>AgentResult</code>.</p>
+
+        <div class="comparison-grid">
+          <div class="card blue">
+            <h4>OpenHands</h4>
+            <p>A self-contained pip CLI (<code>RUNTIME=local</code>) that calls the LLM through LiteLLM's <code>openai/</code> provider — so SGLang's native tool-call parser fires — and logs completions + a trajectory JSON under <code>/logs/agent</code>. Capture forces append-only via a NoOp condenser and <code>AGENT_ENABLE_HISTORY_TRUNCATION=false</code>.</p>
+          </div>
+          <div class="card green">
+            <h4>Terminus-2</h4>
+            <p>A Harbor terminal agent driving a tmux session: pinned Harbor source cloned into the container and run by a thin in-container runner; it too targets <code>proxy_url or sglang_url</code>. Summarization is on for eval, off (append-only) under capture.</p>
+          </div>
+        </div>
+
+        <h3>Termination-reason classification</h3>
+        <p>Every run gets a <code>_termination_reason</code> that drives the failure-class summary. The base classifier (<code>InstalledScaffold.termination_reason</code>) keys off the exit code; scaffolds refine the <em>clean</em> exit. OpenHands' (pinned by <span class="file-ref">test_openhands_termination.py</span>) applies this precedence, first match wins:</p>
+
+        <div class="table-scroll"><table>
+          <tr><th>Precedence (first match wins)</th><th>Reason</th></tr>
+          <tr><td>exit 124 (exec wall-clock kill)</td><td><code>agent_timeout</code></td></tr>
+          <tr><td>exit 137 (OOM / SIGKILL) — external kill beats any marker</td><td><code>infra_other</code></td></tr>
+          <tr><td>a <code>finish</code> action in the trajectory</td><td><code>finish</code></td></tr>
+          <tr><td>a terminal-error marker in the last 40 log lines</td><td>marker table &darr;</td></tr>
+          <tr><td>steps ≥ <code>max_iterations</code></td><td><code>max_turns</code></td></tr>
+          <tr><td>any other nonzero exit</td><td><code>infra_other</code></td></tr>
+          <tr><td>clean exit, no signal</td><td><code>other</code></td></tr>
+        </table></div>
+
+        <div class="table-scroll"><table>
+          <tr><th>Log-tail phrase (case-insensitive)</th><th>Reason</th></tr>
+          <tr><td>reached maximum iteration</td><td><code>max_turns</code></td></tr>
+          <tr><td>stuck in a loop</td><td><code>repeated_action_loop</code></td></tr>
+          <tr><td>exceeds the model's maximum context length</td><td><code>context_overflow</code></td></tr>
+          <tr><td>contextwindowexceeded</td><td><code>context_overflow</code></td></tr>
+        </table></div>
+
+        <p>Terminus-2's is simpler: a clean exit with a <code>mark_task_complete</code> call is <code>finish</code>, else <code>max_turns</code> if the step budget was hit, else <code>finish</code>; nonzero exits defer to the base classes.</p>
+
+        <h3>Capture vs. plain evaluators</h3>
+        <p>Which variant runs is a build-function choice. SkyRL (<span class="file-ref">skyrl/evaluator_config.py</span>) exposes four: <code>build_evaluators_openhands</code>, <code>…_openhands_capture</code>, <code>…_terminus2</code>, <code>…_terminus2_capture</code>. The <code>_capture</code> variants pass <code>capture_tokens=True</code> — the master switch that turns the proxy on <em>and</em> forces append-only history (raising if <code>APPEND_ONLY=off</code>). The rest leave the proxy off and allow summarization: pure eval.</p>
+      </section>
+
+      <!-- ── Section 6: Serving topologies ── -->
+      <section>
+        <h2><span class="num">6</span> Serving Topologies</h2>
+        <p>The same backends wire up three ways:</p>
+
+        <div class="card cyan">
+          <h4>A · Eval-only (external server)</h4>
+          <p><span class="file-ref">serve_sglang.sh</span> starts a standalone engine (<code>python -m sglang.launch_server</code>: <code>--tp-size</code>, <code>--tool-call-parser</code>, <code>--disable-radix-cache</code>, <code>--context-length 262144</code>, port <strong>9001</strong>). <span class="file-ref">eval.sh</span> connects with <code>--rollout-external</code> and runs <code>--num-rollout 0 --debug-rollout-only</code>, writing an eval JSONL. No trainer, no teacher.</p>
+        </div>
+
+        <div class="card orange">
+          <h4>B · Co-located training (in-house SWE agent)</h4>
+          <p>The dagger / aggrevate / OPD recipes run on one 8-GPU node: the frozen teacher (Qwen3-Coder-30B, TP=4) on GPUs 0-3 port <strong>30055</strong>, the student Megatron workers and their SGLang engines on GPUs 4-7 under Ray <code>--colocate</code>. Weights sync to the engines each iteration (§2); the teacher is queried per-turn (Role A) and force-decoded post-rollout (Role B). ROCK admin serves sandboxes at <strong>127.0.0.1:8080</strong>.</p>
+        </div>
+
+        <div class="card purple">
+          <h4>C · Installed-scaffold training (recording proxy in the loop)</h4>
+          <p><span class="file-ref">train.sh</span> runs a Ray job: the training rollout uses the <code>_capture</code> evaluator (proxy on, append-only) for <code>BENCH</code>, eval uses the plain evaluator for a separate <code>EVAL_BENCH</code>. Each task's own <code>RecordingProxy</code> fronts the shared student engine, turning black-box calls into trainable token series.</p>
+        </div>
+
+        <div class="table-scroll"><table>
+          <tr><th>Topology</th><th>Student engine</th><th>Teacher</th><th>Proxy</th><th>Key ports</th></tr>
+          <tr><td>A · Eval-only</td><td>external <code>serve_sglang.sh</code></td><td>—</td><td>off</td><td>9001</td></tr>
+          <tr><td>B · Colocated train</td><td>Ray + Megatron, GPUs 4-7</td><td>SGLang GPUs 0-3</td><td>off (native tokens)</td><td>30055 · 8080</td></tr>
+          <tr><td>C · Installed-scaffold train</td><td>Ray, colocated</td><td>optional (OPD)</td><td>per-task, on</td><td>auto · 8080</td></tr>
+        </table></div>
+      </section>
+
+      <!-- ── Section 7: Quick reference ── -->
+      <section>
+        <h2><span class="num">7</span> Quick Reference</h2>
+        <div class="table-scroll"><table>
+          <tr><th>Symbol</th><th>Location</th><th>Responsibility</th></tr>
+          <tr><td><code>ModelBackend</code> · <code>GenerationResult</code></td><td><code>backends/base.py</code></td><td>Backend protocol + result dataclass.</td></tr>
+          <tr><td><code>SGLangBackend</code></td><td><code>backends/sglang.py</code></td><td>Token-level <code>/generate</code>; <code>generate</code>, <code>tokenize</code>, <code>decode</code>.</td></tr>
+          <tr><td><code>TeacherBackend</code></td><td><code>backends/teacher.py</code></td><td><code>label_turn</code>, <code>generate_from_tokens</code> — frozen teacher relabel.</td></tr>
+          <tr><td><code>OpenAIChatBackend</code></td><td><code>backends/openai_chat.py</code></td><td>Text-level API client (eval only), rate-limited.</td></tr>
+          <tr><td><code>TokenTracker</code></td><td><code>backends/token_tracker.py</code></td><td><code>from_prompt</code>, <code>append_generation</code>, <code>append_observation</code>, <code>to_result_fields</code>.</td></tr>
+          <tr><td><code>score_response_with_topk</code></td><td><code>rollout/distill_capture.py</code></td><td>Teacher force-decode → chosen + top-K logprobs.</td></tr>
+          <tr><td><code>_apply_distillation_capture</code></td><td><code>rollout/rollout_manager.py</code></td><td>Orchestrates force-decode, pins fields onto samples.</td></tr>
+          <tr><td><code>RecordingProxy</code></td><td><code>rollout/proxy/recording_proxy.py</code></td><td><code>_sync_series</code>, <code>_handle_chat_completion</code>, <code>get_result_fields</code>.</td></tr>
+          <tr><td><code>InstalledAgent</code> · <code>InstalledScaffold</code></td><td><code>rollout/agents/installed.py</code></td><td>Black-box container runner + scaffold interface.</td></tr>
+          <tr><td><code>OpenHands</code> · <code>Terminus2</code></td><td><code>rollout/agents/installed_scaffolds/</code></td><td>Per-scaffold install/run + termination classifier.</td></tr>
+        </table></div>
+        <p class="stack-note">Related pages: <a href="rollout.html" style="color:var(--accent-blue)">Rollout Architecture</a> · <a href="rollout-scheduler.html" style="color:var(--accent-blue)">Task Scheduler</a> · <a href="recipes.html" style="color:var(--accent-blue)">Algorithm Recipes</a> · <a href="env-sandbox.html" style="color:var(--accent-blue)">Sandbox Management</a> · <a href="backends.html" style="color:var(--accent-blue)">Trainer Backends</a>.</p>
+      </section>
+    </div><!-- .main-content -->
+  </div><!-- .layout -->
+<button class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark mode">Dark</button>
+<script>
+(function() {
+  var toggle = document.getElementById('themeToggle');
+  var saved = localStorage.getItem('stacx-theme');
+  if (saved === 'dark') {
+    document.documentElement.setAttribute('data-theme', 'dark');
+    toggle.textContent = 'Light';
+  }
+  toggle.addEventListener('click', function() {
+    var current = document.documentElement.getAttribute('data-theme');
+    if (current === 'dark') {
+      document.documentElement.removeAttribute('data-theme');
+      toggle.textContent = 'Dark';
+      localStorage.setItem('stacx-theme', 'light');
+    } else {
+      document.documentElement.setAttribute('data-theme', 'dark');
+      toggle.textContent = 'Light';
+      localStorage.setItem('stacx-theme', 'dark');
+    }
+  });
+})();
+</script>
+<script>
+(function(){
+  var nav=document.getElementById('docsNav'),btn=document.querySelector('.nav-toggle');
+  if(!nav||!btn)return;
+  btn.addEventListener('click',function(e){e.stopPropagation();var open=nav.getAttribute('data-open')==='true';nav.setAttribute('data-open',String(!open));btn.setAttribute('aria-expanded',String(!open));});
+  document.addEventListener('click',function(e){if(nav.getAttribute('data-open')==='true'&&!nav.contains(e.target))nav.setAttribute('data-open','false');});
+})();
+</script>
+</body>
+</html>

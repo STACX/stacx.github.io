@@ -1,0 +1,1235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rollout Engine — STACX Documentation</title>
+  <style>
+/* STACX Documentation — Shared Stylesheet
+   Dark theme */
+
+:root {
+  --bg: #ffffff;
+  --surface: #f6f8fa;
+  --surface2: #eaeef2;
+  --border: #d1d9e0;
+  --text: #1f2328;
+  --text-dim: #57606a;
+  --accent-blue: #0550ae;
+  --accent-green: #116329;
+  --accent-orange: #953800;
+  --accent-purple: #6e40c9;
+  --accent-red: #cf222e;
+  --accent-cyan: #0c5a6d;
+  --nav-width: 260px;
+}
+
+[data-theme="dark"] {
+  --bg: #0d1117;
+  --surface: #161b22;
+  --surface2: #1c2128;
+  --border: #30363d;
+  --text: #e6edf3;
+  --text-dim: #8b949e;
+  --accent-blue: #58a6ff;
+  --accent-green: #3fb950;
+  --accent-orange: #d29922;
+  --accent-purple: #bc8cff;
+  --accent-red: #f85149;
+  --accent-cyan: #56d4dd;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', system-ui, sans-serif;
+  line-height: 1.6;
+}
+
+/* ── Navigation Sidebar ────────────────────────────────── */
+
+.nav-sidebar {
+  position: fixed;
+  top: 0; left: 0;
+  width: var(--nav-width);
+  height: 100vh;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  padding: 24px 0;
+  overflow-y: auto;
+  z-index: 100;
+}
+
+.nav-logo {
+  padding: 0 20px;
+  margin-bottom: 24px;
+}
+
+.nav-logo h2 {
+  font-size: 18px;
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.nav-logo .version {
+  font-size: 11px;
+  color: var(--text-dim);
+  margin-top: 2px;
+}
+
+.nav-section {
+  padding: 0 12px;
+  margin-bottom: 8px;
+}
+
+.nav-section-title {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--text-dim);
+  padding: 8px 8px 4px 8px;
+}
+
+.nav-link {
+  display: block;
+  padding: 6px 12px;
+  border-radius: 6px;
+  color: var(--text-dim);
+  text-decoration: none;
+  font-size: 13px;
+  transition: all 0.15s;
+}
+
+.nav-link:hover {
+  background: var(--surface2);
+  color: var(--text);
+}
+
+.nav-link.active {
+  background: rgba(56, 139, 253, 0.12);
+  color: var(--accent-blue);
+  font-weight: 500;
+}
+
+.nav-link .placeholder-tag {
+  font-size: 9px;
+  padding: 1px 5px;
+  border-radius: 3px;
+  background: rgba(139, 148, 158, 0.15);
+  color: var(--text-dim);
+  margin-left: 6px;
+  vertical-align: middle;
+}
+
+/* ── Main Content ──────────────────────────────────────── */
+
+.main-content {
+  margin-left: var(--nav-width);
+  padding: 48px 48px 80px 48px;
+  max-width: 960px;
+}
+
+h1 {
+  font-size: 32px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.page-subtitle {
+  color: var(--text-dim);
+  font-size: 15px;
+  margin-bottom: 40px;
+}
+
+h2 {
+  font-size: 22px;
+  font-weight: 600;
+  margin: 48px 0 16px 0;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+h2 .num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--accent-blue);
+  color: var(--bg);
+  font-size: 14px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+h3 {
+  font-size: 17px;
+  font-weight: 600;
+  margin: 28px 0 10px 0;
+  color: var(--accent-blue);
+}
+
+h4 {
+  font-size: 14px;
+  font-weight: 600;
+  margin: 16px 0 6px 0;
+  color: var(--accent-green);
+}
+
+p { margin-bottom: 12px; font-size: 14px; }
+
+ul, ol {
+  margin: 8px 0 16px 24px;
+  font-size: 14px;
+}
+
+li { margin-bottom: 4px; }
+
+/* ── Cards ─────────────────────────────────────────────── */
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 20px 24px;
+  margin-bottom: 16px;
+}
+
+.card.blue   { border-left: 3px solid var(--accent-blue); }
+.card.green  { border-left: 3px solid var(--accent-green); }
+.card.orange { border-left: 3px solid var(--accent-orange); }
+.card.purple { border-left: 3px solid var(--accent-purple); }
+.card.red    { border-left: 3px solid var(--accent-red); }
+.card.cyan   { border-left: 3px solid var(--accent-cyan); }
+
+.card h4 { margin-top: 0; }
+.card p:last-child { margin-bottom: 0; }
+
+/* ── Callout Grid ──────────────────────────────────────── */
+
+.callout-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px;
+  margin: 16px 0 24px 0;
+}
+
+.callout {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.callout h4 {
+  font-size: 14px;
+  font-weight: 600;
+  margin: 0 0 4px 0;
+}
+
+.callout p {
+  font-size: 13px;
+  color: var(--text-dim);
+  margin: 0;
+}
+
+/* ── Code ──────────────────────────────────────────────── */
+
+code {
+  font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+  font-size: 12px;
+  background: rgba(110, 118, 129, 0.15);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+pre {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px 20px;
+  overflow-x: auto;
+  font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+  font-size: 12px;
+  line-height: 1.6;
+  margin: 10px 0 16px 0;
+  color: var(--text);
+}
+
+pre code {
+  background: none;
+  padding: 0;
+  font-size: inherit;
+}
+
+.code-ref {
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  font-size: 12px;
+  color: var(--accent-orange);
+  background: rgba(210, 153, 34, 0.1);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.file-ref {
+  color: var(--text-dim);
+  font-size: 12px;
+  font-style: italic;
+}
+
+/* syntax coloring in pre blocks */
+.kw { color: var(--accent-purple); }
+.fn { color: var(--accent-blue); }
+.cm { color: var(--text-dim); }
+.st { color: var(--accent-green); }
+.ar { color: var(--accent-orange); font-weight: 600; }
+
+/* ── Tables ────────────────────────────────────────────── */
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 12px 0 24px 0;
+  font-size: 13px;
+}
+
+th {
+  text-align: left;
+  padding: 10px 12px;
+  border-bottom: 2px solid var(--border);
+  color: var(--accent-blue);
+  font-weight: 600;
+}
+
+td {
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+tr:hover td {
+  background: rgba(56, 139, 253, 0.04);
+}
+
+/* ── Flow Diagrams ─────────────────────────────────────── */
+
+.diagram {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 24px;
+  margin: 16px 0;
+  overflow-x: auto;
+}
+
+.diagram pre {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  color: var(--text-dim);
+}
+
+/* ── Tags / Badges ─────────────────────────────────────── */
+
+.tag {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.tag-blue   { background: rgba(56, 139, 253, 0.15); color: var(--accent-blue); }
+.tag-green  { background: rgba(63, 185, 80, 0.15); color: var(--accent-green); }
+.tag-orange { background: rgba(210, 153, 34, 0.15); color: var(--accent-orange); }
+.tag-purple { background: rgba(188, 140, 255, 0.15); color: var(--accent-purple); }
+.tag-red    { background: rgba(248, 81, 73, 0.15); color: var(--accent-red); }
+
+/* ── Feature Grid ──────────────────────────────────────── */
+
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+  margin: 16px 0 24px 0;
+}
+
+.feature-item {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.feature-item h4 {
+  margin: 0 0 4px 0;
+  font-size: 13px;
+}
+
+.feature-item p {
+  font-size: 12px;
+  color: var(--text-dim);
+  margin: 0;
+}
+
+/* ── Responsive ────────────────────────────────────────── */
+
+@media (max-width: 900px) {
+  .nav-sidebar { display: none; }
+  .main-content { margin-left: 0; padding: 24px; }
+}
+
+.theme-toggle {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  z-index: 200;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 6px 12px;
+  color: var(--text);
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+.theme-toggle:hover {
+  background: var(--surface2);
+  border-color: var(--accent-blue);
+}
+
+/* page-local */
+.diagram svg { width: 100%; height: auto; display: block; }
+.diagram .fig-caption { font-size: 12px; color: var(--text-dim); margin-top: 12px; text-align: center; }
+.lane-note { font-size: 13px; color: var(--text-dim); margin: 6px 0 14px 0; }
+  /* shared: readable content links in both themes */
+.main-content a, .main-content a code { color: var(--accent-blue); }
+.main-content a:hover { color: var(--accent-cyan); }
+
+/* ── Refinement layer: typography, response, materials ── */
+
+html { scroll-behavior: smooth; scroll-padding-top: 24px; }
+
+body {
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  font-optical-sizing: auto;
+}
+
+::selection { background: rgba(56, 139, 253, 0.22); }
+
+/* Type — size-specific tracking and leading */
+h1 {
+  background: none;
+  -webkit-text-fill-color: var(--text);
+  color: var(--text);
+  letter-spacing: -0.022em;
+  line-height: 1.15;
+  text-wrap: balance;
+}
+h2 { letter-spacing: -0.015em; text-wrap: balance; }
+h3 { letter-spacing: -0.008em; }
+p { font-size: 14.5px; line-height: 1.65; }
+ul, ol { font-size: 14.5px; }
+li { line-height: 1.6; }
+.page-subtitle { font-size: 16px; text-wrap: pretty; }
+
+/* Quieter chrome — tint instead of fill, neutral table headers */
+h2 .num {
+  background: rgba(56, 139, 253, 0.13);
+  color: var(--accent-blue);
+  font-weight: 650;
+}
+th {
+  color: var(--text-dim);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+table { font-variant-numeric: tabular-nums; }
+
+/* Gentle depth on resting surfaces */
+.card, .diagram, .comparison-col { box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04); }
+
+/* Response — feedback on press, not just hover */
+.nav-link, .theme-toggle, .hero-card, .view-toggle-btn {
+  transition: background 0.15s ease-out, color 0.15s ease-out,
+              border-color 0.15s ease-out, transform 0.15s ease-out;
+}
+.nav-link:active, .view-toggle-btn:active { transform: scale(0.98); transition-duration: 0.05s; }
+.theme-toggle:active { transform: scale(0.96); transition-duration: 0.05s; }
+.hero-card:active { transform: translateY(0) scale(0.99); transition-duration: 0.05s; }
+.main-content a:active { opacity: 0.65; }
+
+:focus-visible { outline: 2px solid var(--accent-blue); outline-offset: 2px; border-radius: 4px; }
+
+.nav-sidebar { scrollbar-width: thin; }
+
+/* Floating chrome reads as material — content scrolls beneath it */
+.theme-toggle {
+  background: color-mix(in srgb, var(--surface) 72%, transparent);
+  backdrop-filter: blur(12px) saturate(180%);
+  -webkit-backdrop-filter: blur(12px) saturate(180%);
+  box-shadow: 0 1px 3px rgba(16, 24, 40, 0.07);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { transition-duration: 0.01ms !important; animation: none !important; }
+}
+@media (prefers-reduced-transparency: reduce) {
+  .theme-toggle {
+    background: var(--surface);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+}
+
+/* ── Refinement layer v2: beauty pass ── */
+
+/* Sidebar — calmer rhythm, tactile links */
+.nav-sidebar { padding: 20px 0 28px; }
+.nav-sidebar::-webkit-scrollbar { width: 8px; }
+.nav-sidebar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+.nav-logo { padding: 4px 20px 0; margin-bottom: 20px; }
+.nav-section { margin-bottom: 14px; }
+.nav-section-title { padding: 10px 10px 6px; }
+.nav-link { padding: 6px 10px; border-radius: 7px; }
+.nav-link.active { font-weight: 600; }
+
+/* Section rules — the divider fades out instead of cutting across */
+h2 { border-bottom: none; padding-bottom: 10px; position: relative; margin-top: 52px; }
+h2::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 1px;
+  background: linear-gradient(90deg, var(--border) 55%, transparent);
+}
+
+/* Surfaces — rounder, softer */
+.card, .diagram, .comparison-col { border-radius: 12px; }
+pre, .callout { border-radius: 10px; }
+
+/* Tables — enclosed, rounded, quiet */
+table {
+  border-collapse: separate; border-spacing: 0;
+  border: 1px solid var(--border); border-radius: 10px; overflow: hidden;
+}
+th { background: var(--surface); border-bottom: 1px solid var(--border); padding: 10px 14px; }
+td { padding: 9px 14px; }
+tr:last-child td { border-bottom: none; }
+th:first-child { border-top-left-radius: 9px; }
+th:last-child { border-top-right-radius: 9px; }
+tr:last-child td:first-child { border-bottom-left-radius: 9px; }
+tr:last-child td:last-child { border-bottom-right-radius: 9px; }
+
+/* Floating toggle as a pill */
+.theme-toggle { border-radius: 999px; padding: 7px 14px; font-weight: 600; }
+
+/* Landing hero — faint atmospheric wash, icon chips, deeper card lift */
+.hero { position: relative; }
+.hero::before {
+  content: ""; position: absolute; inset: -48px -80px 0; z-index: -1; pointer-events: none;
+  background:
+    radial-gradient(55% 45% at 50% 0%, rgba(56, 139, 253, 0.07), transparent 70%),
+    radial-gradient(35% 35% at 82% 12%, rgba(188, 140, 255, 0.05), transparent 70%);
+}
+.hero h1 { font-size: 54px; letter-spacing: -0.03em; }
+.hero .tagline { font-size: 19px; text-wrap: pretty; }
+.hero-card {
+  border-radius: 14px; padding: 26px 24px;
+  box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04);
+}
+.hero-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 28px rgba(16, 24, 40, 0.08);
+}
+.hero-card .icon {
+  width: 46px; height: 46px; display: inline-grid; place-items: center;
+  background: var(--surface2); border-radius: 12px;
+  font-size: 22px; margin-bottom: 14px;
+}
+
+/* ── Refinement v3: professional pass (external design review) ── */
+
+html { color-scheme: light; }
+[data-theme="dark"] { color-scheme: dark; }
+
+/* Type scale — larger, less compressed */
+body { font-size: 15.5px; }
+p, ul, ol { font-size: inherit; }
+h1 { font-size: 36px; line-height: 1.12; }
+h2 { font-size: 23px; margin: 56px 0 20px; }
+h3 { font-size: 18px; margin: 32px 0 12px; }
+h4 { font-size: 15px; }
+.page-subtitle { font-size: 17px; line-height: 1.55; max-width: 70ch; margin-bottom: 48px; }
+
+/* One accent — headings are neutral ink */
+h3, h4 { color: var(--text); }
+
+/* Code — relative inline sizing, comfortable blocks */
+code { font-size: 0.875em; padding: 0.12em 0.35em; border-radius: 4px; }
+pre { font-size: 13.5px; line-height: 1.55; padding: 18px 20px; tab-size: 2; }
+pre code { font-size: inherit; padding: 0; }
+
+/* Tables scroll instead of squeezing */
+.table-scroll { overflow-x: auto; margin: 12px 0 24px; border: 1px solid var(--border); border-radius: 10px; }
+.table-scroll table { min-width: 640px; margin: 0; border: 0; }
+td { vertical-align: top; line-height: 1.55; }
+
+/* Diagrams — legible labels, editorial captions */
+.diagram svg, .arch-diagram svg { display: block; width: 100%; height: auto; }
+.diagram svg text[font-size="9"], .diagram svg text[font-size="10"],
+.arch-diagram svg text[font-size="9"], .arch-diagram svg text[font-size="10"] { font-size: 11px; }
+.fig-caption { font-style: normal; text-align: left; font-size: 12.5px; margin: 10px 0 12px; max-width: none; }
+
+/* Landing hero actions + icon chips */
+.hero-actions { display: flex; justify-content: center; gap: 10px; margin: 26px 0 8px; }
+.main-content a.button-primary, .main-content a.button-secondary {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 9px 16px; border-radius: 8px; font-size: 14px; font-weight: 600; text-decoration: none;
+  transition: background 0.15s ease-out, border-color 0.15s ease-out,
+              filter 0.15s ease-out, transform 0.15s ease-out;
+}
+.main-content a.button-primary { background: var(--accent-blue); color: #fff; }
+.main-content a.button-primary:hover { filter: brightness(1.1); color: #fff; }
+.main-content a.button-secondary { border: 1px solid var(--border); background: var(--surface); color: var(--text); }
+.main-content a.button-secondary:hover { border-color: var(--accent-blue); color: var(--text); }
+.main-content a.button-primary:active, .main-content a.button-secondary:active { transform: scale(0.97); }
+.hero-card .icon svg { width: 22px; height: 22px; color: var(--accent-blue); }
+
+/* Mobile navigation — header + slide-in sidebar */
+.mobile-header { display: none; }
+@media (max-width: 900px) {
+  .mobile-header {
+    display: flex; position: sticky; top: 0; z-index: 220; height: 52px;
+    align-items: center; justify-content: space-between; padding: 0 16px;
+    background: var(--bg);
+    background: color-mix(in srgb, var(--bg) 88%, transparent);
+    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+  .mobile-header .mh-brand { font-weight: 700; font-size: 16px; color: var(--text); text-decoration: none; }
+  .nav-toggle {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+    padding: 6px 14px; font: inherit; font-size: 13.5px; font-weight: 600;
+    color: var(--text); cursor: pointer;
+  }
+  .nav-sidebar {
+    display: block; z-index: 240; transform: translateX(-100%);
+    transition: transform 200ms cubic-bezier(0.23, 1, 0.32, 1);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.18);
+  }
+  .nav-sidebar[data-open="true"] { transform: none; }
+  .mobile-header ~ .theme-toggle { top: 62px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .nav-sidebar { transition: none; }
+}
+
+/* ── Coding font + chromeless figures ── */
+code, pre, .code-ref {
+  font-family: ui-monospace, "SF Mono", Menlo, "JetBrains Mono", "Fira Code", Consolas, monospace;
+}
+.diagram, .arch-diagram { background: none; border: none; box-shadow: none; padding: 12px 0; }
+
+/* ── Lighter surfaces for code blocks and callouts ── */
+pre, .callout {
+  background: var(--surface);
+  background: color-mix(in srgb, var(--surface) 55%, var(--bg));
+}
+</style>
+<script>try{if(localStorage.getItem('stacx-theme')==='dark')document.documentElement.setAttribute('data-theme','dark');}catch(e){}</script>
+</head>
+<body>
+<header class="mobile-header"><a class="mh-brand" href="index.html">STACX</a><button class="nav-toggle" type="button" aria-controls="docsNav" aria-expanded="false">Menu</button></header>
+  <div class="layout">
+    <nav class="nav-sidebar" id="docsNav">
+      <div class="nav-logo">
+        <h2>STACX</h2>
+        <div class="version">v1.0 Documentation</div>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Overview</div>
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="getting-started.html" class="nav-link">Getting Started</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Trainer</div>
+        <a href="architecture.html" class="nav-link">Architecture</a>
+        <a href="backends.html" class="nav-link">Backends</a>
+        <a href="recipes.html" class="nav-link">Algorithm Recipes</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Rollout</div>
+        <a href="rollout.html" class="nav-link active">Architecture</a>
+        <a href="rollout-scheduler.html" class="nav-link">Task Scheduler</a>
+        <a href="rollout-inference.html" class="nav-link">Inference Backend</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Environment</div>
+        <a href="environment.html" class="nav-link">Architecture</a>
+        <a href="env-sandbox.html" class="nav-link">Sandbox Management</a>
+      </div>
+    </nav>
+
+    <div class="main-content">
+      <div class="page-header">
+        <h1>Rollout Engine</h1>
+        <p class="page-subtitle">The task-scheduler-based rollout and evaluation layer: how one trainer iteration turns a batch of prompts into agentic multi-turn trajectories, filters and relabels them, and hands the result back for the loss.</p>
+      </div>
+
+      <!-- ── Section 1: Position in the system ── -->
+      <section>
+        <h2><span class="num">1</span> Position in the System</h2>
+        <p>Everything in <code>rl_engine/rollout/</code> answers one question each trainer iteration: <em>given the current student weights, produce the trajectories to train on.</em> The entry point is <code>SchedulerRolloutManager</code> — a Ray actor subclassing slime's <code>RolloutManager</code> that routes generation and evaluation through a <code>TaskScheduler</code>.</p>
+
+        <div class="callout-grid">
+          <div class="callout">
+            <h4>This page — Architecture</h4>
+            <p>The manager actor, the directory tour, the episode abstraction, the data path, and the trajectory post-processing lanes.</p>
+          </div>
+          <div class="callout">
+            <h4>Task Scheduler <span class="tag tag-blue">sibling</span></h4>
+            <p><a href="rollout-scheduler.html">rollout-scheduler.html</a> — batching strategies, <code>PlacementPool</code> resource gating, the batch lifecycle, and the multi-dataset param cascade in depth.</p>
+          </div>
+          <div class="callout">
+            <h4>Inference Backend <span class="tag tag-purple">sibling</span></h4>
+            <p><a href="rollout-inference.html">rollout-inference.html</a> — SGLang serving, weight sync (inject vs. exchange), and GPU memory offload between training and rollout phases.</p>
+          </div>
+        </div>
+
+        <h3>SchedulerRolloutManager</h3>
+        <p>Ray forbids inheriting from a <code>@ray.remote</code> actor class directly, so <span class="file-ref">rollout_manager.py</span> unwraps the decorator, subclasses the plain base, and re-applies it:</p>
+
+        <pre><code><span class="cm"># rl_engine/rollout/rollout_manager.py</span>
+<span class="kw">from</span> slime.ray.rollout <span class="kw">import</span> RolloutManager <span class="kw">as</span> _RolloutManagerActor
+
+<span class="cm"># Unwrap the @ray.remote decorator to get the plain Python class.</span>
+_RolloutManagerBase = _RolloutManagerActor.__ray_metadata__.modified_class
+
+<span class="ar">@ray.remote</span>
+<span class="kw">class</span> <span class="fn">SchedulerRolloutManager</span>(_RolloutManagerBase):
+    <span class="cm"># overrides: __init__, dispose, _get_rollout_data, eval (+ helpers)</span>
+    ...</code></pre>
+
+        <p>It overrides only what it must, inheriting the rest from slime:</p>
+
+        <div class="table-scroll"><table>
+          <tr><th>Overridden</th><th>Why</th></tr>
+          <tr><td><code>__init__</code></td><td>Parse <code>--rollout-config</code> YAML, build the <code>TaskScheduler</code>, and swap in a <code>MultiDataSource</code> when a rollout config is present.</td></tr>
+          <tr><td><code>_get_rollout_data(rollout_id)</code></td><td>The heart of this layer: drive <code>TaskScheduler.execute_rollout()</code>, apply the filters, then either expand DAgger sub-samples or capture teacher logprobs (§5).</td></tr>
+          <tr><td><code>eval(rollout_id, eval_label=None)</code></td><td>Drive <code>TaskScheduler.execute_eval()</code>, then compute per-dataset <code>accuracy</code> and <code>pass@k</code>.</td></tr>
+          <tr><td><code>dispose</code> / <code>prune_env_nodes</code></td><td>API-eval-only safety and between-rollout <code>podman</code> overlay cleanup on env nodes.</td></tr>
+        </table></div>
+
+        <div class="table-scroll"><table>
+          <tr><th>Inherited unchanged from slime</th><th>Role</th></tr>
+          <tr><td><code>generate(rollout_id)</code></td><td>Calls <code>_get_rollout_data()</code>, post-processes rewards, converts to columnar data, and splits by DP rank via <code>_split_train_data_by_dp()</code>.</td></tr>
+          <tr><td><code>_convert_samples_to_train_data</code>, <code>_post_process_rewards</code>, <code>_split_train_data_by_dp</code></td><td>Sample → columnar tensor conversion, reward normalization, DP partitioning.</td></tr>
+          <tr><td>offload / onload, health monitoring, fault tolerance</td><td>SGLang lifecycle and actor resiliency — see <a href="rollout-inference.html">Inference Backend</a>.</td></tr>
+        </table></div>
+
+        <div class="card orange">
+          <h4>The output format is <code>list[Box]</code>, not a single dict</h4>
+          <p><code>generate()</code> is inherited unchanged — it returns a <code>list[Box]</code> (one <code>Box</code> per DP rank) that the trainer's <code>process_rollout_data()</code> consumes natively. The manager overrides only <em>what goes into</em> the samples (<code>_get_rollout_data</code>), not this envelope.</p>
+        </div>
+
+        <h3>Two construction paths</h3>
+        <p><span class="file-ref">placement_group.py</span> exposes two factories — the default scheduler-backed path, and a legacy bypass for ablation runs:</p>
+        <div class="table-scroll"><table>
+          <tr><th>Factory</th><th>Selected by</th><th>Builds</th></tr>
+          <tr><td><code>create_rollout_manager(args, pg)</code></td><td>default</td><td><code>SchedulerRolloutManager</code> — full task-scheduler path. Also resolves <code>num_rollout</code> from <code>num_epoch</code>.</td></tr>
+          <tr><td><code>create_legacy_rollout_manager(args, pg)</code></td><td><code>--use-legacy-rollout</code></td><td>slime's original <code>RolloutManager</code> directly — a training-only path that bypasses the scheduler.</td></tr>
+        </table></div>
+
+        <h3>Top-level architecture</h3>
+        <p>One rollout step flows left to right — data source to scheduler, a short-lived <code>Evaluator</code> per batch, one episode handler per sample, and back out as <code>list[Box]</code>:</p>
+
+        <div class="diagram">
+          <svg style="max-width:730px;display:block;margin:0 auto;" viewBox="0 0 1000 500" role="img" aria-labelledby="ra-title" font-family="system-ui, sans-serif">
+            <title id="ra-title">SchedulerRolloutManager top-level architecture</title>
+            <defs>
+              <marker id="ra-arr" viewBox="0 0 10 7" refX="9" refY="3.5" markerWidth="8" markerHeight="6" orient="auto"><path d="M0,0 L10,3.5 L0,7z" style="fill:var(--text-dim)"/></marker>
+            </defs>
+
+            <!-- actor boundary -->
+            <rect x="6" y="30" width="988" height="398" rx="12" fill="rgba(87,96,106,0.04)" stroke="none"/>
+            <text x="500" y="56" text-anchor="middle" style="fill:var(--text)" font-size="16" font-weight="700">SchedulerRolloutManager — Ray actor</text>
+            <text x="500" y="75" text-anchor="middle" style="fill:var(--text-dim)" font-size="11">subclasses slime RolloutManager · overrides __init__ / _get_rollout_data / eval · inherits generate()</text>
+
+            <!-- data source -->
+            <rect x="28" y="196" width="160" height="96" rx="10" fill="none" style="stroke:var(--border)" stroke-width="1.5"/>
+            <text x="108" y="230" text-anchor="middle" style="fill:var(--text)" font-size="14" font-weight="700">MultiDataSource</text>
+            <text x="108" y="252" text-anchor="middle" style="fill:var(--text-dim)" font-size="11">FIFO over datasets</text>
+            <text x="108" y="270" text-anchor="middle" style="fill:var(--text-dim)" font-size="11">tags task_type</text>
+
+            <line x1="188" y1="244" x2="248" y2="244" style="stroke:var(--text-dim)" stroke-width="1.5" marker-end="url(#ra-arr)"/>
+            <text x="218" y="234" text-anchor="middle" style="fill:var(--text-dim)" font-size="11" font-weight="600">groups</text>
+
+            <!-- scheduler -->
+            <rect x="250" y="104" width="252" height="316" rx="10" fill="rgba(5,80,174,0.05)" stroke="none"/>
+            <text x="376" y="128" text-anchor="middle" style="fill:var(--accent-blue)" font-size="15" font-weight="700">TaskScheduler</text>
+
+            <rect x="270" y="142" width="212" height="54" rx="7" fill="rgba(5,80,174,0.06)" style="stroke:var(--border)" stroke-width="1.25"/>
+            <text x="376" y="164" text-anchor="middle" style="fill:var(--text)" font-size="13" font-weight="700">PlacementPool</text>
+            <text x="376" y="182" text-anchor="middle" style="fill:var(--text-dim)" font-size="11">GPU · CPU · mem budget</text>
+
+            <rect x="270" y="214" width="212" height="54" rx="7" fill="rgba(5,80,174,0.06)" style="stroke:var(--border)" stroke-width="1.25"/>
+            <text x="376" y="236" text-anchor="middle" style="fill:var(--text)" font-size="13" font-weight="700">fifo_batching</text>
+            <text x="376" y="254" text-anchor="middle" style="fill:var(--text-dim)" font-size="11">group by task_type → Batch</text>
+
+            <rect x="270" y="286" width="212" height="120" rx="7" fill="rgba(5,80,174,0.06)" style="stroke:var(--border)" stroke-width="1.25"/>
+            <text x="376" y="308" text-anchor="middle" style="fill:var(--text)" font-size="13" font-weight="700">Evaluator factory</text>
+            <text x="376" y="330" text-anchor="middle" style="fill:var(--text-dim)" font-size="11">EvaluatorSpec → Evaluator</text>
+            <text x="376" y="348" text-anchor="middle" style="fill:var(--text-dim)" font-size="11">per batch, short-lived</text>
+            <text x="376" y="366" text-anchor="middle" style="fill:var(--text-dim)" font-size="11">holds one placement token</text>
+            <text x="376" y="384" text-anchor="middle" style="fill:var(--text-dim)" font-size="11">for the whole episode</text>
+
+            <!-- scheduler -> evaluators trunk -->
+            <line x1="502" y1="258" x2="530" y2="258" style="stroke:var(--text-dim)" stroke-width="1.5"/>
+            <line x1="530" y1="152" x2="530" y2="366" style="stroke:var(--text-dim)" stroke-width="1.5"/>
+            <line x1="530" y1="152" x2="558" y2="152" style="stroke:var(--text-dim)" stroke-width="1.5" marker-end="url(#ra-arr)"/>
+            <line x1="530" y1="258" x2="558" y2="258" style="stroke:var(--text-dim)" stroke-width="1.5" marker-end="url(#ra-arr)"/>
+            <line x1="530" y1="366" x2="558" y2="366" style="stroke:var(--text-dim)" stroke-width="1.5" marker-end="url(#ra-arr)"/>
+
+            <!-- evaluators -->
+            <g>
+              <rect x="560" y="108" width="410" height="88" rx="10" fill="rgba(17,99,41,0.05)" style="stroke:var(--accent-green)" stroke-width="1.5"/>
+              <text x="580" y="134" style="fill:var(--accent-green)" font-size="14" font-weight="700">SWE Evaluator</text>
+              <text x="950" y="134" text-anchor="end" style="fill:var(--text-dim)" font-size="11" font-family="'SF Mono',monospace">evaluator_id="swe"</text>
+              <text x="580" y="156" style="fill:var(--text-dim)" font-size="11">in-house DAggerSWEAgent (native token access)</text>
+              <text x="580" y="180" style="fill:var(--text-dim)" font-size="11">init → run → eval → cleanup</text>
+
+              <rect x="560" y="214" width="410" height="88" rx="10" fill="rgba(17,99,41,0.05)" style="stroke:var(--accent-green)" stroke-width="1.5"/>
+              <text x="580" y="240" style="fill:var(--accent-green)" font-size="14" font-weight="700">Retool Evaluator</text>
+              <text x="950" y="240" text-anchor="end" style="fill:var(--text-dim)" font-size="11" font-family="'SF Mono',monospace">evaluator_id="retool"</text>
+              <text x="580" y="262" style="fill:var(--text-dim)" font-size="11">tool-use agent lane</text>
+              <text x="580" y="286" style="fill:var(--text-dim)" font-size="11">init → run → eval → cleanup</text>
+
+              <rect x="560" y="322" width="410" height="88" rx="10" fill="rgba(17,99,41,0.05)" style="stroke:var(--accent-green)" stroke-width="1.5"/>
+              <text x="580" y="348" style="fill:var(--accent-green)" font-size="14" font-weight="700">SWEBench Evaluator</text>
+              <text x="950" y="348" text-anchor="end" style="fill:var(--text-dim)" font-size="11" font-family="'SF Mono',monospace">evaluator_id="swebench"</text>
+              <text x="580" y="370" style="fill:var(--text-dim)" font-size="11">installed scaffold (OpenHands / Terminus-2)</text>
+              <text x="580" y="394" style="fill:var(--text-dim)" font-size="11">init → run → eval → cleanup</text>
+            </g>
+
+            <!-- trainer handoff -->
+            <line x1="376" y1="420" x2="376" y2="452" style="stroke:var(--text-dim)" stroke-width="1.5" marker-end="url(#ra-arr)"/>
+            <text x="388" y="440" style="fill:var(--text-dim)" font-size="11" font-weight="600">generate() → list[Box] / DP rank</text>
+            <rect x="250" y="452" width="252" height="40" rx="10" fill="none" style="stroke:var(--accent-blue)" stroke-width="1.5"/>
+            <text x="376" y="477" text-anchor="middle" style="fill:var(--accent-blue)" font-size="13" font-weight="700">Trainer.process_rollout_data()</text>
+          </svg>
+          <p class="fig-caption">One rollout step. Task types (<code>swe</code>, <code>retool</code>, <code>swebench</code>, …) are illustrative; the evaluators present in a run are whatever <code>build_evaluators</code> registers.</p>
+        </div>
+      </section>
+
+      <!-- ── Section 2: Directory tour ── -->
+      <section>
+        <h2><span class="num">2</span> Directory Tour</h2>
+        <p>Paths are relative to <code>rl_engine/rollout/</code>.</p>
+
+        <h3>Top level</h3>
+        <div class="table-scroll"><table>
+          <tr><th>Path</th><th>Contents</th></tr>
+          <tr><td><code>__init__.py</code></td><td>Exports <code>SchedulerRolloutManager</code>, <code>create_rollout_manager</code>.</td></tr>
+          <tr><td><code>rollout_manager.py</code></td><td>The <code>SchedulerRolloutManager</code> actor: <code>_get_rollout_data</code>, <code>eval</code>, the filters, DAgger sub-sample expansion, and both teacher-capture lanes.</td></tr>
+          <tr><td><code>placement_group.py</code></td><td><code>create_rollout_manager</code> / <code>create_legacy_rollout_manager</code> (§1).</td></tr>
+          <tr><td><code>multi_data_source.py</code></td><td><code>MultiDataSource</code>, <code>DatasetEntry</code>, <code>parse_rollout_datasets_config</code>, <code>resolve_dataset_path</code>.</td></tr>
+          <tr><td><code>eval_dataset_config.py</code></td><td><code>EvalDatasetConfig</code> — slime's config extended with <code>task_type</code>, <code>max_turns</code>, <code>max_context_len</code>.</td></tr>
+          <tr><td><code>termination_summary.py</code></td><td>Failure-class taxonomy + per-iter <code>summary.json</code> writer (§5).</td></tr>
+          <tr><td><code>distill_capture.py</code></td><td>Teacher force-decode (<code>capture_teacher_logprobs_for_samples</code>, <code>score_response_with_topk</code>) with retry/backoff.</td></tr>
+          <tr><td><code>kl_eval_cache.py</code></td><td>Per-iter student eval-trajectory dump (<code>dump_samples_from_eval</code>).</td></tr>
+        </table></div>
+
+        <h3>scheduler/ — the control plane <span class="tag tag-blue">deep dive: <a href="rollout-scheduler.html">Task Scheduler</a></span></h3>
+        <div class="table-scroll"><table>
+          <tr><th>Path</th><th>Contents</th></tr>
+          <tr><td><code>scheduler/__init__.py</code></td><td>Package exports + <code>build_task_scheduler</code> factory + <code>_build_placement_pool</code>.</td></tr>
+          <tr><td><code>scheduler/task_scheduler.py</code></td><td><code>TaskScheduler</code>, <code>Batch</code>, <code>BatchingStrategy</code>, <code>fifo_batching</code>.</td></tr>
+          <tr><td><code>scheduler/evaluator.py</code></td><td><code>EvaluatorSpec</code> (blueprint) + <code>Evaluator</code> (per-batch executor).</td></tr>
+          <tr><td><code>scheduler/resource.py</code></td><td><code>Resource</code>, <code>NodeSpec</code>, <code>PlacementPool</code>, <code>PlacementToken</code>.</td></tr>
+          <tr><td><code>scheduler/task.py</code></td><td><code>Task</code>, <code>TaskConfig</code>, <code>StoppingCriteria</code>, <code>TaskStatus</code>.</td></tr>
+        </table></div>
+
+        <h3>agents/ — episode handlers</h3>
+        <div class="table-scroll"><table>
+          <tr><th>Path</th><th>Contents</th></tr>
+          <tr><td><code>agents/base.py</code></td><td><code>BaseAgent</code> (episode handler), <code>AgentContext</code>, <code>AgentResult</code> (§3).</td></tr>
+          <tr><td><code>agents/installed.py</code></td><td><code>InstalledAgent</code> + <code>InstalledScaffold</code> spec for black-box scaffolds.</td></tr>
+          <tr><td><code>agents/installed_scaffolds/</code></td><td><code>openhands.py</code>, <code>terminus2.py</code> (+ in-sandbox <code>terminus2_runner.py</code>).</td></tr>
+        </table></div>
+        <p class="lane-note">The in-house SWE / DAgger handlers (<code>SWEAgent</code>, <code>DAggerSWEAgent</code>) live with their lane in <span class="file-ref">rl_engine/examples/swe_agent/agents/</span>, not here — <code>rollout/agents/</code> holds only the base contract.</p>
+
+        <h3>backends/ · proxy/ · sandbox/ · utils/</h3>
+        <div class="table-scroll"><table>
+          <tr><th>Path</th><th>Contents</th></tr>
+          <tr><td><code>backends/</code></td><td>Model I/O: <code>SGLangBackend</code>, <code>OpenAIChatBackend</code>, <code>TeacherBackend</code>, <code>TokenTracker</code>, <code>DAggerTracker</code>, <code>api_pricing</code>.</td></tr>
+          <tr><td><code>proxy/recording_proxy.py</code></td><td><code>RecordingProxy</code> — a per-task FastAPI proxy that captures tokens for black-box installed scaffolds that never expose token IDs natively.</td></tr>
+          <tr><td><code>sandbox/rock.py</code></td><td><code>RockSandbox</code> — the ROCK client (<code>start</code> / <code>execute</code> / <code>execute_in_session</code> / <code>stop</code>, leases). See <a href="env-sandbox.html">Sandbox Management</a>.</td></tr>
+          <tr><td><code>utils/</code></td><td><code>tool_calling</code>, <code>action_format</code>, <code>dagger_schedule</code>.</td></tr>
+        </table></div>
+      </section>
+
+      <!-- ── Section 3: The episode abstraction ── -->
+      <section>
+        <h2><span class="num">3</span> The Episode Abstraction</h2>
+        <p>The scheduler knows nothing about SWE-Bench, tool calls, or teachers — all of that lives behind one interface, <code>BaseAgent</code> (<span class="file-ref">agents/base.py</span>). A handler owns the <strong>entire</strong> episode for one sample, so both black-box scaffolds (OpenHands, Terminus-2) and native token-level agents (DAgger) fit one contract.</p>
+
+        <h3>The three data types</h3>
+        <div class="table-scroll"><table>
+          <tr><th>Type</th><th>Role</th></tr>
+          <tr><td><code>BaseAgent</code></td><td>Abstract handler. Async lifecycle <code>init → run → eval → cleanup</code>; subclasses must implement the first three, <code>cleanup</code> defaults to a no-op.</td></tr>
+          <tr><td><code>AgentContext</code></td><td>Per-run inputs the Evaluator populates: <code>args</code>, <code>placement</code> (node/GPU, set only during resource-gated phases), <code>sampling_params</code>, <code>max_turns</code>, <code>max_context_len</code>, <code>timeout</code>, <code>sglang_url</code>. (<code>proxy_url</code> is populated later by the handler, e.g. <code>InstalledAgent._maybe_start_proxy</code>, not by the Evaluator.)</td></tr>
+          <tr><td><code>AgentResult</code></td><td>Episode output: <code>output_text</code>, <code>metadata</code>, task-specific <code>patch</code> / <code>trajectory</code>, and optional token-level fields (<code>prompt_token_ids</code>, per-turn <code>completion_token_ids</code>, per-turn <code>logprobs</code>, <code>loss_mask</code>).</td></tr>
+        </table></div>
+
+        <pre><code><span class="cm"># agents/base.py — the contract every scaffold implements</span>
+<span class="kw">class</span> <span class="fn">BaseAgent</span>(abc.ABC):
+    <span class="kw">async def</span> <span class="fn">init</span>(self, sample, context)          -> <span class="kw">None</span>:  <span class="cm"># lightweight, no placement yet</span>
+    <span class="kw">async def</span> <span class="fn">run</span>(self, sample, context)           -> AgentResult:  <span class="cm"># the full multi-turn loop</span>
+    <span class="kw">async def</span> <span class="fn">eval</span>(self, sample, context, result)  -> <span class="kw">float</span> | <span class="kw">dict</span>:  <span class="cm"># reward</span>
+    <span class="kw">async def</span> <span class="fn">cleanup</span>(self, sample, context)       -> <span class="kw">None</span>:  <span class="cm"># finally-block; stop containers</span></code></pre>
+
+        <div class="card blue">
+          <h4>Reward</h4>
+          <p>There is no standalone <code>Reward</code> object: the reward comes from <code>handler.eval()</code> — for SWE, the bench's verifier scored <code>0/1</code> — and the <code>Evaluator</code> stores it as <code>sample.reward</code>.</p>
+        </div>
+
+        <h3>How the Evaluator runs one sample</h3>
+        <p><span class="file-ref">scheduler/evaluator.py</span> drives the lifecycle in <code>_execute_sample</code>. Three guarantees hold:</p>
+        <ul>
+          <li><strong>The semaphore spans the whole episode.</strong> <code>async with self._semaphore</code> wraps <code>init → run → eval → cleanup</code>, capping live samples at <code>Resource.concurrency</code> — not turns.</li>
+          <li><strong>One placement token spans run and eval.</strong> Acquired before <code>run</code>, released in the <code>finally</code> after <code>cleanup</code>, so the patch and verification containers never double-count against a node's budget.</li>
+          <li><strong>Failures degrade to a masked dummy.</strong> Any exception marks the sample <code>ABORTED</code> with 2-token dummy data (<code>[0, 0]</code>, <code>remove_sample=True</code>, zero gradient); <code>classify_abort</code> buckets it and <code>_annotate_abort</code> attaches diagnostics (phase, elapsed vs. window, node IP).</li>
+        </ul>
+
+        <p>After <code>eval</code>, <code>_populate_token_data</code> lifts the token-level fields off <code>AgentResult</code> onto the <code>Sample</code> — what makes a trajectory trainable, whether captured natively or through the recording proxy.</p>
+
+        <h3>The multi-turn loop</h3>
+        <p>Inside <code>run()</code>, a native handler like <code>DAggerSWEAgent</code> (overriding <code>_agent_loop</code>) alternates policy generation with environment steps, tagging every token with a loss mask.</p>
+
+        <div class="diagram">
+          <svg viewBox="0 0 1200 410" role="img" aria-labelledby="ep-title" font-family="system-ui, sans-serif">
+            <title id="ep-title">The multi-turn episode loop</title>
+            <defs>
+              <marker id="ep-arr" viewBox="0 0 10 7" refX="9" refY="3.5" markerWidth="8" markerHeight="6" orient="auto"><path d="M0,0 L10,3.5 L0,7z" style="fill:var(--text-dim)"/></marker>
+              <marker id="ep-arr-g" viewBox="0 0 10 7" refX="9" refY="3.5" markerWidth="8" markerHeight="6" orient="auto"><path d="M0,0 L10,3.5 L0,7z" style="fill:var(--accent-green)"/></marker>
+              <marker id="ep-arr-r" viewBox="0 0 10 7" refX="9" refY="3.5" markerWidth="8" markerHeight="6" orient="auto"><path d="M0,0 L10,3.5 L0,7z" style="fill:var(--accent-red)"/></marker>
+            </defs>
+
+            <text x="600" y="24" text-anchor="middle" style="fill:var(--text)" font-size="15" font-weight="700">handler.run() — one turn of the episode loop</text>
+            <text x="600" y="42" text-anchor="middle" style="fill:var(--text-dim)" font-size="11">BaseAgent owns the interaction end-to-end; the Evaluator holds one placement token for the whole episode</text>
+
+            <!-- loop-back arrow (top) -->
+            <path d="M1092,150 V104 H354 V150" fill="none" style="stroke:var(--accent-green)" stroke-width="1.5" marker-end="url(#ep-arr-g)"/>
+            <text x="723" y="96" text-anchor="middle" style="fill:var(--accent-green)" font-size="11" font-weight="600">loop while turns &lt; max_turns</text>
+
+            <!-- pipeline boxes -->
+            <rect x="20" y="150" width="176" height="112" rx="10" fill="none" style="stroke:var(--border)" stroke-width="1.5"/>
+            <text x="108" y="178" text-anchor="middle" style="fill:var(--text)" font-size="13" font-weight="700">AgentContext</text>
+            <text x="108" y="200" text-anchor="middle" style="fill:var(--text-dim)" font-size="11">sglang_url · proxy_url</text>
+            <text x="108" y="218" text-anchor="middle" style="fill:var(--text-dim)" font-size="11">sampling_params</text>
+            <text x="108" y="236" text-anchor="middle" style="fill:var(--text-dim)" font-size="11">max_turns</text>
+            <text x="108" y="254" text-anchor="middle" style="fill:var(--text-dim)" font-size="11">max_context_len</text>
+
+            <rect x="266" y="150" width="176" height="112" rx="10" fill="none" style="stroke:var(--border)" stroke-width="1.5"/>
+            <text x="354" y="178" text-anchor="middle" style="fill:var(--text)" font-size="13" font-weight="700">SGLang server</text>
+            <text x="354" y="200" text-anchor="middle" style="fill:var(--text-dim)" font-size="11">generate(action)</text>
+            <text x="354" y="218" text-anchor="middle" style="fill:var(--text-dim)" font-size="11">student + teacher</text>
+            <text x="354" y="236" text-anchor="middle" style="fill:var(--text-dim)" font-size="11">token_ids + logprobs</text>
+
+            <rect x="512" y="150" width="176" height="112" rx="10" fill="none" style="stroke:var(--border)" stroke-width="1.5"/>
+            <text x="600" y="178" text-anchor="middle" style="fill:var(--text)" font-size="13" font-weight="700">TokenTracker</text>
+            <text x="600" y="200" text-anchor="middle" style="fill:var(--text-dim)" font-size="11">append_tokens(loss_mask)</text>
+            <text x="600" y="218" text-anchor="middle" style="fill:var(--text-dim)" font-size="11">1 = teacher action</text>
+            <text x="600" y="236" text-anchor="middle" style="fill:var(--text-dim)" font-size="11">0 = student / observation</text>
+
+            <rect x="758" y="150" width="176" height="112" rx="10" fill="none" style="stroke:var(--border)" stroke-width="1.5"/>
+            <text x="846" y="178" text-anchor="middle" style="fill:var(--text)" font-size="13" font-weight="700">RockSandbox</text>
+            <text x="846" y="200" text-anchor="middle" style="fill:var(--text-dim)" font-size="11">execute(action)</text>
+            <text x="846" y="218" text-anchor="middle" style="fill:var(--text-dim)" font-size="11">SWE-Bench container</text>
+            <text x="846" y="236" text-anchor="middle" style="fill:var(--text-dim)" font-size="11">→ observation (mask 0)</text>
+
+            <rect x="1004" y="150" width="176" height="112" rx="10" fill="none" style="stroke:var(--border)" stroke-width="1.5"/>
+            <text x="1092" y="178" text-anchor="middle" style="fill:var(--text)" font-size="13" font-weight="700">context check</text>
+            <text x="1092" y="200" text-anchor="middle" style="fill:var(--text-dim)" font-size="11">len &lt; max_context?</text>
+            <text x="1092" y="218" text-anchor="middle" style="fill:var(--text-dim)" font-size="11">finish? max_turns?</text>
+
+            <!-- between-box arrows -->
+            <line x1="196" y1="206" x2="266" y2="206" style="stroke:var(--text-dim)" stroke-width="1.5" marker-end="url(#ep-arr)"/>
+            <text x="231" y="196" text-anchor="middle" style="fill:var(--text-dim)" font-size="11" font-weight="600">context</text>
+            <line x1="442" y1="206" x2="512" y2="206" style="stroke:var(--text-dim)" stroke-width="1.5" marker-end="url(#ep-arr)"/>
+            <text x="477" y="196" text-anchor="middle" style="fill:var(--text-dim)" font-size="11" font-weight="600">tokens</text>
+            <line x1="688" y1="206" x2="758" y2="206" style="stroke:var(--text-dim)" stroke-width="1.5" marker-end="url(#ep-arr)"/>
+            <text x="723" y="196" text-anchor="middle" style="fill:var(--text-dim)" font-size="11" font-weight="600">action</text>
+            <line x1="934" y1="206" x2="1004" y2="206" style="stroke:var(--text-dim)" stroke-width="1.5" marker-end="url(#ep-arr)"/>
+            <text x="969" y="196" text-anchor="middle" style="fill:var(--text-dim)" font-size="11" font-weight="600">obs</text>
+
+            <!-- finish branch -->
+            <path d="M1072,262 V300 H267 V336" fill="none" style="stroke:var(--accent-green)" stroke-width="1.5" marker-end="url(#ep-arr-g)"/>
+            <text x="560" y="292" text-anchor="middle" style="fill:var(--accent-green)" font-size="11" font-weight="600">finish / done → eval</text>
+            <rect x="52" y="336" width="430" height="58" rx="10" fill="rgba(17,99,41,0.06)" style="stroke:var(--accent-green)" stroke-width="1.5"/>
+            <text x="267" y="360" text-anchor="middle" style="fill:var(--accent-green)" font-size="13" font-weight="700">handler.eval() → reward</text>
+            <text x="267" y="380" text-anchor="middle" style="fill:var(--text-dim)" font-size="11">SWE-Bench verify in a fresh sandbox · score 0/1</text>
+
+            <!-- overflow branch -->
+            <path d="M1112,262 V316 H775 V336" fill="none" style="stroke:var(--accent-red)" stroke-width="1.5" marker-end="url(#ep-arr-r)"/>
+            <text x="1104" y="296" text-anchor="end" style="fill:var(--accent-red)" font-size="11" font-weight="600">overflow</text>
+            <rect x="560" y="336" width="430" height="58" rx="10" fill="rgba(207,34,46,0.06)" style="stroke:var(--accent-red)" stroke-width="1.5"/>
+            <text x="775" y="360" text-anchor="middle" style="fill:var(--accent-red)" font-size="13" font-weight="700">tracker.rollback(n)</text>
+            <text x="775" y="380" text-anchor="middle" style="fill:var(--text-dim)" font-size="11">termination_reason = context_overflow</text>
+          </svg>
+          <p class="fig-caption">The per-turn loop. Rollback discards the tokens that would overflow the window and ends the episode cleanly rather than truncating mid-token.</p>
+        </div>
+
+        <div class="card cyan">
+          <h4>Where the loss mask comes from</h4>
+          <p>In DAgger rollins, teacher-executed action tokens get <code>loss_mask=1</code>; student actions and all tool observations get <code>0</code>. The two rollin protocols (per-turn β-mixture vs. AggreVaTe student-prefix) are selected by <code>STACX_DAGGER_SAMPLING_MODE</code>; how these masks become CE vs. K3 targets is §5 and <a href="recipes.html">Algorithm Recipes</a>.</p>
+        </div>
+      </section>
+
+      <!-- ── Section 4: The data path ── -->
+      <section>
+        <h2><span class="num">4</span> The Data Path</h2>
+        <p>Each prompt must reach the right handler with the right stopping criteria. Three pieces cooperate: <code>MultiDataSource</code> serves prompts, <code>DatasetEntry</code> / <code>EvalDatasetConfig</code> carry per-dataset overrides, and <code>task_type</code> routes each sample to an <code>EvaluatorSpec</code>.</p>
+
+        <h3>MultiDataSource</h3>
+        <p><span class="file-ref">multi_data_source.py</span> replaces slime's single-file <code>DataSource</code> so one rollout step can span heterogeneous task types. It serves datasets in <strong>FIFO order</strong> (dataset A exhausted before B). Per sample it deep-copies the prompt, stamps <code>metadata["task_type"]</code> and <code>metadata["_dataset_cfg"]</code> (the full <code>DatasetEntry</code>), and expands <code>n_samples_per_prompt</code> into a group.</p>
+
+        <p><code>parse_rollout_datasets_config</code> builds the <code>DatasetEntry</code> list from YAML; <code>resolve_dataset_path</code> anchors relative paths at the repo root (or <code>STACX_ROOT</code>).</p>
+
+        <pre><code><span class="cm"># --rollout-config YAML — parse_rollout_datasets_config()</span>
+rollout:
+  defaults:                  <span class="cm"># shared across datasets</span>
+    task_type: swe
+    max_context_len: 65536
+  datasets:
+    swe_gym_train:
+      path: data/swe/swe_gym_train_minus_val100.jsonl
+      input_key: prompt
+      label_key: instance_id
+    retool_math:
+      path: data/retool_math.jsonl
+      task_type: retool     <span class="cm"># overrides the default</span>
+      max_context_len: 32768</code></pre>
+
+        <div class="feature-grid">
+          <div class="feature-item">
+            <h4>Structural fields</h4>
+            <p><code>path</code>, <code>input_key</code>, <code>label_key</code>, <code>metadata_key</code>, <code>tool_key</code>, <code>task_type</code> — what loads and where it routes.</p>
+          </div>
+          <div class="feature-item">
+            <h4>Generation overrides</h4>
+            <p><code>temperature</code>, <code>top_p</code>, <code>top_k</code>, <code>max_response_len</code>, <code>max_turns</code>, <code>max_context_len</code> — <code>None</code> means "inherit".</p>
+          </div>
+          <div class="feature-item">
+            <h4>Rollout overrides</h4>
+            <p><code>n_samples_per_prompt</code>, <code>reward_key</code> — per-dataset sampling and scoring.</p>
+          </div>
+          <div class="feature-item">
+            <h4>EvalDatasetConfig</h4>
+            <p>The eval-side twin: slime's config plus <code>task_type</code>, <code>max_turns</code>, <code>max_context_len</code>.</p>
+          </div>
+        </div>
+
+        <h3>The 3-level cascade</h3>
+        <p>Generation parameters resolve from coarsest to finest, the per-dataset value winning:</p>
+        <div class="diagram">
+          <pre><code>CLI args      →      EvaluatorSpec.default_stopping      →      DatasetEntry / EvalDatasetConfig
+(coarsest)                                                                        (finest, wins)</code></pre>
+        </div>
+        <p>Resolved by the scheduler's <code>_resolve_stopping</code> (for <code>StoppingCriteria</code>) and the sampling-param builder; the <a href="rollout-scheduler.html">Task Scheduler</a> page documents it in full.</p>
+
+        <h3>Routing: task_type is the evaluator_id</h3>
+        <p>An <code>EvaluatorSpec</code> (<span class="file-ref">scheduler/evaluator.py</span>) is a blueprint: a <code>handler</code> (a <code>BaseAgent</code>), its resource model (<code>resource</code> / <code>run_resource</code> / <code>eval_resource</code>), an optional <code>batch_size</code>, and <code>default_stopping</code>. The scheduler selects one via <code>batch.task_type</code>, so <strong>a dataset's <code>task_type</code> must equal some spec's <code>evaluator_id</code></strong> or the batch has nowhere to run.</p>
+
+        <p>Specs come from a <code>build_evaluators(args)</code> factory (<code>list[EvaluatorSpec]</code>), loaded via <code>--evaluator-config-path</code> and wired into a <code>TaskScheduler</code> by <code>build_task_scheduler</code>.</p>
+
+        <pre><code><span class="cm"># rl_engine/examples/swe_agent/evaluator_config_dagger.py</span>
+<span class="kw">def</span> <span class="fn">build_evaluators</span>(args):
+    teacher = TeacherBackend(sglang_url=..., model_path=..., tools=SWE_TOOL_SPECS)
+    handler = DAggerSWEAgent(teacher_backend=teacher, max_turns=<span class="ar">100</span>, ...)
+    <span class="kw">return</span> [EvaluatorSpec(
+        evaluator_id=<span class="st">"swe"</span>,                     <span class="cm"># == dataset task_type</span>
+        handler=handler,
+        run_resource=Resource(cpu=<span class="ar">4</span>, memory_gb=<span class="ar">16</span>),   <span class="cm"># agent container</span>
+        eval_resource=Resource(cpu=<span class="ar">4</span>, memory_gb=<span class="ar">16</span>),  <span class="cm"># verification container</span>
+        default_stopping=StoppingCriteria(max_turns=<span class="ar">100</span>, max_context_len=<span class="ar">65536</span>),
+    )]</code></pre>
+      </section>
+
+      <!-- ── Section 5: Trajectory post-processing lanes ── -->
+      <section>
+        <h2><span class="num">5</span> Trajectory Post-Processing Lanes</h2>
+        <p>Once <code>execute_rollout()</code> returns raw trajectories, <code>_get_rollout_data</code> shapes them for the loss. The order is fixed — <strong>filter → route by algorithm → shape</strong> — with the lane chosen entirely by <code>args.algorithm</code>.</p>
+
+        <h3>Filters</h3>
+        <p>Two independent filters run before shaping, on the raw one-per-task trajectories:</p>
+        <div class="table-scroll"><table>
+          <tr><th>Filter</th><th>Env var</th><th>Keeps</th></tr>
+          <tr><td>Rejection sampling</td><td><code>STACX_REJECTION_SAMPLING</code></td><td><code>reward &gt; 0</code>. Modes: <code>all</code> / <code>warmup_only</code> (only while β hasn't started decaying) / <code>none</code> (default).</td></tr>
+          <tr><td>Finish-only</td><td><code>STACX_FINISH_ONLY_FILTER</code></td><td><code>termination_reason == "finish"</code> — drops <code>context_overflow</code>, <code>action_budget</code>, loops, <code>max_turns</code>. The launch scripts default this on.</td></tr>
+        </table></div>
+        <p>They compose: rejection first, finish-only on the survivors. If a filter empties the batch, <code>_get_rollout_data</code> returns one masked dummy so logging never trips on an empty rollout.</p>
+
+        <h3>The algorithm fork</h3>
+        <p><code>_maybe_apply_per_token_capture</code> is the switch: per-token-loss algorithms capture teacher logprobs and return immediately (<strong>no chunk expansion</strong>); everything else falls through to CE-only expansion.</p>
+        <div class="table-scroll"><table>
+          <tr><th><code>args.algorithm</code></th><th>Lane</th><th>Shape</th></tr>
+          <tr><td><code>on_policy_distillation</code> (OPD)</td><td><code>_apply_distillation_capture</code></td><td>1 trajectory → 1 packed sample; K3 reverse-KL on student action tokens.</td></tr>
+          <tr><td><code>mixture_dagger_opd</code> · <code>mixture_aggrevate_opd</code></td><td><code>_apply_mixed_loss_dagger_opd_capture</code></td><td>1 trajectory → 1 packed sample; per-token mixed CE/K3 via a sentinel.</td></tr>
+          <tr><td>otherwise (CE-only online-DAgger SFT)</td><td><code>_build_trajectory_sft_samples</code></td><td>1 trajectory → M+1 chunked SFT sub-samples.</td></tr>
+        </table></div>
+
+        <h4>Teacher force-decode capture (per-token lanes)</h4>
+        <p>Both per-token lanes call <code>capture_teacher_logprobs_for_samples</code> (<span class="file-ref">distill_capture.py</span>): kept trajectories are force-decoded through the teacher SGLang server with <code>top_logprobs_num=K</code>, yielding the teacher's chosen-token logprob at each response position. That pins <code>sample.teacher_log_probs</code> and overwrites <code>sample.loss_mask</code> with the action mask, so the loss reduces only over student action tokens.</p>
+        <p>The <strong>mixed CE/K3</strong> lane snapshots the agent's per-token is-teacher mask, then overwrites <code>teacher_log_probs</code> with a <code>+1.0</code> <em>sentinel</em> at teacher positions. Real SGLang logprobs are always <code>≤ 0</code>, so the kernel reads the sign — <code>&gt; 0 ⇒ CE</code>, <code>≤ 0 ⇒ K3</code> — meaning β=1.0 is pure CE (≡ legacy online-DAgger) and β=0.0 pure K3 (≡ OPD). The loss kernel lives in <span class="file-ref">rl_engine/trainer/specialization/mixed_loss_dagger.py</span> — see <a href="recipes.html">Algorithm Recipes</a>.</p>
+
+        <h4>DAgger trajectory-SFT sub-samples (CE-only lane)</h4>
+        <p>The chunk-expansion lane (<code>_build_trajectory_sft_samples</code>) is the older CE-only path: each trajectory with M student-executed turns becomes up to M+1 plain-CE SFT sub-samples, driven by the <code>_student_cut_points</code> metadata.</p>
+        <div class="table-scroll"><table>
+          <tr><th><code>_subsample_kind</code></th><th>When</th><th>What it trains</th></tr>
+          <tr><td><code>dagger_pair</code></td><td>one per valid student cut</td><td>prefix up to the student's action, with the student's action <em>replaced</em> by the teacher relabel tokens (all mask=1) plus any teacher actions in the preceding gap.</td></tr>
+          <tr><td><code>trailing_chunk</code></td><td>teacher turns after the last student cut</td><td>the full trajectory, masked to only the trailing teacher actions.</td></tr>
+          <tr><td><code>teacher_only_trajectory</code></td><td>no cut points (β=1.0, or a legacy <code>.pt</code>)</td><td>the whole trajectory verbatim — the one case where 1 trajectory = 1 sample.</td></tr>
+        </table></div>
+        <p>A per-trajectory buffer makes the drop atomic — if any sub-sample exceeds <code>max_seq_len</code> the <em>whole</em> trajectory is discarded (semantics pinned by <span class="file-ref">tests/rollout/test_trajectory_sft_samples.py</span>). A deterministic per-iter shuffle (<code>STACX_SHUFFLE_SEED_BASE</code>) de-clusters sibling chunks; optional dynamic GBS scaling (<code>STACX_TASKS_PER_GRAD_STEP</code>) holds tasks-per-step constant as chunks grow.</p>
+
+        <h3>Termination taxonomy &amp; per-iter summary</h3>
+        <p><span class="file-ref">termination_summary.py</span> classifies outcomes. <code>classify_termination(reward, termination_reason)</code> maps every trajectory into one of eight classes; <code>write_summary</code> aggregates a pass into a <code>summary.json</code> with per-dataset counts and a per-task list.</p>
+        <div class="table-scroll"><table>
+          <tr><th>Class</th><th>Meaning</th></tr>
+          <tr><td><code>solved</code></td><td><code>reward == 1.0</code>.</td></tr>
+          <tr><td><code>finish_unresolved</code></td><td>agent called <code>finish</code> but the answer was wrong.</td></tr>
+          <tr><td><code>loop</code></td><td><code>repeated_action_loop</code>.</td></tr>
+          <tr><td><code>ctx_overflow</code></td><td><code>context_overflow</code>.</td></tr>
+          <tr><td><code>budget</code></td><td><code>action_budget</code> or <code>max_turns</code>.</td></tr>
+          <tr><td><code>timeout</code></td><td>aborted on the agent window or a sandbox/request timeout (<code>classify_abort → agent_timeout</code>).</td></tr>
+          <tr><td><code>infra</code></td><td>aborted on a sandbox/transport error, not a model outcome (<code>infra_conn</code> / <code>infra_sandbox</code> / <code>infra_other</code>).</td></tr>
+          <tr><td><code>other</code></td><td>any unrecognized <code>termination_reason</code>.</td></tr>
+        </table></div>
+
+        <h3>Analysis dumps</h3>
+        <p>Three optional, best-effort dumps capture token-level data for offline analysis. All are atomic (tmp + <code>os.replace</code>) and swallow failures so they can never abort training:</p>
+        <ul>
+          <li><strong>OPD discrepancy dump</strong> (<code>STACX_DISTILL_DUMP_DIR</code>) — per-iter <code>.pt</code> with the exact <code>(teacher, student)</code> logprob pair the K3 estimator consumes, plus the <code>action_mask</code>.</li>
+          <li><strong>Mixed-loss dump</strong> (<code>STACX_MIXED_LOSS_DAGGER_DUMP_DIR</code>) — the sentinel'd <code>teacher_log_probs</code> and the original is-teacher mask, so tools can split CE vs. K3 per position.</li>
+          <li><strong>Per-iter student dump</strong> (<code>STACX_KL_DUMP_DIR</code>, <span class="file-ref">kl_eval_cache.py</span>) — <code>dump_samples_from_eval</code> writes one <code>.pt</code> per finished eval task (tokens, loss_mask, rollout logprobs, reward) plus a <code>manifest.json</code>; armed by default in the launch scripts.</li>
+        </ul>
+      </section>
+
+      <!-- ── Section 6: Env-var knobs ── -->
+      <section>
+        <h2><span class="num">6</span> Rollout-Layer Env Knobs</h2>
+        <p>The <code>STACX_*</code> variables read inside <code>rollout_manager.py</code> and <code>scheduler/task_scheduler.py</code> — the rollout-layer slice of the full catalog (with launch-script defaults) in <span class="file-ref">scripts/train/swe/ENV_REFERENCE.md</span>.</p>
+
+        <h3>Data path &amp; filters</h3>
+        <div class="table-scroll"><table>
+          <tr><th>Env var</th><th>Default</th><th>Effect</th></tr>
+          <tr><td><code>STACX_FINISH_ONLY_FILTER</code></td><td><code>0</code> (scripts set <code>1</code>)</td><td>Keep only <code>termination_reason == "finish"</code>.</td></tr>
+          <tr><td><code>STACX_REJECTION_SAMPLING</code></td><td><code>none</code></td><td>Keep <code>reward &gt; 0</code>: <code>all</code> / <code>warmup_only</code> / <code>none</code>.</td></tr>
+          <tr><td><code>STACX_SHUFFLE_SEED</code></td><td><code>0</code></td><td>Per-experiment dataset shuffle seed in <code>MultiDataSource</code>.</td></tr>
+          <tr><td><code>STACX_SHUFFLE_SEED_BASE</code></td><td><code>42</code></td><td>Base for the per-iter sub-sample shuffle (<code>+ rollout_id</code>).</td></tr>
+          <tr><td><code>STACX_TASKS_PER_GRAD_STEP</code></td><td><span class="file-ref">unset</span></td><td>Dynamic GBS: scale <code>global_batch_size</code> to hold tasks/step constant as chunks/trajectory grows.</td></tr>
+          <tr><td><code>STACX_REUSE_ROLLOUT</code> · <code>STACX_FORCE_FRESH_ROLLOUT</code></td><td><code>0</code></td><td>Load the saved trajectory <code>.pt</code> (multi-epoch) vs. force a fresh rollout every iter (true iterative DAgger).</td></tr>
+          <tr><td><code>STACX_SAVE_PER_ITER_PT</code></td><td><code>1</code></td><td>Also write a per-iter <code>trajectory_sft_samples_iter_NNN.pt</code> snapshot.</td></tr>
+          <tr><td><code>STACX_ROOT</code> · <code>DAGGER_OUTPUT_DIR</code></td><td>repo root · <code>/tmp/dagger_data</code></td><td>Dataset-path anchor · trajectory <code>.pt</code> + JSON debug dumps.</td></tr>
+        </table></div>
+
+        <h3>Teacher force-decode capture</h3>
+        <div class="table-scroll"><table>
+          <tr><th>Env var</th><th>Default</th><th>Effect</th></tr>
+          <tr><td><code>TEACHER_SGLANG_URL</code></td><td><span class="file-ref">required (OPD/mixed)</span></td><td>Teacher SGLang server for force-decoding student action tokens.</td></tr>
+          <tr><td><code>STACX_DISTILL_TOPK</code></td><td><code>20</code></td><td>Top-K logprobs captured per token (K3 uses the chosen logprob).</td></tr>
+          <tr><td><code>STACX_DISTILL_TEACHER_CONCURRENCY</code></td><td><code>4</code></td><td>Concurrent teacher force-decode requests.</td></tr>
+          <tr><td><code>STACX_DISTILL_TEACHER_RETRIES</code></td><td><code>5</code></td><td>Retry attempts per force-decode request.</td></tr>
+          <tr><td><code>STACX_DISTILL_TEACHER_BASE_DELAY</code></td><td><code>2.0</code></td><td>Exponential-backoff base delay (seconds).</td></tr>
+        </table></div>
+
+        <h3>Analysis dumps</h3>
+        <div class="table-scroll"><table>
+          <tr><th>Env var</th><th>Default</th><th>Effect</th></tr>
+          <tr><td><code>STACX_DISTILL_DUMP_DIR</code></td><td><span class="file-ref">empty = off</span></td><td>OPD per-iter teacher↔student discrepancy dump.</td></tr>
+          <tr><td><code>STACX_MIXED_LOSS_DAGGER_DUMP_DIR</code></td><td><span class="file-ref">empty = off</span></td><td>Mixed-loss per-iter dump (sentinel + is-teacher mask).</td></tr>
+          <tr><td><code>STACX_KL_DUMP_DIR</code></td><td><span class="file-ref">empty; scripts arm it</span></td><td>Per-iter student eval-trajectory dump.</td></tr>
+          <tr><td><code>STACX_KL_DUMP_DATASET</code> · <code>STACX_KL_DUMP_FORCE_LABEL</code></td><td><span class="file-ref">unset</span></td><td>Restrict the student dump to one eval dataset · override its label.</td></tr>
+        </table></div>
+
+        <div class="card red">
+          <h4>Do not set these by hand</h4>
+          <p><code>STACX_ROLLOUT_ID</code>, <code>STACX_DAGGER_BETA</code>, and <code>STACX_DAGGER_TAIL_T</code> are written per-iter by <span class="file-ref">scheduler/task_scheduler.py</span> from the DAgger schedule. Setting them manually is overwritten and can corrupt the schedule — see ENV_REFERENCE §C.</p>
+        </div>
+      </section>
+
+      <!-- ── Section 7: Go deeper ── -->
+      <section>
+        <h2><span class="num">7</span> Where To Go Next</h2>
+        <div class="callout-grid">
+          <div class="callout">
+            <h4>Task Scheduler</h4>
+            <p><a href="rollout-scheduler.html">rollout-scheduler.html</a> — batching strategies, the <code>PlacementPool</code> allocator, the batch lifecycle, task state machine, and the multi-dataset param cascade.</p>
+          </div>
+          <div class="callout">
+            <h4>Inference Backend</h4>
+            <p><a href="rollout-inference.html">rollout-inference.html</a> — SGLang serving, weight sync (inject vs. exchange), the onload/offload lifecycle, and CUDA-graph / KV-cache memory management.</p>
+          </div>
+          <div class="callout">
+            <h4>Sandbox Management</h4>
+            <p><a href="env-sandbox.html">env-sandbox.html</a> and <a href="environment.html">environment.html</a> — the ROCK sandbox lifecycle behind <code>RockSandbox</code> that every episode steps against.</p>
+          </div>
+          <div class="callout">
+            <h4>Algorithm Recipes</h4>
+            <p><a href="recipes.html">recipes.html</a> — how the CE/K3 masks and sentinels from §5 become the mixed-loss DAgger, AggreVaTe, OPD, GRPO, and iter-SFT objectives.</p>
+          </div>
+        </div>
+      </section>
+
+    </div><!-- .main-content -->
+  </div><!-- .layout -->
+<button class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark mode">Dark</button>
+<script>
+(function() {
+  var toggle = document.getElementById('themeToggle');
+  var saved = localStorage.getItem('stacx-theme');
+  if (saved === 'dark') {
+    document.documentElement.setAttribute('data-theme', 'dark');
+    toggle.textContent = 'Light';
+  }
+  toggle.addEventListener('click', function() {
+    var current = document.documentElement.getAttribute('data-theme');
+    if (current === 'dark') {
+      document.documentElement.removeAttribute('data-theme');
+      toggle.textContent = 'Dark';
+      localStorage.setItem('stacx-theme', 'light');
+    } else {
+      document.documentElement.setAttribute('data-theme', 'dark');
+      toggle.textContent = 'Light';
+      localStorage.setItem('stacx-theme', 'dark');
+    }
+  });
+})();
+</script>
+<script>
+(function(){
+  var nav=document.getElementById('docsNav'),btn=document.querySelector('.nav-toggle');
+  if(!nav||!btn)return;
+  btn.addEventListener('click',function(e){e.stopPropagation();var open=nav.getAttribute('data-open')==='true';nav.setAttribute('data-open',String(!open));btn.setAttribute('aria-expanded',String(!open));});
+  document.addEventListener('click',function(e){if(nav.getAttribute('data-open')==='true'&&!nav.contains(e.target))nav.setAttribute('data-open','false');});
+})();
+</script>
+</body>
+</html>

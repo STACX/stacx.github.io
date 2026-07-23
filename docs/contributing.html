@@ -1,0 +1,1119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>How to Contribute — STACX Documentation</title>
+  <style>
+/* STACX Documentation — Shared Stylesheet */
+
+:root {
+  --bg: #ffffff;
+  --surface: #f6f8fa;
+  --surface2: #eaeef2;
+  --border: #d1d9e0;
+  --text: #1f2328;
+  --text-dim: #57606a;
+  --accent-blue: #0550ae;
+  --accent-green: #116329;
+  --accent-orange: #953800;
+  --accent-purple: #6e40c9;
+  --accent-red: #cf222e;
+  --accent-cyan: #0c5a6d;
+  --nav-width: 260px;
+}
+
+[data-theme="dark"] {
+  --bg: #0d1117;
+  --surface: #161b22;
+  --surface2: #1c2128;
+  --border: #30363d;
+  --text: #e6edf3;
+  --text-dim: #8b949e;
+  --accent-blue: #58a6ff;
+  --accent-green: #3fb950;
+  --accent-orange: #d29922;
+  --accent-purple: #bc8cff;
+  --accent-red: #f85149;
+  --accent-cyan: #56d4dd;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', system-ui, sans-serif;
+  line-height: 1.6;
+}
+
+.nav-sidebar {
+  position: fixed;
+  top: 0; left: 0;
+  width: var(--nav-width);
+  height: 100vh;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  padding: 24px 0;
+  overflow-y: auto;
+  z-index: 100;
+}
+
+.nav-logo {
+  padding: 0 20px;
+  margin-bottom: 24px;
+}
+
+.nav-logo h2 {
+  font-size: 18px;
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.nav-logo .version {
+  font-size: 11px;
+  color: var(--text-dim);
+  margin-top: 2px;
+}
+
+.nav-section {
+  padding: 0 12px;
+  margin-bottom: 8px;
+}
+
+.nav-section-title {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--text-dim);
+  padding: 8px 8px 4px 8px;
+}
+
+.nav-link {
+  display: block;
+  padding: 6px 12px;
+  border-radius: 6px;
+  color: var(--text-dim);
+  text-decoration: none;
+  font-size: 13px;
+  transition: all 0.15s;
+}
+
+.nav-link:hover {
+  background: var(--surface2);
+  color: var(--text);
+}
+
+.nav-link.active {
+  background: rgba(56, 139, 253, 0.12);
+  color: var(--accent-blue);
+  font-weight: 500;
+}
+
+.main-content {
+  margin-left: var(--nav-width);
+  padding: 48px 48px 80px 48px;
+  max-width: 1100px;
+}
+
+h1 {
+  font-size: 32px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.page-subtitle {
+  color: var(--text-dim);
+  font-size: 15px;
+  margin-bottom: 40px;
+}
+
+h2 {
+  font-size: 22px;
+  font-weight: 600;
+  margin: 48px 0 16px 0;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+h2 .num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--accent-blue);
+  color: var(--bg);
+  font-size: 14px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+h3 {
+  font-size: 17px;
+  font-weight: 600;
+  margin: 28px 0 10px 0;
+  color: var(--accent-blue);
+}
+
+h4 {
+  font-size: 14px;
+  font-weight: 600;
+  margin: 16px 0 6px 0;
+  color: var(--accent-green);
+}
+
+p { margin-bottom: 12px; font-size: 14px; }
+
+ul, ol {
+  margin: 8px 0 16px 24px;
+  font-size: 14px;
+}
+
+li { margin-bottom: 4px; }
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 20px 24px;
+  margin-bottom: 16px;
+}
+
+.card.blue   { border-left: 3px solid var(--accent-blue); }
+.card.green  { border-left: 3px solid var(--accent-green); }
+.card.orange { border-left: 3px solid var(--accent-orange); }
+.card.purple { border-left: 3px solid var(--accent-purple); }
+.card.red    { border-left: 3px solid var(--accent-red); }
+.card.cyan   { border-left: 3px solid var(--accent-cyan); }
+
+.card h4 { margin-top: 0; }
+.card p:last-child { margin-bottom: 0; }
+
+.callout-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px;
+  margin: 16px 0 24px 0;
+}
+
+.callout {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.callout h4 {
+  font-size: 14px;
+  font-weight: 600;
+  margin: 0 0 4px 0;
+}
+
+.callout p {
+  font-size: 13px;
+  color: var(--text-dim);
+  margin: 0;
+}
+
+code {
+  font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+  font-size: 12px;
+  background: rgba(110, 118, 129, 0.15);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+pre {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px 20px;
+  overflow-x: auto;
+  margin: 12px 0 20px 0;
+  font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.tag {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.tag-blue   { background: rgba(56, 139, 253, 0.15); color: var(--accent-blue); }
+.tag-green  { background: rgba(63, 185, 80, 0.15); color: var(--accent-green); }
+.tag-orange { background: rgba(210, 153, 34, 0.15); color: var(--accent-orange); }
+.tag-purple { background: rgba(188, 140, 255, 0.15); color: var(--accent-purple); }
+.tag-red    { background: rgba(248, 81, 73, 0.15); color: var(--accent-red); }
+.tag-cyan   { background: rgba(86, 212, 221, 0.15); color: var(--accent-cyan); }
+
+.contrib-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 24px 28px;
+  margin-bottom: 20px;
+}
+
+.contrib-card h4 {
+  font-size: 16px;
+  font-weight: 700;
+  margin: 0 0 6px 0;
+}
+
+.contrib-card .entry-point {
+  font-size: 13px;
+  color: var(--text-dim);
+  margin-bottom: 10px;
+}
+
+.contrib-card .details {
+  font-size: 13px;
+  margin-bottom: 0;
+}
+
+.contrib-card ul {
+  margin: 8px 0 0 20px;
+  font-size: 13px;
+}
+
+.contrib-card li {
+  margin-bottom: 3px;
+}
+
+.difficulty {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-left: 8px;
+}
+
+.difficulty.starter  { background: rgba(63,185,80,0.15); color: var(--accent-green); }
+.difficulty.intermediate { background: rgba(56,139,253,0.15); color: var(--accent-blue); }
+.difficulty.advanced { background: rgba(188,140,255,0.15); color: var(--accent-purple); }
+.difficulty.expert   { background: rgba(248,81,73,0.15); color: var(--accent-red); }
+
+/* ── Module Roadmap Detail Sections ──────────────────── */
+
+.module-detail {
+  margin: 28px 0 36px 0;
+  padding: 24px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+
+.module-title {
+  font-size: 20px;
+  font-weight: 700;
+  margin: 0 0 6px 0 !important;
+  border-bottom: none !important;
+}
+
+.module-detail > p {
+  font-size: 13px;
+  color: var(--text-dim);
+  margin-bottom: 18px;
+}
+
+.module-phases {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.module-phase-card {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-left: 4px solid;
+  border-radius: 8px;
+  padding: 16px 18px;
+}
+
+.module-phase-tag {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 6px;
+}
+
+.module-phase-card h4 {
+  font-size: 15px;
+  font-weight: 700;
+  margin: 0 0 8px 0;
+  color: var(--text);
+}
+
+.module-phase-card ul {
+  margin: 0 0 0 16px;
+  padding: 0;
+  font-size: 12px;
+  color: var(--text-dim);
+}
+
+.module-phase-card li {
+  margin-bottom: 4px;
+  line-height: 1.5;
+}
+
+@media (max-width: 900px) {
+  .nav-sidebar { display: none; }
+  .main-content { margin-left: 0; padding: 24px; }
+  .module-phases {
+    grid-template-columns: 1fr;
+  }
+}
+
+.theme-toggle {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  z-index: 200;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 6px 12px;
+  color: var(--text);
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+.theme-toggle:hover {
+  background: var(--surface2);
+  border-color: var(--accent-blue);
+}
+  /* shared: readable content links in both themes */
+.main-content a, .main-content a code { color: var(--accent-blue); }
+.main-content a:hover { color: var(--accent-cyan); }
+
+/* ── Refinement layer: typography, response, materials ── */
+
+html { scroll-behavior: smooth; scroll-padding-top: 24px; }
+
+body {
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  font-optical-sizing: auto;
+}
+
+::selection { background: rgba(56, 139, 253, 0.22); }
+
+/* Type — size-specific tracking and leading */
+h1 {
+  background: none;
+  -webkit-text-fill-color: var(--text);
+  color: var(--text);
+  letter-spacing: -0.022em;
+  line-height: 1.15;
+  text-wrap: balance;
+}
+h2 { letter-spacing: -0.015em; text-wrap: balance; }
+h3 { letter-spacing: -0.008em; }
+p { font-size: 14.5px; line-height: 1.65; }
+ul, ol { font-size: 14.5px; }
+li { line-height: 1.6; }
+.page-subtitle { font-size: 16px; text-wrap: pretty; }
+
+/* Quieter chrome — tint instead of fill, neutral table headers */
+h2 .num {
+  background: rgba(56, 139, 253, 0.13);
+  color: var(--accent-blue);
+  font-weight: 650;
+}
+th {
+  color: var(--text-dim);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+table { font-variant-numeric: tabular-nums; }
+
+/* Gentle depth on resting surfaces */
+.card, .diagram, .comparison-col { box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04); }
+
+/* Response — feedback on press, not just hover */
+.nav-link, .theme-toggle, .hero-card, .view-toggle-btn {
+  transition: background 0.15s ease-out, color 0.15s ease-out,
+              border-color 0.15s ease-out, transform 0.15s ease-out;
+}
+.nav-link:active, .view-toggle-btn:active { transform: scale(0.98); transition-duration: 0.05s; }
+.theme-toggle:active { transform: scale(0.96); transition-duration: 0.05s; }
+.hero-card:active { transform: translateY(0) scale(0.99); transition-duration: 0.05s; }
+.main-content a:active { opacity: 0.65; }
+
+:focus-visible { outline: 2px solid var(--accent-blue); outline-offset: 2px; border-radius: 4px; }
+
+.nav-sidebar { scrollbar-width: thin; }
+
+/* Floating chrome reads as material — content scrolls beneath it */
+.theme-toggle {
+  background: color-mix(in srgb, var(--surface) 72%, transparent);
+  backdrop-filter: blur(12px) saturate(180%);
+  -webkit-backdrop-filter: blur(12px) saturate(180%);
+  box-shadow: 0 1px 3px rgba(16, 24, 40, 0.07);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { transition-duration: 0.01ms !important; animation: none !important; }
+}
+@media (prefers-reduced-transparency: reduce) {
+  .theme-toggle {
+    background: var(--surface);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+}
+
+/* ── Refinement layer v2: beauty pass ── */
+
+/* Sidebar — calmer rhythm, tactile links */
+.nav-sidebar { padding: 20px 0 28px; }
+.nav-sidebar::-webkit-scrollbar { width: 8px; }
+.nav-sidebar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+.nav-logo { padding: 4px 20px 0; margin-bottom: 20px; }
+.nav-section { margin-bottom: 14px; }
+.nav-section-title { padding: 10px 10px 6px; }
+.nav-link { padding: 6px 10px; border-radius: 7px; }
+.nav-link.active { font-weight: 600; }
+
+/* Section rules — the divider fades out instead of cutting across */
+h2 { border-bottom: none; padding-bottom: 10px; position: relative; margin-top: 52px; }
+h2::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 1px;
+  background: linear-gradient(90deg, var(--border) 55%, transparent);
+}
+
+/* Surfaces — rounder, softer */
+.card, .diagram, .comparison-col { border-radius: 12px; }
+pre, .callout { border-radius: 10px; }
+
+/* Tables — enclosed, rounded, quiet */
+table {
+  border-collapse: separate; border-spacing: 0;
+  border: 1px solid var(--border); border-radius: 10px; overflow: hidden;
+}
+th { background: var(--surface); border-bottom: 1px solid var(--border); padding: 10px 14px; }
+td { padding: 9px 14px; }
+tr:last-child td { border-bottom: none; }
+th:first-child { border-top-left-radius: 9px; }
+th:last-child { border-top-right-radius: 9px; }
+tr:last-child td:first-child { border-bottom-left-radius: 9px; }
+tr:last-child td:last-child { border-bottom-right-radius: 9px; }
+
+/* Floating toggle as a pill */
+.theme-toggle { border-radius: 999px; padding: 7px 14px; font-weight: 600; }
+
+/* Landing hero — faint atmospheric wash, icon chips, deeper card lift */
+.hero { position: relative; }
+.hero::before {
+  content: ""; position: absolute; inset: -48px -80px 0; z-index: -1; pointer-events: none;
+  background:
+    radial-gradient(55% 45% at 50% 0%, rgba(56, 139, 253, 0.07), transparent 70%),
+    radial-gradient(35% 35% at 82% 12%, rgba(188, 140, 255, 0.05), transparent 70%);
+}
+.hero h1 { font-size: 54px; letter-spacing: -0.03em; }
+.hero .tagline { font-size: 19px; text-wrap: pretty; }
+.hero-card {
+  border-radius: 14px; padding: 26px 24px;
+  box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04);
+}
+.hero-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 28px rgba(16, 24, 40, 0.08);
+}
+.hero-card .icon {
+  width: 46px; height: 46px; display: inline-grid; place-items: center;
+  background: var(--surface2); border-radius: 12px;
+  font-size: 22px; margin-bottom: 14px;
+}
+
+/* ── Refinement v3: professional pass (external design review) ── */
+
+html { color-scheme: light; }
+[data-theme="dark"] { color-scheme: dark; }
+
+/* Type scale — larger, less compressed */
+body { font-size: 15.5px; }
+p, ul, ol { font-size: inherit; }
+h1 { font-size: 36px; line-height: 1.12; }
+h2 { font-size: 23px; margin: 56px 0 20px; }
+h3 { font-size: 18px; margin: 32px 0 12px; }
+h4 { font-size: 15px; }
+.page-subtitle { font-size: 17px; line-height: 1.55; max-width: 70ch; margin-bottom: 48px; }
+
+/* One accent — headings are neutral ink */
+h3, h4 { color: var(--text); }
+
+/* Code — relative inline sizing, comfortable blocks */
+code { font-size: 0.875em; padding: 0.12em 0.35em; border-radius: 4px; }
+pre { font-size: 13.5px; line-height: 1.55; padding: 18px 20px; tab-size: 2; }
+pre code { font-size: inherit; padding: 0; }
+
+/* Tables scroll instead of squeezing */
+.table-scroll { overflow-x: auto; margin: 12px 0 24px; border: 1px solid var(--border); border-radius: 10px; }
+.table-scroll table { min-width: 640px; margin: 0; border: 0; }
+td { vertical-align: top; line-height: 1.55; }
+
+/* Diagrams — legible labels, editorial captions */
+.diagram svg, .arch-diagram svg { display: block; width: 100%; height: auto; }
+.diagram svg text[font-size="9"], .diagram svg text[font-size="10"],
+.arch-diagram svg text[font-size="9"], .arch-diagram svg text[font-size="10"] { font-size: 11px; }
+.fig-caption { font-style: normal; text-align: left; font-size: 12.5px; margin: 10px 0 12px; max-width: none; }
+
+/* Landing hero actions + icon chips */
+.hero-actions { display: flex; justify-content: center; gap: 10px; margin: 26px 0 8px; }
+.main-content a.button-primary, .main-content a.button-secondary {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 9px 16px; border-radius: 8px; font-size: 14px; font-weight: 600; text-decoration: none;
+  transition: background 0.15s ease-out, border-color 0.15s ease-out,
+              filter 0.15s ease-out, transform 0.15s ease-out;
+}
+.main-content a.button-primary { background: var(--accent-blue); color: #fff; }
+.main-content a.button-primary:hover { filter: brightness(1.1); color: #fff; }
+.main-content a.button-secondary { border: 1px solid var(--border); background: var(--surface); color: var(--text); }
+.main-content a.button-secondary:hover { border-color: var(--accent-blue); color: var(--text); }
+.main-content a.button-primary:active, .main-content a.button-secondary:active { transform: scale(0.97); }
+.hero-card .icon svg { width: 22px; height: 22px; color: var(--accent-blue); }
+
+/* Mobile navigation — header + slide-in sidebar */
+.mobile-header { display: none; }
+@media (max-width: 900px) {
+  .mobile-header {
+    display: flex; position: sticky; top: 0; z-index: 220; height: 52px;
+    align-items: center; justify-content: space-between; padding: 0 16px;
+    background: var(--bg);
+    background: color-mix(in srgb, var(--bg) 88%, transparent);
+    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+  .mobile-header .mh-brand { font-weight: 700; font-size: 16px; color: var(--text); text-decoration: none; }
+  .nav-toggle {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+    padding: 6px 14px; font: inherit; font-size: 13.5px; font-weight: 600;
+    color: var(--text); cursor: pointer;
+  }
+  .nav-sidebar {
+    display: block; z-index: 240; transform: translateX(-100%);
+    transition: transform 200ms cubic-bezier(0.23, 1, 0.32, 1);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.18);
+  }
+  .nav-sidebar[data-open="true"] { transform: none; }
+  .mobile-header ~ .theme-toggle { top: 62px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .nav-sidebar { transition: none; }
+}
+
+/* ── Coding font + chromeless figures ── */
+code, pre, .code-ref {
+  font-family: ui-monospace, "SF Mono", Menlo, "JetBrains Mono", "Fira Code", Consolas, monospace;
+}
+.diagram, .arch-diagram { background: none; border: none; box-shadow: none; padding: 12px 0; }
+
+/* ── Lighter surfaces for code blocks and callouts ── */
+pre, .callout {
+  background: var(--surface);
+  background: color-mix(in srgb, var(--surface) 55%, var(--bg));
+}
+</style>
+<script>try{if(localStorage.getItem('stacx-theme')==='dark')document.documentElement.setAttribute('data-theme','dark');}catch(e){}</script>
+</head>
+<body>
+<header class="mobile-header"><a class="mh-brand" href="index.html">STACX</a><button class="nav-toggle" type="button" aria-controls="docsNav" aria-expanded="false">Menu</button></header>
+  <div class="layout">
+    <nav class="nav-sidebar" id="docsNav">
+      <div class="nav-logo">
+        <h2>STACX</h2>
+        <div class="version">v1.0 Documentation</div>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Overview</div>
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="getting-started.html" class="nav-link">Getting Started</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Trainer</div>
+        <a href="architecture.html" class="nav-link">Architecture</a>
+        <a href="backends.html" class="nav-link">Backends</a>
+        <a href="recipes.html" class="nav-link">Algorithm Recipes</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Rollout</div>
+        <a href="rollout.html" class="nav-link">Architecture</a>
+        <a href="rollout-scheduler.html" class="nav-link">Task Scheduler</a>
+        <a href="rollout-inference.html" class="nav-link">Inference Backend</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Environment</div>
+        <a href="environment.html" class="nav-link">Architecture</a>
+        <a href="env-sandbox.html" class="nav-link">Sandbox Management</a>
+      </div>
+    </nav>
+
+    <div class="main-content">
+      <div class="page-header">
+        <h1>How to Contribute</h1>
+        <p class="page-subtitle">How to contribute to STACX, key architectural design decisions, and validation experiments.</p>
+      </div>
+
+      <!-- ══════════════════════════════════════════════════════════
+           Section 1: Module Roadmaps (detailed per-pillar breakdown)
+           ══════════════════════════════════════════════════════════ -->
+      <section>
+        <h2><span class="num">1</span> Module Roadmaps</h2>
+        <p>Detailed development trajectory for each framework pillar, showing how capabilities evolve across phases. Each module below maps directly to contribution areas in Section 2.</p>
+
+        <!-- Training Engine -->
+        <div class="module-detail">
+          <h3 class="module-title">Training Engine</h3>
+          <p><code>rl_engine/trainer/</code> &mdash; Three-layer architecture: StacxTrainer &rarr; RoleWorkers &rarr; TrainBackend + ModelSpecialization</p>
+          <div class="module-phases">
+            <div class="module-phase-card" style="border-left-color:var(--accent-green);">
+              <div class="module-phase-tag" style="background:rgba(63,185,80,0.15); color:var(--accent-green);">Phase 1</div>
+              <h4>Foundation</h4>
+              <ul>
+                <li>Dual-backend architecture: Megatron-LM (TP/PP/DP/CP) and PyTorch FSDP v2</li>
+                <li>Weight sync to SGLang inference engines via <code>inject</code> (Ray) and <code>exchange</code> (NCCL)</li>
+                <li>Checkpointing &amp; profiling infrastructure</li>
+                <li>Megatron-ARM backend for GH200 cluster support <span class="tag tag-orange">WIP</span></li>
+              </ul>
+            </div>
+            <div class="module-phase-card" style="border-left-color:var(--accent-orange);">
+              <div class="module-phase-tag" style="background:rgba(210,153,34,0.15); color:var(--accent-orange);">Phase 2</div>
+              <h4>Scaling</h4>
+              <ul>
+                <li><strong>Diffusion RL backend:</strong> DiffusionSpecialization with flow matching loss for DiT / MM-DiT architectures</li>
+                <li>Advanced parallelism strategies: Sequence Parallelism (SP), Context Parallelism (CP)</li>
+                <li>Elastic GPU scaling &mdash; dynamic worker addition/removal during training</li>
+                <li>Online reward model integration for real-time reward computation</li>
+                <li>Mid-scale validation: 7B&ndash;32B stable training for 1000+ steps</li>
+              </ul>
+            </div>
+            <div class="module-phase-card" style="border-left-color:var(--accent-purple);">
+              <div class="module-phase-tag" style="background:rgba(188,140,255,0.15); color:var(--accent-purple);">Phase 3</div>
+              <h4>Production</h4>
+              <ul>
+                <li>70B+ multi-node training with TP+PP+DP across 128+ GPUs</li>
+                <li>Multi-modal RL pipelines: joint image + text training</li>
+                <li>Automated hyperparameter sweep infrastructure</li>
+                <li>Throughput optimization targeting MFU &ge; 40%</li>
+                <li>Production monitoring &amp; fault tolerance</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Algorithm Recipes -->
+        <div class="module-detail">
+          <h3 class="module-title">Algorithm Recipes</h3>
+          <p><code>rl_engine/trainer/recipes.py</code> &mdash; Declarative <code>@recipe</code> configs with pluggable ModelSpecialization</p>
+          <div class="module-phases">
+            <div class="module-phase-card" style="border-left-color:var(--accent-green);">
+              <div class="module-phase-tag" style="background:rgba(63,185,80,0.15); color:var(--accent-green);">Phase 1</div>
+              <h4>Foundation</h4>
+              <ul>
+                <li>22 built-in recipes: GRPO, GSPO, REINFORCE++, PPO, DPO, SFT, online reward, and more</li>
+                <li>Specializations: Actor, Critic, DualRole, Reward, Diffusion</li>
+                <li>Pool sharing: multiple roles on a single WorkerPool with alternating dispatch</li>
+                <li>~50 lines to add a new algorithm via frozen <code>TrainingConfig</code> dataclass</li>
+              </ul>
+            </div>
+            <div class="module-phase-card" style="border-left-color:var(--accent-orange);">
+              <div class="module-phase-tag" style="background:rgba(210,153,34,0.15); color:var(--accent-orange);">Phase 2</div>
+              <h4>Scaling</h4>
+              <ul>
+                <li>Diffusion RL weighted scoring specialization for image generation</li>
+                <li>Vision-language RL algorithm variants (VLM fine-tuning)</li>
+                <li>World model &amp; video model RL specializations</li>
+                <li>Curriculum learning recipes with progressive difficulty</li>
+              </ul>
+            </div>
+            <div class="module-phase-card" style="border-left-color:var(--accent-purple);">
+              <div class="module-phase-tag" style="background:rgba(188,140,255,0.15); color:var(--accent-purple);">Phase 3</div>
+              <h4>Production</h4>
+              <ul>
+                <li>Coding-agent-specific reward shaping &amp; curriculum</li>
+                <li>Cross-domain transfer learning recipes</li>
+                <li>Continuous evaluation with live leaderboard</li>
+                <li>Full benchmark coverage with per-domain tuned variants</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Rollout Engine -->
+        <div class="module-detail">
+          <h3 class="module-title">Rollout Engine</h3>
+          <p><code>rl_engine/rollout/</code> &mdash; Task-scheduler-based inference with SGLang, multi-turn agentic rollout, and evaluation</p>
+          <div class="module-phases">
+            <div class="module-phase-card" style="border-left-color:var(--accent-green);">
+              <div class="module-phase-tag" style="background:rgba(63,185,80,0.15); color:var(--accent-green);">Phase 1</div>
+              <h4>Foundation</h4>
+              <ul>
+                <li>SchedulerRolloutManager with batch-based TaskScheduler</li>
+                <li>FIFO batching strategy for ordered task dispatch</li>
+                <li>Multi-dataset YAML config for concurrent dataset handling</li>
+                <li>SGLang inference backend with automatic weight distribution</li>
+                <li>Clean backend interface: <code>generate</code>, <code>tokenize</code>, <code>decode</code>; evaluation lives on the agent handler</li>
+              </ul>
+            </div>
+            <div class="module-phase-card" style="border-left-color:var(--accent-orange);">
+              <div class="module-phase-tag" style="background:rgba(210,153,34,0.15); color:var(--accent-orange);">Phase 2</div>
+              <h4>Scaling</h4>
+              <ul>
+                <li>Priority &amp; fair-share scheduling for heterogeneous task routing</li>
+                <li><strong>Diffusion rollout:</strong> iterative denoising &amp; velocity field extraction pipelines</li>
+                <li>Adaptive batching based on evaluator throughput</li>
+                <li>Task-aware scheduling strategy (resource-based priority)</li>
+              </ul>
+            </div>
+            <div class="module-phase-card" style="border-left-color:var(--accent-purple);">
+              <div class="module-phase-tag" style="background:rgba(188,140,255,0.15); color:var(--accent-purple);">Phase 3</div>
+              <h4>Production</h4>
+              <ul>
+                <li>Multi-node SGLang for long-context coding agent inference</li>
+                <li>Distributed inference with dynamic auto-scaling</li>
+                <li>Real-time monitoring dashboard for rollout performance</li>
+                <li>Multi-turn agentic rollout with tool use &amp; debugging loops</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Environment Engine -->
+        <div class="module-detail">
+          <h3 class="module-title">Environment Engine</h3>
+          <p><code>env_engine/</code> &mdash; Scalable sandbox and scheduler for agentic RL. Every environment = sandbox + tools + prompt</p>
+          <div class="module-phases">
+            <div class="module-phase-card" style="border-left-color:var(--accent-green);">
+              <div class="module-phase-tag" style="background:rgba(63,185,80,0.15); color:var(--accent-green);">Phase 1</div>
+              <h4>Foundation</h4>
+              <ul>
+                <li>Composable Evaluator pipeline: Agent + Environment + Reward</li>
+                <li>PlacementPool resource allocation for GPU/CPU management</li>
+                <li>Docker/Podman sandboxes with configurable resource limits</li>
+                <li>SWE-bench integration: 2,294 real GitHub issue resolution tasks</li>
+                <li>MLE-bench integration: 75 Kaggle-style ML engineering competitions</li>
+              </ul>
+            </div>
+            <div class="module-phase-card" style="border-left-color:var(--accent-orange);">
+              <div class="module-phase-tag" style="background:rgba(210,153,34,0.15); color:var(--accent-orange);">Phase 2</div>
+              <h4>Scaling</h4>
+              <ul>
+                <li>Browser interaction environments (WebArena: 812 tasks)</li>
+                <li>Terminal/CLI automation (Terminal-Bench: 150+ tasks)</li>
+                <li>GPU-equipped sandbox for MLE tasks with CUDA support</li>
+                <li>Multi-turn agentic workflows with session persistence</li>
+                <li>Math &amp; code benchmark pipelines (WeMath, LiveCodeBench)</li>
+              </ul>
+            </div>
+            <div class="module-phase-card" style="border-left-color:var(--accent-purple);">
+              <div class="module-phase-tag" style="background:rgba(188,140,255,0.15); color:var(--accent-purple);">Phase 3</div>
+              <h4>Production</h4>
+              <ul>
+                <li>Distributed environments across cloud regions</li>
+                <li>Robotics &amp; embodied simulation (OpenClaw)</li>
+                <li>Desktop OS interaction (OSWorld: 369 tasks)</li>
+                <li>Agent &amp; interactive task environments (Tau-bench: 200+ tasks)</li>
+                <li>Full ecosystem: 15+ environments across all domains</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══════════════════════════════════════════════════════════
+           Section 2: How to Contribute
+           ══════════════════════════════════════════════════════════ -->
+      <section>
+        <h2><span class="num">2</span> Contribution Guideline</h2>
+        <p>Each roadmap item has a natural entry point in the codebase. Below are the highest-impact contribution areas, organized by difficulty.</p>
+
+        <h3>Single-subsystem contributions</h3>
+        <p>Self-contained tasks that require understanding of one framework subsystem. Can be completed independently.</p>
+
+        <div class="contrib-card" style="border-left:3px solid var(--accent-blue);">
+          <h4>New Algorithm Recipe</h4>
+          <div class="entry-point"><strong>Entry point:</strong> <code>rl_engine/trainer/specialization/</code> + <code>rl_engine/trainer/recipes.py</code></div>
+          <p class="details">Adding a new RL algorithm to STACX requires two things:</p>
+          <ol>
+            <li><strong>A <code>ModelSpecialization</code> subclass</strong> (~40 lines) &mdash; Implement <code>compute_loss()</code>, <code>prepare_batch()</code>, and <code>extract_model_output()</code>. The specialization encapsulates all algorithm-specific logic.</li>
+            <li><strong>An <code>@recipe</code> config function</strong> (~10 lines) &mdash; Returns a frozen <code>TrainingConfig</code> declaring which roles participate, how they synchronize data, and a description.</li>
+          </ol>
+          <p class="details">Only <code>recipes.py</code> and the new specialization change. The existing specializations in <code>rl_engine/trainer/specialization/agent.py</code> (diffusion variants in <code>diffusion.py</code>) are the reference implementations.</p>
+          <pre>@recipe("my_algo")
+def my_algo_config():
+    return TrainingConfig(
+        name="my_algo",
+        description="My new algorithm",
+        roles=(ModelRole(name="policy",
+                         specialization_cls=MySpecialization),),
+        syncs=(DataSync(source="value", target="policy",
+                        keys=("values",), stage="inject"),),
+    )</pre>
+        </div>
+
+        <div class="contrib-card" style="border-left:3px solid var(--accent-blue);">
+          <h4>New Benchmark Environment</h4>
+          <div class="entry-point"><strong>Entry point:</strong> <code>rl_engine/examples/</code></div>
+          <p class="details">Integrate a new benchmark by providing the two pieces the existing examples use:</p>
+          <ul>
+            <li>A Harbor-style task directory &mdash; the task instances and their assets</li>
+            <li>An <code>evaluator_config.py</code> &mdash; wires the agent, environment, and reward for the run</li>
+          </ul>
+          <p class="details">Wire it into the composable Evaluator pipeline (Agent + Environment + Reward). The SWE-bench integration in <code>rl_engine/examples/swe_agent/</code> is the best reference. Math benchmarks (WeMath, MathVision) are the lowest-complexity next targets &mdash; they need only string-match verification with no sandbox.</p>
+        </div>
+
+        <div class="contrib-card" style="border-left:3px solid var(--accent-blue);">
+          <h4>Scheduling Strategy</h4>
+          <div class="entry-point"><strong>Entry point:</strong> <code>rl_engine/rollout/scheduler/</code></div>
+          <p class="details">The current <code>TaskScheduler</code> uses FIFO batching. The next targets are:</p>
+          <ul>
+            <li><strong>Priority-based scheduling</strong> &mdash; Assign priorities to task types (e.g., math &gt; coding &gt; eval) so high-value rollouts get GPU time first</li>
+            <li><strong>Fair-share scheduling</strong> &mdash; Ensure each task type gets proportional GPU time in heterogeneous workloads</li>
+            <li><strong>Adaptive batching</strong> &mdash; Dynamically adjust batch sizes based on evaluator throughput and pending queue depth</li>
+          </ul>
+          <p class="details">The batching strategy is a plain function &mdash; the default is <code>fifo_batching</code> in <code>rl_engine/rollout/scheduler/task_scheduler.py</code> &mdash; passed to <code>TaskScheduler</code>; supply a new function to change the policy. The scheduler is decoupled from the rollout manager, so new strategies can be tested without modifying the inference pipeline.</p>
+        </div>
+
+        <div class="contrib-card" style="border-left:3px solid var(--accent-blue);">
+          <h4>Browser / Terminal Environments</h4>
+          <div class="entry-point"><strong>Entry point:</strong> <code>rl_engine/examples/</code></div>
+          <p class="details">Extend the environment engine to support interactive tasks:</p>
+          <ul>
+            <li><strong>WebArena</strong> &mdash; Docker container with headless Chromium. The agent navigates web pages, fills forms, and completes user workflows. Requires screenshot capture and DOM extraction for observations.</li>
+            <li><strong>Terminal-Bench</strong> &mdash; Shell sandbox with configurable tool access. Reward function based on exit codes and diff-based correctness checks. Lower complexity than browser environments.</li>
+          </ul>
+          <p class="details">Both environments use the same Agent + Environment + Reward evaluator pipeline. The sandbox infrastructure from SWE-bench can be reused for process isolation and resource limits.</p>
+        </div>
+
+        <h3>Training &amp; rollout contributions</h3>
+        <p>Require deep understanding of the training or rollout subsystems.</p>
+
+        <div class="contrib-card" style="border-left:3px solid var(--accent-purple);">
+          <h4>Diffusion RL Pipeline</h4>
+          <div class="entry-point"><strong>Entry point:</strong> <code>rl_engine/trainer/specialization/diffusion.py</code></div>
+          <p class="details">Complete the end-to-end diffusion model RL pipeline. This spans both the trainer and rollout subsystems:</p>
+          <ul>
+            <li><strong>Backend:</strong> Finish <code>DiffusionSpecialization</code> (recipe <code>diffusion_rwfm</code>, reward-weighted flow matching) &mdash; production-grade diffusion data loading, noise schedule integration, velocity field extraction</li>
+            <li><strong>Rollout:</strong> Build the iterative denoising inference pipeline in <code>SchedulerRolloutManager</code> &mdash; multi-step generation, noise scheduling at inference time, weight sync for diffusion checkpoints</li>
+            <li><strong>Validation:</strong> End-to-end training on a DiT model, evaluated on GenEval2 and DPG-Bench</li>
+          </ul>
+          <p class="details">Requires familiarity with flow matching / weighted scoring loss formulations and DiT / MM-DiT architectures (e.g., Stable Diffusion 3, FLUX).</p>
+        </div>
+
+        <div class="contrib-card" style="border-left:3px solid var(--accent-purple);">
+          <h4>World Model &amp; Video Model RL</h4>
+          <div class="entry-point"><strong>Entry point:</strong> <code>rl_engine/trainer/specialization/</code></div>
+          <p class="details">Extend the specialization system to support world models and video generation models for RL training. This involves:</p>
+          <ul>
+            <li>New <code>ModelSpecialization</code> subclasses for autoregressive video prediction and world-model rollouts</li>
+            <li>Temporal sequence handling in the rollout pipeline (multi-frame generation, state prediction)</li>
+            <li>Reward formulation for video quality and physical plausibility</li>
+          </ul>
+          <p class="details">The existing diffusion RL infrastructure provides the foundation. Extends naturally to video generation (frame-by-frame denoising) and world models (latent state prediction).</p>
+        </div>
+
+        <div class="contrib-card" style="border-left:3px solid var(--accent-purple);">
+          <h4>Vision-Language RL</h4>
+          <div class="entry-point"><strong>Entry point:</strong> <code>rl_engine/trainer/specialization/agent.py</code> + <code>rl_engine/rollout/</code></div>
+          <p class="details">Extend the actor specialization to handle vision-language model inputs (image + text tokens in the same rollout batch). Requires:</p>
+          <ul>
+            <li>Multi-modal input handling in <code>prepare_batch()</code> for vision encoders</li>
+            <li>VLM-compatible rollout data format in the scheduler</li>
+            <li>Validation on visual benchmarks (MathVision, MME-RealWorld-Lite)</li>
+          </ul>
+        </div>
+
+        <h3>Cross-subsystem contributions</h3>
+        <p>Work that spans the trainer, rollout, and environment subsystems.</p>
+
+        <div class="contrib-card" style="border-left:3px solid var(--accent-red);">
+          <h4>Large-Scale Coding Agent Training</h4>
+          <div class="entry-point"><strong>Entry point:</strong> Full stack &mdash; trainer, rollout, and environment</div>
+          <p class="details">The Phase 3 flagship goal: train a SOTA coding agent for top-tier SWE-bench performance. This requires:</p>
+          <ul>
+            <li>70B+ model training on 128+ GPUs with multi-turn agentic rollout</li>
+            <li>Coding-agent-specific reward shaping and curriculum learning</li>
+            <li>Multi-node SGLang inference for long-context code generation</li>
+            <li>Iterative self-improvement loops with debugging and test execution feedback</li>
+          </ul>
+          <p class="details">Combines all framework components at production scale.</p>
+        </div>
+
+        <div class="contrib-card" style="border-left:3px solid var(--accent-red);">
+          <h4>Multi-Node Training Infrastructure</h4>
+          <div class="entry-point"><strong>Entry point:</strong> <code>rl_engine/trainer/backends/</code> + <code>rl_engine/trainer/infra/</code></div>
+          <p class="details">Scale the trainer to 70B+ models across multi-node clusters:</p>
+          <ul>
+            <li>Advanced parallelism strategies (sequence parallel, context parallel) in the Megatron backend</li>
+            <li>Elastic GPU scaling &mdash; add/remove training workers without full restart</li>
+            <li>Fault tolerance and checkpoint recovery from mid-run failures</li>
+            <li>Throughput optimization targeting MFU &ge; 40% on 70B models</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ══════════════════════════════════════════════════════════
+           Section 3: Key Design Decisions
+           ══════════════════════════════════════════════════════════ -->
+      <section>
+        <h2><span class="num">3</span> Key Design Decisions</h2>
+        <p>Architectural choices that shape STACX. For full details, see the <a href="architecture.html" style="color:var(--accent-blue);">Architecture</a>, <a href="backends.html" style="color:var(--accent-blue);">Backends</a>, and <a href="rollout.html" style="color:var(--accent-blue);">Rollout</a> documentation.</p>
+
+        <h3>Dual-Backend Trainer</h3>
+        <p>Algorithms written against the shared <code>TrainBackend</code> interface run on both FSDP (1&ndash;4 GPU prototyping with HuggingFace models) and Megatron (production-scale TP+PP+DP) without changes.</p>
+
+        <h3>Declarative Algorithm Recipes</h3>
+        <p>Algorithms are expressed as data, not code. The trainer reads the recipe and automatically wires up the correct roles, syncs, and specializations. This is why adding a new RL algorithm takes ~50 lines: define the loss function and declare the training topology.</p>
+
+        <h3>Unified Rollout Manager</h3>
+        <div class="card cyan">
+          <h4>Design</h4>
+          <p>The same <code>SchedulerRolloutManager</code> + <code>PlacementPool</code> serves both LLM token generation and diffusion iterative denoising. Scheduling strategies are pluggable: currently FIFO, with priority-based and fair-share strategies planned.</p>
+        </div>
+        <p>The rollout manager owns all inference GPU allocation through <code>PlacementPool</code>. After each training step, weights are synchronized to the inference backend (SGLang for LLMs, denoising pipeline for diffusion). The scheduler batches requests and routes them to available inference workers, decoupling the training loop from inference throughput.</p>
+
+        <h3>Composable Evaluator Pipeline</h3>
+        <p>The composability means that the same <code>Agent</code> (e.g., a custom Agent handler with tool use) can be paired with different environments and reward functions without code changes; multiple tasks can be mixed in a single training run through the <code>TaskScheduler</code>.</p>
+
+        <h3>Diffusion RL (DiT / MM-DiT)</h3>
+        <div class="card green">
+          <h4>Backend perspective</h4>
+          <p><code>DiffusionSpecialization</code> (recipe <code>diffusion_rwfm</code>) implements reward-weighted flow matching loss for DiT and MM-DiT architectures. Plugs into the same <code>TrainBackend</code> interface as LLM specializations, reusing RoleWorker pools, weight sync, and checkpointing infrastructure.</p>
+        </div>
+        <div class="card cyan" style="margin-top:8px;">
+          <h4>Rollout perspective</h4>
+          <p>Diffusion-aware inference pipeline with iterative denoising steps, noise scheduling, and velocity field extraction. The rollout manager handles generation requests through the same <code>TaskScheduler</code> and <code>PlacementPool</code> used for LLM inference, ensuring unified resource management.</p>
+        </div>
+        <p>Interface and loss formulation defined in <code>rl_engine/trainer/specialization/diffusion.py</code>. Pending: production-grade diffusion data loading, noise schedule integration, and end-to-end validation on GenEval2 / DPG-Bench.</p>
+      </section>
+
+      <!-- ══════════════════════════════════════════════════════════
+           Section 4: Validation Experiments
+           ══════════════════════════════════════════════════════════ -->
+      <section>
+        <h2><span class="num">4</span> Validation Experiments</h2>
+        <p>Experiments to validate STACX against established baselines and push new capabilities. Each experiment targets a specific roadmap phase.</p>
+
+        <h3>LLM RL on Math <span class="tag tag-blue">Phase 2</span></h3>
+        <div class="card blue">
+          <h4>Objective</h4>
+          <p>Reproduce and extend published DAPO / GRPO results on math benchmarks (WeMath, MathVision). Validate the training pipeline at mid-scale (7B&ndash;32B models).</p>
+        </div>
+        <ul>
+          <li><strong>Target models:</strong> Qwen3-0.6B, Qwen3-4B, Qwen-2.5-Math-7B</li>
+          <li><strong>Algorithms:</strong> GRPO, DAPO, PPO</li>
+          <li><strong>Benchmarks:</strong> WeMath (6,500+ problems), MathVision (3,040 problems)</li>
+          <li><strong>Success criteria:</strong> Match published DAPO-Math accuracy within 2% on Qwen-7B over 500 rollouts</li>
+        </ul>
+
+        <h3>LLM RL on SWE <span class="tag tag-green">Phase 1&ndash;3</span></h3>
+        <div class="card green">
+          <h4>Objective</h4>
+          <p>Train a state-of-the-art coding agent on SWE-bench with multi-turn agentic rollout and sandboxed code execution. This is the flagship production target.</p>
+        </div>
+        <ul>
+          <li><strong>Target models:</strong> Qwen-2.5-Coder-32B, 70B+ models at production scale</li>
+          <li><strong>Algorithms:</strong> GRPO with coding-agent-specific reward shaping</li>
+          <li><strong>Benchmarks:</strong> SWE-bench (2,294 tasks), LiveCodeBench (400+ problems), CodeContests (13,328 problems)</li>
+          <li><strong>Success criteria:</strong> Top-tier SWE-bench resolution rate with multi-turn agentic rollout</li>
+          <li><strong>Current status:</strong> <span class="tag tag-green">SWE-bench environment integrated</span></li>
+        </ul>
+
+        <h3>Diffusion RL on Text-to-Image <span class="tag tag-orange">Phase 2</span></h3>
+        <div class="card purple">
+          <h4>Objective</h4>
+          <p>Train DiT/MM-DiT models with RL using weighted scoring matching loss. Validate generation quality improvements over base models.</p>
+        </div>
+        <ul>
+          <li><strong>Target models:</strong> FLUX-dev, Stable Diffusion 3</li>
+          <li><strong>Algorithms:</strong> Weighted scoring diffusion RL</li>
+          <li><strong>Benchmarks:</strong> GenEval2 (553 prompts), DPG-Bench (1,065 prompts)</li>
+          <li><strong>Success criteria:</strong> Measurable GenEval2 score improvement over base model; reproducible baseline on DPG-Bench</li>
+          <li><strong>Current status:</strong> <span class="tag tag-orange">Interface defined, pending production pipeline</span></li>
+        </ul>
+
+        <h3>LLM RL on MLE <span class="tag tag-blue">Phase 1&ndash;2</span></h3>
+        <div class="card orange">
+          <h4>Objective</h4>
+          <p>Machine learning engineering tasks with GPU sandbox environments, long-running code execution, and iterative debugging loops.</p>
+        </div>
+        <ul>
+          <li><strong>Target models:</strong> Qwen-2.5-Coder-32B</li>
+          <li><strong>Algorithms:</strong> GRPO, PPO</li>
+          <li><strong>Benchmarks:</strong> MLE-bench (75 Kaggle competitions)</li>
+          <li><strong>Success criteria:</strong> Bronze medal equivalent on 3+ competitions; stable 1h+ GPU sandbox trajectories</li>
+          <li><strong>Current status:</strong> <span class="tag tag-green">MLE-bench environment integrated</span></li>
+        </ul>
+
+        <h3>Scaling Stages</h3>
+        <p>All experiments progress through two scaling stages:</p>
+        <ol>
+          <li><strong>Mid-scale training</strong> &mdash; 7B&ndash;32B models on 16&ndash;64 GPUs with GRPO/PPO on math + code tasks</li>
+          <li><strong>Full-scale deployment</strong> &mdash; 70B+ models, multi-node TP+PP+DP, heterogeneous task mixes across hundreds of GPUs</li>
+        </ol>
+      </section>
+
+    </div><!-- .main-content -->
+  </div><!-- .layout -->
+
+<button class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark mode">Dark</button>
+<script>
+(function() {
+  var toggle = document.getElementById('themeToggle');
+  var saved = localStorage.getItem('stacx-theme');
+  if (saved === 'dark') {
+    document.documentElement.setAttribute('data-theme', 'dark');
+    toggle.textContent = 'Light';
+  }
+  toggle.addEventListener('click', function() {
+    var current = document.documentElement.getAttribute('data-theme');
+    if (current === 'dark') {
+      document.documentElement.removeAttribute('data-theme');
+      toggle.textContent = 'Dark';
+      localStorage.setItem('stacx-theme', 'light');
+    } else {
+      document.documentElement.setAttribute('data-theme', 'dark');
+      toggle.textContent = 'Light';
+      localStorage.setItem('stacx-theme', 'dark');
+    }
+  });
+})();
+</script>
+<script>
+(function(){
+  var nav=document.getElementById('docsNav'),btn=document.querySelector('.nav-toggle');
+  if(!nav||!btn)return;
+  btn.addEventListener('click',function(e){e.stopPropagation();var open=nav.getAttribute('data-open')==='true';nav.setAttribute('data-open',String(!open));btn.setAttribute('aria-expanded',String(!open));});
+  document.addEventListener('click',function(e){if(nav.getAttribute('data-open')==='true'&&!nav.contains(e.target))nav.setAttribute('data-open','false');});
+})();
+</script>
+</body>
+</html>

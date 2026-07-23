@@ -1,0 +1,1367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script>document.documentElement.classList.add('js');</script>
+<title>STACX — Modular Infrastructure for End-to-End Agentic RL</title>
+<meta name="description" content="STACX (STandAloneCompleX) is a modular infrastructure for end-to-end agentic reinforcement learning over LLMs, decoupling Trainer, Rollout, and Environment engines.">
+<meta property="og:title" content="STACX — STandAloneCompleX">
+<meta property="og:description" content="A modular infrastructure for end-to-end agentic reinforcement learning over LLMs and agentic tasks.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="static/images/stacx-logo.png">
+<link rel="icon" type="image/png" href="static/images/stacx-logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="static/css/style.css">
+</head>
+<body>
+
+<!-- ══════════════════════════ NAV ══════════════════════════ -->
+<nav class="nav" id="nav">
+  <div class="nav__inner">
+    <a class="brand" href="#home" aria-label="STACX home">
+      <span class="brand__mark" aria-hidden="true"></span>
+      <span>STACX</span>
+    </a>
+    <div class="nav__links" id="navLinks">
+      <a href="#motivation">Motivation</a>
+      <a href="#overview">Overview</a>
+      <a href="#features">Features</a>
+      <a href="#rollout">Rollout</a>
+      <a href="#trainer">Trainer</a>
+      <a href="#environment">Environment</a>
+      <a href="#experiments">Experiments</a>
+      <a href="#citation">Cite</a>
+    </div>
+    <a class="nav__cta" href="https://github.com/StACx-StandAloneComplex/stacx/tree/main" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .5C5.7.5.5 5.7.5 12c0 5.1 3.3 9.4 7.9 10.9.6.1.8-.2.8-.5v-2c-3.2.7-3.9-1.4-3.9-1.4-.5-1.3-1.3-1.7-1.3-1.7-1.1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.7 1.3 3.4 1 .1-.8.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.6 18.3 5 18.3 5c.6 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.3c0 .3.2.6.8.5 4.6-1.5 7.9-5.8 7.9-10.9C23.5 5.7 18.3.5 12 .5z"/></svg>
+      <span class="long">Code</span>
+    </a>
+    <button class="nav__toggle" id="navToggle" aria-label="Toggle menu">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18" stroke-linecap="round"/></svg>
+    </button>
+  </div>
+</nav>
+
+<!-- ══════════════════════════ HERO ══════════════════════════ -->
+<header class="hero" id="home">
+  <div class="hero__bg" aria-hidden="true"></div>
+  <div class="wrap">
+    <img class="hero__logo reveal" src="static/images/stacx-logo.png" alt="STACX logo">
+    <h1 class="reveal d1"><span class="accent">STACX</span></h1>
+    <span class="hero__full reveal d1">STandAloneCompleX</span>
+    <p class="hero__tagline reveal d2">
+      A <b>modular infrastructure</b> for end-to-end agentic reinforcement learning over
+      <b>LLMs</b> and <b>agentic tasks</b>.
+    </p>
+
+    <div class="authors reveal d2">
+      <a href="https://lichangh20.github.io/" target="_blank" rel="noopener">Changhao Li</a><sup class="lead-sup">*&dagger;</sup> &middot;
+      <a href="https://haotiansun.tech" target="_blank" rel="noopener">Haotian Sun</a><sup class="lead-sup">*&Dagger;</sup> &middot;
+      <a href="https://www.linkedin.com/in/huijie-tang-57aa8b297/" target="_blank" rel="noopener">Huijie Tang</a><sup class="lead-sup">*</sup> &middot;
+      <a href="https://rushi-q.github.io/" target="_blank" rel="noopener">Rushi Qiang</a> &middot;
+      <a href="https://about.gaocx.io/" target="_blank" rel="noopener">Chenxiao Gao</a>
+      <div class="affil">
+        <span class="pi">Lab PI:</span> <a href="https://bo-dai.github.io/" target="_blank" rel="noopener">Bo Dai</a>
+        &nbsp;&middot;&nbsp; <span class="gt">Georgia Institute of Technology</span>
+      </div>
+      <div class="author-roles"><span class="lead-key">*</span> Core Contributor &nbsp;&nbsp; <span class="lead-key">&dagger;</span> Agent Lead &amp; Project Lead &nbsp;&nbsp; <span class="lead-key">&Dagger;</span> Training Lead</div>
+    </div>
+
+    <div class="btn-row reveal d3">
+      <a class="btn btn--brand" href="https://github.com/StACx-StandAloneComplex/stacx/tree/main" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24"><path d="M12 .5C5.7.5.5 5.7.5 12c0 5.1 3.3 9.4 7.9 10.9.6.1.8-.2.8-.5v-2c-3.2.7-3.9-1.4-3.9-1.4-.5-1.3-1.3-1.7-1.3-1.7-1.1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.7 1.3 3.4 1 .1-.8.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.6 18.3 5 18.3 5c.6 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.3c0 .3.2.6.8.5 4.6-1.5 7.9-5.8 7.9-10.9C23.5 5.7 18.3.5 12 .5z"/></svg>
+        Code
+      </a>
+      <a class="btn btn--doc" href="../docs/" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24"><path d="M12 6.9C9.6 5.4 6.6 4.8 3.6 5.4v12.3c3-.6 6 0 8.4 1.5 2.4-1.5 5.4-2.1 8.4-1.5V5.4c-3-.6-6 0-8.4 1.5z"/></svg>
+        Documentation
+      </a>
+      <a class="btn btn--ghost" href="#overview">
+        <svg viewBox="0 0 24 24"><path d="M12 4l8 8-1.4 1.4L13 7.8V20h-2V7.8l-5.6 5.6L4 12z" transform="rotate(180 12 12)"/></svg>
+        Explore
+      </a>
+    </div>
+
+    <div class="chips reveal d4">
+      <span class="chip">Modular Orchestration</span>
+      <span class="chip b">Declarative Recipes</span>
+      <span class="chip p">Pluggable Model Specializations</span>
+      <span class="chip a">Agent-as-a-Service</span>
+    </div>
+  </div>
+</header>
+
+<!-- ══════════════════════════ MOTIVATION ══════════════════════════ -->
+<section class="section section--alt" id="motivation">
+  <div class="wrap">
+    <div class="section-head center reveal">
+      <span class="eyebrow">Motivation</span>
+      <h2 class="section-title">Why Agentic RL Needs a New Infrastructure Stack</h2>
+      <p class="section-lead">
+        Standard RLHF stacks assume a single model, a reward signal, and a relatively closed training loop.
+        Agentic RL breaks this assumption: policies call tools, run inside scaffolds, and interact with long-horizon environments that must be executed, scheduled, and scaled.
+      </p>
+    </div>
+
+    <!-- Existing RL Infra vs STACX diagram -->
+    <div class="figure figure--pad reveal d1" style="margin:0 auto;">
+      <svg viewBox="0 0 1080 380" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="mo-title mo-desc">
+        <title id="mo-title">Motivation: Existing RL Infra vs STACX</title>
+        <desc id="mo-desc">The left panel shows existing RL infrastructure built around single-model RLHF pipelines. The right panel shows STACX targeting agentic RL with unified multi-model support and agent-environment scaling.</desc>
+        <defs>
+          <marker id="mo-arr" viewBox="0 0 10 7" refX="9" refY="3.5" markerWidth="8" markerHeight="6" orient="auto"><path d="M0,0 L10,3.5 L0,7z" fill="#57606a"/></marker>
+        </defs>
+
+        <!-- ════════ LEFT: Existing RL Infra ════════ -->
+        <rect x="0" y="0" width="460" height="380" rx="12" fill="rgba(149,56,0,0.03)" stroke="rgba(149,56,0,0.15)" stroke-width="1.5" stroke-dasharray="6,3"/>
+        <text x="230" y="30" text-anchor="middle" fill="#953800" font-size="18" font-weight="700" font-family="system-ui, sans-serif">Existing RL Infrastructure</text>
+        <text x="230" y="50" text-anchor="middle" fill="#953800" font-size="13" font-family="system-ui, sans-serif" opacity="0.7">OpenRLHF &middot; veRL &middot; TRL</text>
+
+        <rect x="40" y="80" width="160" height="56" rx="8" fill="rgba(149,56,0,0.08)" stroke="#953800" stroke-width="1.5"/>
+        <text x="120" y="113" text-anchor="middle" fill="#953800" font-size="15" font-weight="700" font-family="system-ui, sans-serif">Single LLM</text>
+        <line x1="120" y1="136" x2="120" y2="170" stroke="#57606a" stroke-width="2" marker-end="url(#mo-arr)"/>
+        <rect x="40" y="175" width="160" height="56" rx="8" fill="rgba(149,56,0,0.08)" stroke="#953800" stroke-width="1.5"/>
+        <text x="120" y="208" text-anchor="middle" fill="#953800" font-size="15" font-weight="700" font-family="system-ui, sans-serif">Reward Model</text>
+        <line x1="120" y1="231" x2="120" y2="265" stroke="#57606a" stroke-width="2" marker-end="url(#mo-arr)"/>
+        <rect x="40" y="270" width="160" height="50" rx="8" fill="rgba(149,56,0,0.08)" stroke="#953800" stroke-width="1.5"/>
+        <text x="120" y="300" text-anchor="middle" fill="#953800" font-size="15" font-weight="700" font-family="system-ui, sans-serif">PPO / RLHF</text>
+
+        <text x="240" y="100" fill="#953800" font-size="13" font-weight="600" font-family="system-ui, sans-serif" opacity="0.8">Limitations:</text>
+        <text x="240" y="130" fill="#953800" font-size="20" font-family="system-ui, sans-serif">&#x2717;</text>
+        <text x="262" y="130" fill="#57606a" font-size="14" font-family="system-ui, sans-serif">Single model type only</text>
+        <text x="240" y="162" fill="#953800" font-size="20" font-family="system-ui, sans-serif">&#x2717;</text>
+        <text x="262" y="162" fill="#57606a" font-size="14" font-family="system-ui, sans-serif">No agent scaffolding</text>
+        <text x="240" y="194" fill="#953800" font-size="20" font-family="system-ui, sans-serif">&#x2717;</text>
+        <text x="262" y="194" fill="#57606a" font-size="14" font-family="system-ui, sans-serif">Limited env interaction</text>
+        <text x="240" y="226" fill="#953800" font-size="20" font-family="system-ui, sans-serif">&#x2717;</text>
+        <text x="262" y="226" fill="#57606a" font-size="14" font-family="system-ui, sans-serif">Hard to scale agents</text>
+
+        <!-- Transition arrow -->
+        <line x1="480" y1="190" x2="520" y2="190" stroke="#57606a" stroke-width="2.5" marker-end="url(#mo-arr)"/>
+        <text x="500" y="178" text-anchor="middle" fill="#6e40c9" font-size="22" font-weight="800" font-family="system-ui, sans-serif">&#x276F;</text>
+
+        <!-- ════════ RIGHT: STACX — Agentic RL ════════ -->
+        <rect x="540" y="0" width="530" height="380" rx="12" fill="rgba(5,80,174,0.03)" stroke="rgba(5,80,174,0.15)" stroke-width="1.5"/>
+        <text x="805" y="30" text-anchor="middle" fill="#0550ae" font-size="18" font-weight="700" font-family="system-ui, sans-serif">STACX — Agentic RL</text>
+        <text x="805" y="48" text-anchor="middle" fill="#0550ae" font-size="13" font-family="system-ui, sans-serif" opacity="0.7">Purpose-built for the agentic paradigm</text>
+        <text x="805" y="64" text-anchor="middle" fill="#0550ae" font-size="12" font-family="system-ui, sans-serif" opacity="0.6">Automatically incorporating agent-environment interactions</text>
+
+        <!-- Pillar 1: Unification -->
+        <rect x="560" y="70" width="230" height="290" rx="10" fill="rgba(5,80,174,0.05)" stroke="rgba(5,80,174,0.2)" stroke-width="1.5"/>
+        <text x="675" y="96" text-anchor="middle" fill="#0550ae" font-size="16" font-weight="700" font-family="system-ui, sans-serif">Unification</text>
+        <text x="675" y="114" text-anchor="middle" fill="#0550ae" font-size="12" font-family="system-ui, sans-serif" opacity="0.7">Heterogeneous models &amp; agents</text>
+        <rect x="580" y="132" width="88" height="42" rx="6" fill="rgba(5,80,174,0.10)" stroke="#0550ae" stroke-width="1"/>
+        <text x="624" y="158" text-anchor="middle" fill="#0550ae" font-size="13" font-weight="600" font-family="system-ui, sans-serif">LLMs</text>
+        <rect x="680" y="132" width="88" height="42" rx="6" fill="rgba(110,64,201,0.10)" stroke="#6e40c9" stroke-width="1"/>
+        <text x="724" y="158" text-anchor="middle" fill="#6e40c9" font-size="13" font-weight="600" font-family="system-ui, sans-serif">Diffusion</text>
+        <rect x="580" y="186" width="88" height="42" rx="6" fill="rgba(17,99,41,0.10)" stroke="#116329" stroke-width="1"/>
+        <text x="624" y="212" text-anchor="middle" fill="#116329" font-size="13" font-weight="600" font-family="system-ui, sans-serif">Reward</text>
+        <rect x="680" y="186" width="88" height="42" rx="6" fill="rgba(12,90,109,0.10)" stroke="#0c5a6d" stroke-width="1"/>
+        <text x="724" y="212" text-anchor="middle" fill="#0c5a6d" font-size="13" font-weight="600" font-family="system-ui, sans-serif">Custom</text>
+        <rect x="605" y="240" width="140" height="36" rx="6" fill="rgba(149,56,0,0.10)" stroke="#953800" stroke-width="1"/>
+        <text x="675" y="263" text-anchor="middle" fill="#953800" font-size="12" font-weight="600" font-family="system-ui, sans-serif">Diverse Scaffolding</text>
+        <line x1="624" y1="228" x2="650" y2="238" stroke="#57606a" stroke-width="1.5" marker-end="url(#mo-arr)"/>
+        <line x1="724" y1="228" x2="700" y2="238" stroke="#57606a" stroke-width="1.5" marker-end="url(#mo-arr)"/>
+        <line x1="675" y1="276" x2="675" y2="292" stroke="#57606a" stroke-width="1.5" marker-end="url(#mo-arr)"/>
+        <rect x="620" y="296" width="110" height="40" rx="8" fill="rgba(5,80,174,0.12)" stroke="#0550ae" stroke-width="2"/>
+        <text x="675" y="321" text-anchor="middle" fill="#0550ae" font-size="14" font-weight="700" font-family="system-ui, sans-serif">Unified Agent</text>
+        <text x="675" y="350" text-anchor="middle" fill="#0550ae" font-size="12" font-weight="600" font-family="system-ui, sans-serif">&#x2713; SFT &middot; RL &middot; Eval &middot; Multi-turn</text>
+
+        <!-- Pillar 2: Agent-Env Scaling -->
+        <rect x="810" y="70" width="248" height="290" rx="10" fill="rgba(17,99,41,0.05)" stroke="rgba(17,99,41,0.2)" stroke-width="1.5"/>
+        <text x="934" y="96" text-anchor="middle" fill="#116329" font-size="16" font-weight="700" font-family="system-ui, sans-serif">Agent-Env Scaling</text>
+        <text x="934" y="114" text-anchor="middle" fill="#116329" font-size="12" font-family="system-ui, sans-serif" opacity="0.7">Agents &#x00D7; diverse environments at scale</text>
+        <rect x="830" y="134" width="52" height="36" rx="5" fill="rgba(5,80,174,0.10)" stroke="#0550ae" stroke-width="1"/>
+        <text x="856" y="157" text-anchor="middle" fill="#0550ae" font-size="11" font-weight="600" font-family="system-ui, sans-serif">Agent</text>
+        <rect x="892" y="134" width="52" height="36" rx="5" fill="rgba(5,80,174,0.10)" stroke="#0550ae" stroke-width="1"/>
+        <text x="918" y="157" text-anchor="middle" fill="#0550ae" font-size="11" font-weight="600" font-family="system-ui, sans-serif">Agent</text>
+        <rect x="954" y="134" width="52" height="36" rx="5" fill="rgba(5,80,174,0.10)" stroke="#0550ae" stroke-width="1"/>
+        <text x="980" y="157" text-anchor="middle" fill="#0550ae" font-size="11" font-weight="600" font-family="system-ui, sans-serif">Agent</text>
+        <text x="1020" y="157" fill="#0550ae" font-size="14" font-weight="700" font-family="system-ui, sans-serif">…</text>
+        <line x1="856" y1="170" x2="856" y2="208" stroke="#57606a" stroke-width="1.5" marker-end="url(#mo-arr)"/>
+        <line x1="918" y1="170" x2="918" y2="208" stroke="#57606a" stroke-width="1.5" marker-end="url(#mo-arr)"/>
+        <line x1="980" y1="170" x2="980" y2="208" stroke="#57606a" stroke-width="1.5" marker-end="url(#mo-arr)"/>
+        <rect x="822" y="212" width="62" height="36" rx="5" fill="rgba(17,99,41,0.10)" stroke="#116329" stroke-width="1"/>
+        <text x="853" y="235" text-anchor="middle" fill="#116329" font-size="10" font-weight="600" font-family="system-ui, sans-serif">Code</text>
+        <rect x="892" y="212" width="62" height="36" rx="5" fill="rgba(110,64,201,0.10)" stroke="#6e40c9" stroke-width="1"/>
+        <text x="923" y="235" text-anchor="middle" fill="#6e40c9" font-size="10" font-weight="600" font-family="system-ui, sans-serif">Math</text>
+        <rect x="962" y="212" width="62" height="36" rx="5" fill="rgba(149,56,0,0.10)" stroke="#953800" stroke-width="1"/>
+        <text x="993" y="235" text-anchor="middle" fill="#953800" font-size="10" font-weight="600" font-family="system-ui, sans-serif">Tool-use</text>
+        <text x="1038" y="235" fill="#116329" font-size="14" font-weight="700" font-family="system-ui, sans-serif">…</text>
+        <rect x="830" y="268" width="206" height="36" rx="6" fill="rgba(17,99,41,0.08)" stroke="rgba(17,99,41,0.25)" stroke-width="1" stroke-dasharray="4,2"/>
+        <text x="933" y="290" text-anchor="middle" fill="#116329" font-size="12" font-weight="600" font-family="system-ui, sans-serif">Multi-node Docker clusters</text>
+        <text x="934" y="326" text-anchor="middle" fill="#116329" font-size="13" font-weight="600" font-family="system-ui, sans-serif">&#x2713; Heterogeneous environments</text>
+        <text x="934" y="344" text-anchor="middle" fill="#116329" font-size="13" font-weight="600" font-family="system-ui, sans-serif">&#x2713; Containerized sandboxes</text>
+      </svg>
+      <p class="figure__cap"><b>The core shift:</b> Agentic RL turns post-training from single-model optimization
+        into two infrastructure requirements: unifying heterogeneous models and agent scaffolds,
+        and scaling agent-environment interaction across distributed sandboxes.</p>
+    </div>
+
+    <!-- Two-takeaway strip: high-level goals of the RL infra -->
+    <!-- <div class="motivation-takeaways reveal d2">
+      <div class="takeaway">
+        <span class="tag t-blue">UNIFICATION</span>
+        <p>One interface for heterogeneous models, agent scaffolds, and post-training modes.</p>
+      </div>
+      <div class="takeaway">
+        <span class="tag t-green">SCALING</span>
+        <p>Distributed agent–environment interaction across containerized sandbox clusters.</p>
+      </div>
+    </div> -->
+
+    <!-- Two goals legend -->
+    <!-- <div class="loop-legend reveal d2">
+      <div class="item">
+        <span class="tag t-amber">THE GAP</span>
+        <h4>Single-model RLHF</h4>
+        <p>Prior infrastructure centers on one LLM and one reward model, with little support for agent scaffolds or rich, long-horizon environment interaction.</p>
+      </div>
+      <div class="item">
+        <span class="tag t-blue">GOAL 01 · UNIFICATION</span>
+        <h4>Heterogeneous models &amp; agents</h4>
+        <p>One framework spanning LLMs, diffusion, and reward models with pluggable agent scaffolds across SFT, RL, reward modeling, and evaluation.</p>
+      </div>
+      <div class="item">
+        <span class="tag t-green">GOAL 02 · SCALING</span>
+        <h4>Agent–environment scaling</h4>
+        <p>Massively parallel agent–environment interaction across multi-node, containerized sandbox clusters — the regime agentic RL actually runs in.</p>
+      </div>
+    </div> -->
+  </div>
+</section>
+
+<!-- ══════════════════════════ OVERVIEW ══════════════════════════ -->
+<section class="section" id="overview">
+  <div class="wrap">
+    <div class="section-head center reveal">
+      <span class="eyebrow">System Overview</span>
+      <h2 class="section-title">RL post-training as a distributed<br>orchestration problem</h2>
+      <p class="section-lead">Agentic RL is no longer dominated by model compute alone. STACX decouples training, rollout, and sandboxed environment execution into independently schedulable services, allowing each component to scale, evolve, and be optimized around its own bottleneck.</p>
+    </div>
+
+    <div class="callout narrow reveal d1" style="margin:0 auto;">
+      <h3>Design principle</h3>
+      <p>
+        Keep algorithms lightweight; move system complexity into stable service boundaries:
+        training, rollout, inference serving, sandbox execution, and data buffering.
+      </p>
+    </div>
+
+    <!-- Framework diagram -->
+    <div class="figure figure--pad reveal d1" style="margin-top:24px;" id="fig-system-loop">
+      <svg viewBox="0 0 960 410" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="fw-title fw-desc">
+        <title id="fw-title">STACX Overall Framework</title>
+        <desc id="fw-desc">A continuous loop connecting Data Buffer, Customized Rollout Logic, Environment Engine, Training Backend and Model Inference Server with GPU arrays.</desc>
+        <defs>
+          <marker id="fw-arr" viewBox="0 0 10 7" refX="9" refY="3.5" markerWidth="8" markerHeight="6" orient="auto"><path d="M0,0 L10,3.5 L0,7z" fill="#57606a"/></marker>
+          <marker id="fw-arr-dim" viewBox="0 0 10 7" refX="9" refY="3.5" markerWidth="7" markerHeight="5" orient="auto"><path d="M0,0 L10,3.5 L0,7z" fill="#57606a"/></marker>
+        </defs>
+        <rect x="10" y="356" width="320" height="5" rx="2.5" fill="#0550ae" opacity="0.5"/>
+        <text x="170" y="378" text-anchor="middle" fill="#0550ae" font-size="14" font-weight="700" font-family="system-ui, sans-serif">Trainer</text>
+        <text x="170" y="396" text-anchor="middle" fill="#0550ae" font-size="12" font-family="system-ui, sans-serif" opacity="0.7">Pretrain + SFT + RL</text>
+        <rect x="340" y="356" width="610" height="5" rx="2.5" fill="#116329" opacity="0.5"/>
+        <text x="645" y="378" text-anchor="middle" fill="#116329" font-size="14" font-weight="700" font-family="system-ui, sans-serif">Rollout + Environment</text>
+        <text x="645" y="396" text-anchor="middle" fill="#116329" font-size="12" font-family="system-ui, sans-serif" opacity="0.7">Generation &amp; evaluation</text>
+        <rect x="20" y="12" width="200" height="72" rx="10" fill="rgba(12,90,109,0.10)" stroke="#0c5a6d" stroke-width="2"/>
+        <text x="120" y="42" text-anchor="middle" fill="#0c5a6d" font-size="17" font-weight="700" font-family="system-ui, sans-serif">Data Buffer</text>
+        <text x="120" y="62" text-anchor="middle" fill="#0c5a6d" font-size="13" font-family="system-ui, sans-serif" opacity="0.7">Replay &amp; batching</text>
+        <rect x="348" y="12" width="240" height="72" rx="10" fill="rgba(12,90,109,0.10)" stroke="#0c5a6d" stroke-width="2"/>
+        <text x="468" y="38" text-anchor="middle" fill="#0c5a6d" font-size="17" font-weight="700" font-family="system-ui, sans-serif">Customized</text>
+        <text x="468" y="58" text-anchor="middle" fill="#0c5a6d" font-size="17" font-weight="700" font-family="system-ui, sans-serif">Rollout Logic</text>
+        <rect x="726" y="12" width="214" height="72" rx="10" fill="rgba(12,90,109,0.10)" stroke="#0c5a6d" stroke-width="2"/>
+        <text x="833" y="38" text-anchor="middle" fill="#0c5a6d" font-size="17" font-weight="700" font-family="system-ui, sans-serif">Environment</text>
+        <text x="833" y="58" text-anchor="middle" fill="#0c5a6d" font-size="17" font-weight="700" font-family="system-ui, sans-serif">Engine</text>
+        <line x1="770" y1="84" x2="770" y2="104" stroke="rgba(87,96,106,0.4)" stroke-width="1.5" marker-end="url(#fw-arr-dim)"/>
+        <line x1="810" y1="84" x2="810" y2="104" stroke="rgba(87,96,106,0.4)" stroke-width="1.5" marker-end="url(#fw-arr-dim)"/>
+        <line x1="850" y1="84" x2="850" y2="104" stroke="rgba(87,96,106,0.4)" stroke-width="1.5" marker-end="url(#fw-arr-dim)"/>
+        <line x1="890" y1="84" x2="890" y2="104" stroke="rgba(87,96,106,0.4)" stroke-width="1.5" marker-end="url(#fw-arr-dim)"/>
+        <rect x="753" y="110" width="34" height="40" rx="4" fill="rgba(87,96,106,0.15)" stroke="rgba(87,96,106,0.3)" stroke-width="1"/>
+        <text x="770" y="134" text-anchor="middle" fill="#57606a" font-size="11" font-weight="600" font-family="system-ui, sans-serif">GPU</text>
+        <rect x="795" y="110" width="34" height="40" rx="4" fill="rgba(87,96,106,0.15)" stroke="rgba(87,96,106,0.3)" stroke-width="1"/>
+        <text x="812" y="134" text-anchor="middle" fill="#57606a" font-size="11" font-weight="600" font-family="system-ui, sans-serif">GPU</text>
+        <rect x="837" y="110" width="34" height="40" rx="4" fill="rgba(87,96,106,0.15)" stroke="rgba(87,96,106,0.3)" stroke-width="1"/>
+        <text x="854" y="134" text-anchor="middle" fill="#57606a" font-size="11" font-weight="600" font-family="system-ui, sans-serif">GPU</text>
+        <rect x="879" y="110" width="34" height="40" rx="4" fill="rgba(87,96,106,0.15)" stroke="rgba(87,96,106,0.3)" stroke-width="1"/>
+        <text x="896" y="134" text-anchor="middle" fill="#57606a" font-size="11" font-weight="600" font-family="system-ui, sans-serif">GPU</text>
+        <rect x="20" y="200" width="200" height="72" rx="10" fill="rgba(12,90,109,0.10)" stroke="#0c5a6d" stroke-width="2"/>
+        <text x="120" y="228" text-anchor="middle" fill="#0c5a6d" font-size="17" font-weight="700" font-family="system-ui, sans-serif">Training Backend</text>
+        <text x="120" y="250" text-anchor="middle" fill="#0c5a6d" font-size="13" font-family="system-ui, sans-serif" opacity="0.7">Megatron / FSDP</text>
+        <rect x="398" y="200" width="200" height="72" rx="10" fill="rgba(12,90,109,0.10)" stroke="#0c5a6d" stroke-width="2"/>
+        <text x="498" y="225" text-anchor="middle" fill="#0c5a6d" font-size="15" font-weight="700" font-family="system-ui, sans-serif">Model Inference</text>
+        <text x="498" y="244" text-anchor="middle" fill="#0c5a6d" font-size="15" font-weight="700" font-family="system-ui, sans-serif">Server</text>
+        <text x="498" y="261" text-anchor="middle" fill="#0c5a6d" font-size="11" font-family="system-ui, sans-serif" opacity="0.7">SGLang inference</text>
+        <line x1="346" y1="48" x2="222" y2="48" stroke="#57606a" stroke-width="2.5" marker-end="url(#fw-arr)"/>
+        <text x="284" y="40" text-anchor="middle" fill="#57606a" font-size="13" font-weight="600" font-family="system-ui, sans-serif">send sample</text>
+        <line x1="590" y1="32" x2="724" y2="32" stroke="#57606a" stroke-width="2.5" marker-end="url(#fw-arr)"/>
+        <text x="657" y="24" text-anchor="middle" fill="#57606a" font-size="13" font-weight="600" font-family="system-ui, sans-serif">send request</text>
+        <line x1="724" y1="64" x2="590" y2="64" stroke="#57606a" stroke-width="2.5" marker-end="url(#fw-arr)"/>
+        <text x="657" y="80" text-anchor="middle" fill="#57606a" font-size="13" font-weight="600" font-family="system-ui, sans-serif">send exec result</text>
+        <line x1="120" y1="84" x2="120" y2="198" stroke="#57606a" stroke-width="2.5" marker-end="url(#fw-arr)"/>
+        <text x="112" y="145" text-anchor="end" fill="#57606a" font-size="13" font-weight="600" font-family="system-ui, sans-serif">training</text> 
+        <text x="112" y="161" text-anchor="end" fill="#57606a" font-size="13" font-weight="600" font-family="system-ui, sans-serif">data</text>
+        <line x1="483" y1="84" x2="483" y2="198" stroke="#57606a" stroke-width="2.5" marker-end="url(#fw-arr)"/>
+        <text x="491" y="145" text-anchor="start" fill="#57606a" font-size="13" font-weight="600" font-family="system-ui, sans-serif">send</text>
+        <text x="491" y="161" text-anchor="start" fill="#57606a" font-size="13" font-weight="600" font-family="system-ui, sans-serif">request</text>
+        <line x1="222" y1="236" x2="396" y2="236" stroke="#57606a" stroke-width="2.5" marker-end="url(#fw-arr)"/>
+        <text x="309" y="228" text-anchor="middle" fill="#57606a" font-size="13" font-weight="600" font-family="system-ui, sans-serif">update weights</text>
+        <line x1="50" y1="272" x2="50" y2="295" stroke="#57606a" stroke-width="1.5" marker-end="url(#fw-arr-dim)"/>
+        <line x1="92" y1="272" x2="92" y2="295" stroke="#57606a" stroke-width="1.5" marker-end="url(#fw-arr-dim)"/>
+        <line x1="134" y1="272" x2="134" y2="295" stroke="#57606a" stroke-width="1.5" marker-end="url(#fw-arr-dim)"/>
+        <line x1="176" y1="272" x2="176" y2="295" stroke="#57606a" stroke-width="1.5" marker-end="url(#fw-arr-dim)"/>
+        <rect x="33" y="300" width="34" height="46" rx="4" fill="rgba(87,96,106,0.15)" stroke="rgba(87,96,106,0.3)" stroke-width="1"/>
+        <text x="50" y="328" text-anchor="middle" fill="#57606a" font-size="11" font-weight="600" font-family="system-ui, sans-serif">GPU</text>
+        <rect x="75" y="300" width="34" height="46" rx="4" fill="rgba(87,96,106,0.15)" stroke="rgba(87,96,106,0.3)" stroke-width="1"/>
+        <text x="92" y="328" text-anchor="middle" fill="#57606a" font-size="11" font-weight="600" font-family="system-ui, sans-serif">GPU</text>
+        <rect x="117" y="300" width="34" height="46" rx="4" fill="rgba(87,96,106,0.15)" stroke="rgba(87,96,106,0.3)" stroke-width="1"/>
+        <text x="134" y="328" text-anchor="middle" fill="#57606a" font-size="11" font-weight="600" font-family="system-ui, sans-serif">GPU</text>
+        <rect x="159" y="300" width="34" height="46" rx="4" fill="rgba(87,96,106,0.15)" stroke="rgba(87,96,106,0.3)" stroke-width="1"/>
+        <text x="176" y="328" text-anchor="middle" fill="#57606a" font-size="11" font-weight="600" font-family="system-ui, sans-serif">GPU</text>
+        <line x1="428" y1="272" x2="428" y2="295" stroke="#57606a" stroke-width="1.5" marker-end="url(#fw-arr-dim)"/>
+        <line x1="470" y1="272" x2="470" y2="295" stroke="#57606a" stroke-width="1.5" marker-end="url(#fw-arr-dim)"/>
+        <line x1="512" y1="272" x2="512" y2="295" stroke="#57606a" stroke-width="1.5" marker-end="url(#fw-arr-dim)"/>
+        <line x1="554" y1="272" x2="554" y2="295" stroke="#57606a" stroke-width="1.5" marker-end="url(#fw-arr-dim)"/>
+        <rect x="411" y="300" width="34" height="46" rx="4" fill="rgba(87,96,106,0.15)" stroke="rgba(87,96,106,0.3)" stroke-width="1"/>
+        <text x="428" y="328" text-anchor="middle" fill="#57606a" font-size="11" font-weight="600" font-family="system-ui, sans-serif">GPU</text>
+        <rect x="453" y="300" width="34" height="46" rx="4" fill="rgba(87,96,106,0.15)" stroke="rgba(87,96,106,0.3)" stroke-width="1"/>
+        <text x="470" y="328" text-anchor="middle" fill="#57606a" font-size="11" font-weight="600" font-family="system-ui, sans-serif">GPU</text>
+        <rect x="495" y="300" width="34" height="46" rx="4" fill="rgba(87,96,106,0.15)" stroke="rgba(87,96,106,0.3)" stroke-width="1"/>
+        <text x="512" y="328" text-anchor="middle" fill="#57606a" font-size="11" font-weight="600" font-family="system-ui, sans-serif">GPU</text>
+        <rect x="537" y="300" width="34" height="46" rx="4" fill="rgba(87,96,106,0.15)" stroke="rgba(87,96,106,0.3)" stroke-width="1"/>
+        <text x="554" y="328" text-anchor="middle" fill="#57606a" font-size="11" font-weight="600" font-family="system-ui, sans-serif">GPU</text>
+      </svg>
+      <p class="figure__cap"><b>STACX system loop.</b> Training, rollout, inference-time serving, and environment execution are separated into services connected by shared data buffering and weight synchronization.</p>
+    </div>
+
+    <!-- Three engines legend -->
+    <div class="loop-legend reveal d2">
+      <div class="item">
+        <span class="tag t-green">ROLLOUT ENGINE</span>
+        <h4>Generate</h4>
+        <p>Orchestrates inference, agent scaffolds, and environment execution to generate training-ready trajectories.</p>
+      </div>
+      <div class="item">
+        <span class="tag t-blue">TRAINER ENGINE</span>
+        <h4>Optimize</h4>
+        <p>Consumes trajectory batches and updates policy weights through recipe-defined objectives.</p>
+      </div>
+      <div class="item">
+        <span class="tag t-cyan">ENVIRONMENT ENGINE</span>
+        <h4>Execute</h4>
+        <p>Runs long-lived sandbox environments behind a narrow, scalable interface.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════ FEATURES ══════════════════════════ -->
+<section class="section section--alt" id="features">
+  <div class="wrap">
+    <div class="section-head center reveal">
+      <span class="eyebrow">Key Features</span>
+      <h2 class="section-title">Capabilities Enabled by the Architecture</h2>
+      <p class="section-lead">STACX decomposes training, rollout, scheduling, and environment execution into stable, independently extensible services.</p>
+    </div>
+
+    <div class="feature-grid">
+      <div class="feature fa-brand reveal">
+        <div class="feature__icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></div>
+        <h3>Modularization</h3>
+        <p>Decouples training, rollout, model serving, data buffering, and environment execution into independently scalable subsystems.</p>
+      </div>
+      <div class="feature fa-green reveal d1">
+        <div class="feature__icon"><svg viewBox="0 0 24 24"><path d="M12 3l9 5-9 5-9-5 9-5z"/><path d="M3 13l9 5 9-5"/></svg></div>
+        <h3>Versatility</h3>
+        <p>Supports post-training for LLMs across SFT, RL, reward modeling, and evaluation workflows.</p>
+      </div>
+      <div class="feature fa-purple reveal d2">
+        <div class="feature__icon"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/><circle cx="9" cy="6" r="2.2" fill="currentColor" stroke="none"/><circle cx="15" cy="12" r="2.2" fill="currentColor" stroke="none"/><circle cx="8" cy="18" r="2.2" fill="currentColor" stroke="none"/></svg></div>
+        <h3>Customizable Agent Runtime</h3>
+        <p>Plugs in agent scaffolds, tools, and multi-turn task logic through a standard rollout interface.</p>
+      </div>
+      <div class="feature fa-amber reveal d3">
+        <div class="feature__icon"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="6" rx="1.5"/><rect x="3" y="14" width="18" height="6" rx="1.5"/><circle cx="7" cy="7" r="1" fill="currentColor" stroke="none"/><circle cx="7" cy="17" r="1" fill="currentColor" stroke="none"/></svg></div>
+        <h3>Automatic Environment Scaling</h3>
+        <p>Scales long-running, containerized environments across multi-node clusters for parallel agent-environment interaction</p>
+      </div>
+    </div>
+
+    <div class="stats reveal d1">
+      <div class="stat"><div class="stat__num" data-count="22" style="color:#06469a;">22</div><div class="stat__label">Built-in Recipes</div></div>
+      <div class="stat"><div class="stat__num" data-count="2" style="color:var(--green);">2</div><div class="stat__label">Training Backends</div></div>
+      <div class="stat"><div class="stat__num" data-count="64" style="color:var(--cyan);">64</div><div class="stat__label">Concurrent Sandboxes</div></div>
+      <div class="stat"><div class="stat__num" data-count="6" style="color:var(--amber);">6</div><div class="stat__label">Built-in Benchmarks</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════ ROLLOUT ENGINE ══════════════════════════ -->
+<section class="section" id="rollout">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="engine-badge" style="background:rgba(17,99,41,0.08); color:var(--green);"><span class="dot" style="background:var(--green);"></span>ENGINE 01 — ROLLOUT SERVICE</span>
+      <h2 class="section-title">The Rollout Engine</h2>
+      <p class="section-lead">
+        We now zoom into the rollout side of the system loop: the Rollout Engine receives samples,
+        schedules evaluator instances, and runs multi-turn agent–environment interactions to produce training-ready trajectories.
+      </p>
+    </div>
+
+    <!-- Zoom path: Level 0 → Level 1 → Level 2 -->
+    <div class="zoom-path reveal d1">
+      <a class="zoom-step" href="#fig-system-loop">
+        <span class="zoom-level">Level 0</span>
+        <h4>System Overview</h4>
+        <p>Service loop across trainer, rollout, inference, environment, and data buffer</p>
+      </a>
+      <div class="zoom-arrow">→</div>
+      <a class="zoom-step active" href="#fig-rolloutmanager">
+        <span class="zoom-level">Level 1</span>
+        <h4>RolloutManager</h4>
+        <p>Task scheduling and evaluator dispatch</p>
+      </a>
+      <div class="zoom-arrow">→</div>
+      <a class="zoom-step" href="#fig-evaluator-loop">
+        <span class="zoom-level">Level 2</span>
+        <h4>Evaluator loop</h4>
+        <p>One multi-turn trajectory execution</p>
+      </a>
+    </div>
+
+    <div class="sub-blocks">
+
+      <!-- RolloutManager architecture -->
+      <div class="reveal">
+        <h3 class="block-title"><span class="num">01</span>Level 1 — RolloutManager Control Plane</h3>
+        <p class="block-lead" style="max-width:900px;">This expands the <b>Customized Rollout Logic</b> box from the system overview. The RolloutManager pulls samples from <code>DataSource</code>, allocates resources through <code>TaskScheduler</code>, and dispatches task-specific Evaluators to execute trajectories.</p>
+        <div class="figure figure--pad" id="fig-rolloutmanager">
+          <svg viewBox="0 0 1100 420" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="rm-title">
+            <title id="rm-title">RolloutManager Architecture</title>
+            <defs>
+              <marker id="rm-arr" viewBox="0 0 10 7" refX="9" refY="3.5" markerWidth="8" markerHeight="6" orient="auto"><path d="M0,0 L10,3.5 L0,7z" fill="#57606a"/></marker>
+              <marker id="rm-arr-g" viewBox="0 0 10 7" refX="9" refY="3.5" markerWidth="8" markerHeight="6" orient="auto"><path d="M0,0 L10,3.5 L0,7z" fill="#116329"/></marker>
+            </defs>
+            <rect x="4" y="0" width="1092" height="410" rx="12" fill="rgba(17,99,41,0.03)" stroke="#116329" stroke-width="2.5"/>
+            <text x="550" y="25" text-anchor="middle" fill="#116329" font-size="18" font-weight="800" font-family="system-ui, sans-serif">RolloutManager</text>
+            <rect x="100" y="168" width="170" height="70" rx="10" fill="rgba(12,90,109,0.10)" stroke="#0c5a6d" stroke-width="2"/>
+            <text x="185" y="210" text-anchor="middle" fill="#0c5a6d" font-size="16" font-weight="700" font-family="system-ui, sans-serif">DataSource</text>
+            <line x1="272" y1="203" x2="348" y2="203" stroke="#57606a" stroke-width="2.5" marker-end="url(#rm-arr)"/>
+            <text x="310" y="193" text-anchor="middle" fill="#57606a" font-size="10" font-weight="600" font-family="system-ui, sans-serif">Training</text>
+            <text x="310" y="218" text-anchor="middle" fill="#57606a" font-size="10" font-weight="600" font-family="system-ui, sans-serif">Samples</text>
+            <rect x="352" y="90" width="230" height="296" rx="10" fill="rgba(5,80,174,0.06)" stroke="#0550ae" stroke-width="2"/>
+            <text x="467" y="114" text-anchor="middle" fill="#0550ae" font-size="16" font-weight="700" font-family="system-ui, sans-serif">TaskScheduler</text>
+            <rect x="372" y="126" width="190" height="48" rx="8" fill="rgba(149,56,0,0.08)" stroke="#953800" stroke-width="1.5"/>
+            <text x="467" y="145" text-anchor="middle" fill="#953800" font-size="14" font-weight="700" font-family="system-ui, sans-serif">ResourcePool</text>
+            <text x="467" y="163" text-anchor="middle" fill="#57606a" font-size="12" font-family="system-ui, sans-serif">GPU &bull; CPU &bull; Memory</text>
+            <rect x="372" y="184" width="190" height="48" rx="8" fill="rgba(12,90,109,0.08)" stroke="#0c5a6d" stroke-width="1.5"/>
+            <text x="467" y="203" text-anchor="middle" fill="#0c5a6d" font-size="14" font-weight="700" font-family="system-ui, sans-serif">Agent Manager</text>
+            <text x="467" y="221" text-anchor="middle" fill="#57606a" font-size="12" font-family="system-ui, sans-serif">Scaffolding &middot; Lifecycle</text>
+            <rect x="372" y="244" width="190" height="66" rx="8" fill="rgba(110,64,201,0.08)" stroke="#6e40c9" stroke-width="1.5"/>
+            <text x="467" y="266" text-anchor="middle" fill="#6e40c9" font-size="13" font-weight="700" font-family="system-ui, sans-serif">Schedule Strategy</text>
+            <text x="467" y="284" text-anchor="start" fill="#57606a" font-size="11" font-family="system-ui, sans-serif"><tspan x="392">1. FIFO Strategy</tspan><tspan x="392" dy="14">2. Task-Aware Strategy</tspan></text>
+            <line x1="584" y1="204" x2="650" y2="204" stroke="#116329" stroke-width="2.5"/>
+            <line x1="650" y1="90" x2="650" y2="350" stroke="#116329" stroke-width="2.5"/>
+            <line x1="650" y1="90" x2="714" y2="90" stroke="#116329" stroke-width="2" marker-end="url(#rm-arr-g)"/>
+            <line x1="650" y1="220" x2="714" y2="220" stroke="#116329" stroke-width="2" marker-end="url(#rm-arr-g)"/>
+            <line x1="650" y1="350" x2="714" y2="350" stroke="#116329" stroke-width="2" marker-end="url(#rm-arr-g)"/>
+            <g font-family="system-ui, sans-serif">
+              <rect x="718" y="52" width="280" height="80" rx="10" fill="rgba(17,99,41,0.08)" stroke="#116329" stroke-width="2"/>
+              <text x="858" y="74" text-anchor="middle" fill="#116329" font-size="14" font-weight="700">Retool Evaluator</text>
+              <rect x="734" y="84" width="56" height="28" rx="5" fill="rgba(5,80,174,0.08)" stroke="rgba(5,80,174,0.3)" stroke-width="1"/><text x="762" y="102" text-anchor="middle" fill="#0550ae" font-size="11" font-weight="600">Agent</text>
+              <rect x="796" y="84" width="44" height="28" rx="5" fill="rgba(12,90,109,0.10)" stroke="rgba(12,90,109,0.3)" stroke-width="1"/><text x="818" y="102" text-anchor="middle" fill="#0c5a6d" font-size="11" font-weight="600">Env</text>
+              <rect x="846" y="84" width="64" height="28" rx="5" fill="rgba(110,64,201,0.08)" stroke="rgba(110,64,201,0.3)" stroke-width="1"/><text x="878" y="102" text-anchor="middle" fill="#6e40c9" font-size="11" font-weight="600">Reward</text>
+              <rect x="916" y="84" width="70" height="28" rx="5" fill="rgba(149,56,0,0.06)" stroke="rgba(149,56,0,0.2)" stroke-width="1"/><text x="951" y="102" text-anchor="middle" fill="#953800" font-size="11" font-weight="600">Resource</text>
+              <rect x="718" y="182" width="280" height="80" rx="10" fill="rgba(17,99,41,0.08)" stroke="#116329" stroke-width="2"/>
+              <text x="858" y="204" text-anchor="middle" fill="#116329" font-size="14" font-weight="700">MLE Evaluator</text>
+              <rect x="734" y="214" width="56" height="28" rx="5" fill="rgba(5,80,174,0.08)" stroke="rgba(5,80,174,0.3)" stroke-width="1"/><text x="762" y="232" text-anchor="middle" fill="#0550ae" font-size="11" font-weight="600">Agent</text>
+              <rect x="796" y="214" width="44" height="28" rx="5" fill="rgba(12,90,109,0.10)" stroke="rgba(12,90,109,0.3)" stroke-width="1"/><text x="818" y="232" text-anchor="middle" fill="#0c5a6d" font-size="11" font-weight="600">Env</text>
+              <rect x="846" y="214" width="64" height="28" rx="5" fill="rgba(110,64,201,0.08)" stroke="rgba(110,64,201,0.3)" stroke-width="1"/><text x="878" y="232" text-anchor="middle" fill="#6e40c9" font-size="11" font-weight="600">Reward</text>
+              <rect x="916" y="214" width="70" height="28" rx="5" fill="rgba(149,56,0,0.06)" stroke="rgba(149,56,0,0.2)" stroke-width="1"/><text x="951" y="232" text-anchor="middle" fill="#953800" font-size="11" font-weight="600">Resource</text>
+              <rect x="718" y="312" width="280" height="80" rx="10" fill="rgba(17,99,41,0.08)" stroke="#116329" stroke-width="2"/>
+              <text x="858" y="334" text-anchor="middle" fill="#116329" font-size="14" font-weight="700">SWE Evaluator</text>
+              <rect x="734" y="344" width="56" height="28" rx="5" fill="rgba(5,80,174,0.08)" stroke="rgba(5,80,174,0.3)" stroke-width="1"/><text x="762" y="362" text-anchor="middle" fill="#0550ae" font-size="11" font-weight="600">Agent</text>
+              <rect x="796" y="344" width="44" height="28" rx="5" fill="rgba(12,90,109,0.10)" stroke="rgba(12,90,109,0.3)" stroke-width="1"/><text x="818" y="362" text-anchor="middle" fill="#0c5a6d" font-size="11" font-weight="600">Env</text>
+              <rect x="846" y="344" width="64" height="28" rx="5" fill="rgba(110,64,201,0.08)" stroke="rgba(110,64,201,0.3)" stroke-width="1"/><text x="878" y="362" text-anchor="middle" fill="#6e40c9" font-size="11" font-weight="600">Reward</text>
+              <rect x="916" y="344" width="70" height="28" rx="5" fill="rgba(149,56,0,0.06)" stroke="rgba(149,56,0,0.2)" stroke-width="1"/><text x="951" y="362" text-anchor="middle" fill="#953800" font-size="11" font-weight="600">Resource</text>
+            </g>
+          </svg>
+          <p class="figure__cap">Task environments are normalized into a unified <b><a href="https://www.harborframework.com/" target="_blank" rel="noopener">Harbor-style</a></b> format, with shared metadata, prompts, tools, stopping conditions, and reward definitions, so new tasks can be added with minimal glue code.</p>
+        </div>
+      </div>
+
+      <!-- Zooming-in transition: RolloutManager → one Evaluator -->
+      <p class="bridge-line reveal">
+        <b>Zooming in:</b> Each evaluator dispatched by the RolloutManager runs the multi-turn loop below.
+      </p>
+
+      <!-- Multi-turn loop (Level 2) -->
+      <div class="split wide-left reveal">
+        <div class="figure" id="fig-evaluator-loop">
+          <svg viewBox="0 0 440 410" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="al-title">
+            <title id="al-title">Multi-turn Agentic Loop</title>
+            <defs>
+              <marker id="al-arr" viewBox="0 0 10 7" refX="9" refY="3.5" markerWidth="8" markerHeight="6" orient="auto"><path d="M0,0 L10,3.5 L0,7z" fill="#57606a"/></marker>
+              <marker id="al-arr-g" viewBox="0 0 10 7" refX="9" refY="3.5" markerWidth="8" markerHeight="6" orient="auto"><path d="M0,0 L10,3.5 L0,7z" fill="#116329"/></marker>
+            </defs>
+            <rect x="30" y="16" width="380" height="250" rx="10" fill="rgba(5,80,174,0.03)" stroke="rgba(5,80,174,0.15)" stroke-width="1.5" stroke-dasharray="6 3"/>
+            <text x="220" y="40" text-anchor="middle" fill="#0550ae" font-size="12" font-weight="700" font-family="system-ui, sans-serif">for turn in range(max_turns):</text>
+            <rect x="100" y="54" width="240" height="40" rx="7" fill="rgba(5,80,174,0.10)" stroke="#0550ae" stroke-width="1.5"/>
+            <text x="220" y="79" text-anchor="middle" fill="#0550ae" font-size="13" font-weight="700" font-family="system-ui, sans-serif">Agent.action()</text>
+            <line x1="220" y1="94" x2="220" y2="122" stroke="#57606a" stroke-width="1.5" marker-end="url(#al-arr)"/>
+            <text x="230" y="111" text-anchor="start" fill="#57606a" font-size="10.5" font-weight="600" font-family="system-ui, sans-serif">tool_call</text>
+            <rect x="100" y="126" width="240" height="54" rx="7" fill="rgba(12,90,109,0.10)" stroke="#0c5a6d" stroke-width="1.5"/>
+            <text x="220" y="151" text-anchor="middle" fill="#0c5a6d" font-size="13" font-weight="700" font-family="system-ui, sans-serif">Environment.step()</text>
+            <text x="220" y="169" text-anchor="middle" fill="#57606a" font-size="10" font-family="system-ui, sans-serif">acquire resource &rarr; step &rarr; release</text>
+            <line x1="220" y1="180" x2="220" y2="208" stroke="#57606a" stroke-width="1.5" marker-end="url(#al-arr)"/>
+            <text x="230" y="197" text-anchor="start" fill="#57606a" font-size="10.5" font-weight="600" font-family="system-ui, sans-serif">tool_response</text>
+            <rect x="100" y="212" width="240" height="40" rx="7" fill="rgba(110,64,201,0.08)" stroke="#6e40c9" stroke-width="1.5"/>
+            <text x="220" y="237" text-anchor="middle" fill="#6e40c9" font-size="13" font-weight="700" font-family="system-ui, sans-serif">Agent.manage_context()</text>
+            <path d="M 220 252 L 220 259 L 394 259 L 394 74 L 342 74" fill="none" stroke="#116329" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#al-arr-g)"/>
+            <text x="386" y="165" text-anchor="middle" fill="#116329" font-size="10" font-weight="600" font-family="system-ui, sans-serif" transform="rotate(-90 386 165)">next turn</text>
+            <line x1="220" y1="266" x2="220" y2="286" stroke="#57606a" stroke-width="1.5" marker-end="url(#al-arr)"/>
+            <rect x="100" y="288" width="240" height="36" rx="7" fill="rgba(17,99,41,0.09)" stroke="#116329" stroke-width="1.5"/>
+            <text x="220" y="311" text-anchor="middle" fill="#116329" font-size="13" font-weight="700" font-family="system-ui, sans-serif">Reward.get_reward()</text>
+            <line x1="220" y1="324" x2="220" y2="344" stroke="#57606a" stroke-width="1.5" marker-end="url(#al-arr)"/>
+            <rect x="100" y="346" width="240" height="36" rx="7" fill="rgba(12,90,109,0.08)" stroke="#0c5a6d" stroke-width="1.5"/>
+            <text x="220" y="369" text-anchor="middle" fill="#0c5a6d" font-size="13" font-weight="700" font-family="system-ui, sans-serif">Environment.cleanup()</text>
+          </svg>
+          <p class="figure__cap">Each Evaluator runs an async-native multi-turn loop, enabling hundreds of trajectories to execute concurrently.</p>
+        </div>
+        <div>
+          <h3 class="block-title"><span class="num">02</span>Level 2 — Evaluator Multi-Turn Loop</h3>
+          <p class="block-lead">This expands a single <b>Evaluator</b> launched by the RolloutManager. Each Evaluator runs a multi-turn episode by coordinating agent actions, environment steps, reward computation, resource management, and trajectory construction.</p>
+          <div class="points">
+            <div class="point v-cyan"><div class="point__ic"><svg viewBox="0 0 24 24"><path d="M12 2v4M12 18v4M2 12h4M18 12h4"/><circle cx="12" cy="12" r="4"/></svg></div><div><h4>Resource allocation</h4><p>Resources are acquired before each <code>env.step()</code> and released immediately after, including on exceptions.</p></div></div>
+            <div class="point v-purple"><div class="point__ic"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M9 12l2 2 4-4"/></svg></div><div><h4>Loss mask</h4><p>Only model-generated tokens are trained on; environment observations are masked out.</p></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Task Scheduling (figure + strategies) -->
+      <div class="split wide-right reveal">
+        <div>
+          <h3 class="block-title"><span class="num">03</span>Task Scheduling</h3>
+          <p class="block-lead">The scheduler groups pending tasks by type and dispatches them to evaluators. Scheduling policies are pluggable: FIFO, priority, fair-share, or task-aware strategies can be swapped in without changing evaluator logic.</p>
+          <div class="points">
+            <div class="point v-green"><div class="point__ic"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h10M4 18h7"/></svg></div><div><h4>FIFO Strategy</h4><p>Processes batches in arrival order. Simple and predictable for homogeneous workloads.</p></div></div>
+            <div class="point v-purple"><div class="point__ic"><svg viewBox="0 0 24 24"><path d="M3 12h4l3-9 4 18 3-9h4"/></svg></div><div><h4>Task-Aware Strategy</h4><p>Interleaves task types across batches to balance multi-task training and reduce catastrophic forgetting.</p></div></div>
+          </div>
+        </div>
+        <div class="figure">
+          <svg viewBox="0 0 480 370" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ts-title">
+            <title id="ts-title">Task Scheduling</title>
+            <defs>
+              <marker id="ts-arr" viewBox="0 0 10 7" refX="9" refY="3.5" markerWidth="8" markerHeight="6" orient="auto"><path d="M0,0 L10,3.5 L0,7z" fill="#57606a"/></marker>
+              <marker id="ts-arr-g" viewBox="0 0 10 7" refX="9" refY="3.5" markerWidth="8" markerHeight="6" orient="auto"><path d="M0,0 L10,3.5 L0,7z" fill="#116329"/></marker>
+            </defs>
+            <text x="50" y="58" text-anchor="middle" fill="#57606a" font-size="11" font-weight="600" font-family="system-ui, sans-serif">Incoming Tasks</text>
+            <rect x="10" y="68" width="80" height="30" rx="6" fill="rgba(5,80,174,0.10)" stroke="#0550ae" stroke-width="1.5"/>
+            <text x="50" y="88" text-anchor="middle" fill="#0550ae" font-size="11" font-weight="600" font-family="system-ui, sans-serif">Retool</text>
+            <rect x="10" y="104" width="80" height="30" rx="6" fill="rgba(12,90,109,0.10)" stroke="#0c5a6d" stroke-width="1.5"/>
+            <text x="50" y="124" text-anchor="middle" fill="#0c5a6d" font-size="11" font-weight="600" font-family="system-ui, sans-serif">MLE</text>
+            <rect x="10" y="140" width="80" height="30" rx="6" fill="rgba(110,64,201,0.10)" stroke="#6e40c9" stroke-width="1.5"/>
+            <text x="50" y="160" text-anchor="middle" fill="#6e40c9" font-size="11" font-weight="600" font-family="system-ui, sans-serif">SWE</text>
+            <rect x="10" y="178" width="80" height="30" rx="6" fill="rgba(5,80,174,0.10)" stroke="#0550ae" stroke-width="1.5"/>
+            <text x="50" y="198" text-anchor="middle" fill="#0550ae" font-size="11" font-weight="600" font-family="system-ui, sans-serif">Retool</text>
+            <rect x="10" y="214" width="80" height="30" rx="6" fill="rgba(12,90,109,0.10)" stroke="#0c5a6d" stroke-width="1.5"/>
+            <text x="50" y="234" text-anchor="middle" fill="#0c5a6d" font-size="11" font-weight="600" font-family="system-ui, sans-serif">MLE</text>
+            <rect x="10" y="250" width="80" height="30" rx="6" fill="rgba(110,64,201,0.10)" stroke="#6e40c9" stroke-width="1.5"/>
+            <text x="50" y="270" text-anchor="middle" fill="#6e40c9" font-size="11" font-weight="600" font-family="system-ui, sans-serif">SWE</text>
+            <line x1="92" y1="83" x2="134" y2="83" stroke="#57606a" stroke-width="1.5"/>
+            <line x1="92" y1="119" x2="134" y2="119" stroke="#57606a" stroke-width="1.5"/>
+            <line x1="92" y1="155" x2="134" y2="155" stroke="#57606a" stroke-width="1.5"/>
+            <line x1="92" y1="193" x2="134" y2="193" stroke="#57606a" stroke-width="1.5"/>
+            <line x1="92" y1="229" x2="134" y2="229" stroke="#57606a" stroke-width="1.5"/>
+            <line x1="92" y1="265" x2="134" y2="265" stroke="#57606a" stroke-width="1.5"/>
+            <line x1="134" y1="83" x2="134" y2="265" stroke="#57606a" stroke-width="1.5"/>
+            <line x1="134" y1="174" x2="154" y2="174" stroke="#57606a" stroke-width="2" marker-end="url(#ts-arr)"/>
+            <rect x="158" y="60" width="200" height="310" rx="10" fill="rgba(5,80,174,0.06)" stroke="#0550ae" stroke-width="2"/>
+            <text x="258" y="82" text-anchor="middle" fill="#0550ae" font-size="14" font-weight="700" font-family="system-ui, sans-serif">TaskScheduler</text>
+            <text x="258" y="104" text-anchor="middle" fill="#57606a" font-size="11" font-weight="600" font-family="system-ui, sans-serif">1. Compose batches by task_type</text>
+            <line x1="178" y1="112" x2="338" y2="112" stroke="rgba(5,80,174,0.15)" stroke-width="1"/>
+            <rect x="178" y="122" width="160" height="26" rx="5" fill="rgba(5,80,174,0.08)" stroke="rgba(5,80,174,0.2)" stroke-width="1"/>
+            <text x="258" y="139" text-anchor="middle" fill="#0550ae" font-size="11" font-weight="600" font-family="system-ui, sans-serif">Batch: Retool &times;2</text>
+            <rect x="178" y="156" width="160" height="26" rx="5" fill="rgba(12,90,109,0.08)" stroke="rgba(12,90,109,0.2)" stroke-width="1"/>
+            <text x="258" y="173" text-anchor="middle" fill="#0c5a6d" font-size="11" font-weight="600" font-family="system-ui, sans-serif">Batch: MLE &times;2</text>
+            <rect x="178" y="190" width="160" height="26" rx="5" fill="rgba(110,64,201,0.08)" stroke="rgba(110,64,201,0.2)" stroke-width="1"/>
+            <text x="258" y="207" text-anchor="middle" fill="#6e40c9" font-size="11" font-weight="600" font-family="system-ui, sans-serif">Batch: SWE &times;2</text>
+            <line x1="178" y1="224" x2="338" y2="224" stroke="rgba(5,80,174,0.15)" stroke-width="1"/>
+            <text x="258" y="242" text-anchor="middle" fill="#57606a" font-size="11" font-weight="600" font-family="system-ui, sans-serif">2. Agent Manager</text>
+            <rect x="178" y="250" width="160" height="40" rx="6" fill="rgba(12,90,109,0.06)" stroke="#0c5a6d" stroke-width="1.2"/>
+            <text x="258" y="266" text-anchor="middle" fill="#0c5a6d" font-size="10" font-weight="700" font-family="system-ui, sans-serif">Scaffolding &middot; Lifecycle</text>
+            <text x="258" y="280" text-anchor="middle" fill="#57606a" font-size="10" font-family="system-ui, sans-serif">Per-task agent orchestration</text>
+            <line x1="178" y1="298" x2="338" y2="298" stroke="rgba(5,80,174,0.15)" stroke-width="1"/>
+            <text x="258" y="316" text-anchor="middle" fill="#57606a" font-size="11" font-weight="600" font-family="system-ui, sans-serif">3. Decide execution order</text>
+            <rect x="178" y="324" width="160" height="36" rx="6" fill="rgba(110,64,201,0.06)" stroke="#6e40c9" stroke-width="1.2"/>
+            <text x="258" y="340" text-anchor="middle" fill="#6e40c9" font-size="11" font-weight="700" font-family="system-ui, sans-serif">Schedule Strategy</text>
+            <text x="258" y="354" text-anchor="middle" fill="#57606a" font-size="10" font-family="system-ui, sans-serif">FIFO or Task-Aware</text>
+            <line x1="360" y1="174" x2="390" y2="174" stroke="#116329" stroke-width="2"/>
+            <line x1="390" y1="100" x2="390" y2="280" stroke="#116329" stroke-width="2"/>
+            <line x1="390" y1="100" x2="412" y2="100" stroke="#116329" stroke-width="1.5" marker-end="url(#ts-arr-g)"/>
+            <line x1="390" y1="190" x2="412" y2="190" stroke="#116329" stroke-width="1.5" marker-end="url(#ts-arr-g)"/>
+            <line x1="390" y1="280" x2="412" y2="280" stroke="#116329" stroke-width="1.5" marker-end="url(#ts-arr-g)"/>
+            <text x="445" y="58" text-anchor="middle" fill="#57606a" font-size="11" font-weight="600" font-family="system-ui, sans-serif">Evaluators</text>
+            <rect x="416" y="70" width="54" height="62" rx="8" fill="rgba(17,99,41,0.08)" stroke="#116329" stroke-width="1.5"/>
+            <text x="443" y="92" text-anchor="middle" fill="#116329" font-size="11" font-weight="700" font-family="system-ui, sans-serif">Retool</text>
+            <text x="443" y="106" text-anchor="middle" fill="#0550ae" font-size="8" font-family="system-ui, sans-serif">Agent</text>
+            <text x="443" y="116" text-anchor="middle" fill="#0c5a6d" font-size="8" font-family="system-ui, sans-serif">Env</text>
+            <text x="443" y="126" text-anchor="middle" fill="#6e40c9" font-size="8" font-family="system-ui, sans-serif">Reward</text>
+            <rect x="416" y="160" width="54" height="62" rx="8" fill="rgba(17,99,41,0.08)" stroke="#116329" stroke-width="1.5"/>
+            <text x="443" y="182" text-anchor="middle" fill="#116329" font-size="11" font-weight="700" font-family="system-ui, sans-serif">MLE</text>
+            <text x="443" y="196" text-anchor="middle" fill="#0550ae" font-size="8" font-family="system-ui, sans-serif">Agent</text>
+            <text x="443" y="206" text-anchor="middle" fill="#0c5a6d" font-size="8" font-family="system-ui, sans-serif">Env</text>
+            <text x="443" y="216" text-anchor="middle" fill="#6e40c9" font-size="8" font-family="system-ui, sans-serif">Reward</text>
+            <rect x="416" y="250" width="54" height="62" rx="8" fill="rgba(17,99,41,0.08)" stroke="#116329" stroke-width="1.5"/>
+            <text x="443" y="272" text-anchor="middle" fill="#116329" font-size="11" font-weight="700" font-family="system-ui, sans-serif">SWE</text>
+            <text x="443" y="286" text-anchor="middle" fill="#0550ae" font-size="8" font-family="system-ui, sans-serif">Agent</text>
+            <text x="443" y="296" text-anchor="middle" fill="#0c5a6d" font-size="8" font-family="system-ui, sans-serif">Env</text>
+            <text x="443" y="306" text-anchor="middle" fill="#6e40c9" font-size="8" font-family="system-ui, sans-serif">Reward</text>
+          </svg>
+          <p class="figure__cap">Tasks are grouped into batches by <code>task_type</code>, agents are managed per task, then the active strategy (FIFO or Task-Aware) sets execution order before dispatch to the matching evaluators.</p>
+        </div>
+      </div>
+
+      <!-- Resource Scheduling + Agent-as-a-Service -->
+      <div class="split reveal">
+        <div>
+          <h3 class="block-title"><span class="num">04</span>Resource Scheduling</h3>
+          <p class="block-lead">Users specify a global resource budget, and STACX allocates per-task resources before launching evaluators or sandboxes. Resources are acquired atomically and released when each episode finishes.</p>
+          <div class="points">
+            <div class="point v-amber"><div class="point__ic"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="7" rx="1.5"/><rect x="3" y="14" width="18" height="7" rx="1.5"/></svg></div><div><h4>Two-level pools</h4><p>Evaluators draw from a global budget to form local pools, while each task acquires the resources it needs at runtime.</p></div></div>
+            <div class="point v-amber"><div class="point__ic"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 10 10"/><path d="M12 7v5l3 3"/></svg></div><div><h4>Deadlock prevention</h4><p>Before scheduling, STACX verifies that the pool can satisfy each evaluator’s budget, ensuring all-or-nothing resource acquisition.</p></div></div>
+          </div>
+        </div>
+        <div>
+          <h3 class="block-title"><span class="num">05</span>Agent-as-a-Service</h3>
+          <p class="block-lead">STACX plugs external agent scaffolds into the RL loop as black-box services. A lightweight proxy captures actions, tool calls, observations, rewards, and traces from systems such as <a href="https://www.harborframework.com/docs/agents/terminus-2" target="_blank" rel="noopener">Terminus2</a> or <a href="https://github.com/OpenHands/openhands" target="_blank" rel="noopener">OpenHands</a>, then converts them into training-ready rollout trajectories.</p>
+          <div class="points">
+            <div class="point v-blue"><div class="point__ic"><svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><path d="M3.27 6.96L12 12l8.73-5.04M12 22V12"/></svg></div><div><h4>Black-box integration</h4><p>Connect existing agent frameworks without modifying their internals.</p></div></div>
+            <div class="point v-green"><div class="point__ic"><svg viewBox="0 0 24 24"><path d="M4 7h6l4 5h6"/><path d="M4 17h6l4-5"/><path d="M18 8l3 4-3 4"/></svg></div><div><h4>Unified rollout interface</h4><p>Normalize heterogeneous agent executions into trajectories that support evaluation, reward computation, and policy training.</p></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Two Training Modes -->
+      <div class="reveal" id="modes">
+        <h3 class="block-title"><span class="num">06</span>Two RL Workflows</h3>
+        <p class="block-lead" style="max-width:940px;">The same rollout interface closes the RL loop in two complementary ways: <b>Batch RL</b> collects high-throughput trajectories from parallel simulated environments, while <b>On-Call RL</b> learns continuously from a deployed agent's real-world interactions.</p>
+        <div class="split" style="align-items:stretch;">
+          <!-- Batch RL Training -->
+          <div class="figure">
+            <div style="text-align:center; margin-bottom:8px;">
+              <div style="font-family:var(--font-display); font-size:18px; font-weight:650; color:var(--blue); letter-spacing:-0.3px;">Batch RL Training</div>
+              <div style="font-size:13px; color:var(--text-dim); margin-top:2px;">Enumerate agents across diverse simulators in parallel</div>
+            </div>
+            <svg viewBox="0 0 460 240" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="bt-title">
+              <title id="bt-title">Batch RL Training</title>
+              <defs>
+                <marker id="bt-arr" viewBox="0 0 10 7" refX="9" refY="3.5" markerWidth="8" markerHeight="6" orient="auto"><path d="M0,0 L10,3.5 L0,7z" fill="#57606a"/></marker>
+              </defs>
+              <rect x="10" y="30" width="100" height="180" rx="8" fill="rgba(5,80,174,0.06)" stroke="#0550ae" stroke-width="1.5"/>
+              <text x="60" y="22" text-anchor="middle" fill="#0550ae" font-size="12" font-weight="700" font-family="system-ui, sans-serif">Agent Pool</text>
+              <rect x="22" y="46" width="76" height="30" rx="5" fill="rgba(5,80,174,0.10)" stroke="#0550ae" stroke-width="1"/>
+              <text x="60" y="66" text-anchor="middle" fill="#0550ae" font-size="11" font-weight="600" font-family="system-ui, sans-serif">Agent 1</text>
+              <rect x="22" y="86" width="76" height="30" rx="5" fill="rgba(5,80,174,0.10)" stroke="#0550ae" stroke-width="1"/>
+              <text x="60" y="106" text-anchor="middle" fill="#0550ae" font-size="11" font-weight="600" font-family="system-ui, sans-serif">Agent 2</text>
+              <rect x="22" y="126" width="76" height="30" rx="5" fill="rgba(5,80,174,0.10)" stroke="#0550ae" stroke-width="1"/>
+              <text x="60" y="146" text-anchor="middle" fill="#0550ae" font-size="11" font-weight="600" font-family="system-ui, sans-serif">Agent 3</text>
+              <text x="60" y="186" text-anchor="middle" fill="#0550ae" font-size="16" font-weight="700" font-family="system-ui, sans-serif">…</text>
+              <line x1="112" y1="61" x2="168" y2="61" stroke="#57606a" stroke-width="1.5" marker-end="url(#bt-arr)"/>
+              <line x1="112" y1="101" x2="168" y2="101" stroke="#57606a" stroke-width="1.5" marker-end="url(#bt-arr)"/>
+              <line x1="112" y1="141" x2="168" y2="141" stroke="#57606a" stroke-width="1.5" marker-end="url(#bt-arr)"/>
+              <rect x="170" y="30" width="120" height="180" rx="8" fill="rgba(17,99,41,0.06)" stroke="#116329" stroke-width="1.5"/>
+              <text x="230" y="22" text-anchor="middle" fill="#116329" font-size="12" font-weight="700" font-family="system-ui, sans-serif">Simulators</text>
+              <rect x="182" y="46" width="96" height="30" rx="5" fill="rgba(17,99,41,0.10)" stroke="#116329" stroke-width="1"/>
+              <text x="230" y="66" text-anchor="middle" fill="#116329" font-size="11" font-weight="600" font-family="system-ui, sans-serif">Code Env</text>
+              <rect x="182" y="86" width="96" height="30" rx="5" fill="rgba(110,64,201,0.10)" stroke="#6e40c9" stroke-width="1"/>
+              <text x="230" y="106" text-anchor="middle" fill="#6e40c9" font-size="11" font-weight="600" font-family="system-ui, sans-serif">Math Env</text>
+              <rect x="182" y="126" width="96" height="30" rx="5" fill="rgba(149,56,0,0.10)" stroke="#953800" stroke-width="1"/>
+              <text x="230" y="146" text-anchor="middle" fill="#953800" font-size="11" font-weight="600" font-family="system-ui, sans-serif">Tool-use Env</text>
+              <text x="230" y="186" text-anchor="middle" fill="#116329" font-size="16" font-weight="700" font-family="system-ui, sans-serif">…</text>
+              <line x1="292" y1="120" x2="328" y2="120" stroke="#57606a" stroke-width="2" marker-end="url(#bt-arr)"/>
+              <rect x="332" y="60" width="110" height="70" rx="8" fill="rgba(12,90,109,0.08)" stroke="#0c5a6d" stroke-width="1.5"/>
+              <text x="387" y="85" text-anchor="middle" fill="#0c5a6d" font-size="12" font-weight="700" font-family="system-ui, sans-serif">Trajectory</text>
+              <text x="387" y="102" text-anchor="middle" fill="#0c5a6d" font-size="12" font-weight="700" font-family="system-ui, sans-serif">Buffer</text>
+              <line x1="387" y1="132" x2="387" y2="168" stroke="#57606a" stroke-width="2" marker-end="url(#bt-arr)"/>
+              <rect x="332" y="172" width="110" height="38" rx="8" fill="rgba(5,80,174,0.12)" stroke="#0550ae" stroke-width="2"/>
+              <text x="387" y="196" text-anchor="middle" fill="#0550ae" font-size="12" font-weight="700" font-family="system-ui, sans-serif">Policy Update</text>
+              <text x="230" y="234" text-anchor="middle" fill="#57606a" font-size="11" font-weight="600" font-family="system-ui, sans-serif">Offline &middot; Parallel &middot; Large-scale enumeration</text>
+            </svg>
+            <p class="figure__cap"><b>Offline &amp; high-throughput.</b> Agents run across simulated environments in parallel; trajectories are buffered and consumed by the trainer for reproducible large-scale policy updates.</p>
+          </div>
+
+          <!-- On-Call RL Training -->
+          <div class="figure">
+            <div style="text-align:center; margin-bottom:8px;">
+              <div style="font-family:var(--font-display); font-size:18px; font-weight:650; color:var(--green); letter-spacing:-0.3px;">On-Call RL Training</div>
+              <div style="font-size:13px; color:var(--text-dim); margin-top:2px;">Collect real-world interactions; a daemon resumes training</div>
+            </div>
+            <svg viewBox="0 0 460 240" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="oc-title">
+              <title id="oc-title">On-Call RL Training</title>
+              <defs>
+                <marker id="oc-arr" viewBox="0 0 10 7" refX="9" refY="3.5" markerWidth="8" markerHeight="6" orient="auto"><path d="M0,0 L10,3.5 L0,7z" fill="#57606a"/></marker>
+                <marker id="oc-arr-r" viewBox="0 0 10 7" refX="9" refY="3.5" markerWidth="8" markerHeight="6" orient="auto"><path d="M0,0 L10,3.5 L0,7z" fill="#953800"/></marker>
+              </defs>
+              <g transform="translate(0,-18)">
+              <rect x="10" y="50" width="110" height="60" rx="8" fill="rgba(5,80,174,0.10)" stroke="#0550ae" stroke-width="1.5"/>
+              <text x="65" y="75" text-anchor="middle" fill="#0550ae" font-size="13" font-weight="700" font-family="system-ui, sans-serif">Deployed</text>
+              <text x="65" y="92" text-anchor="middle" fill="#0550ae" font-size="13" font-weight="700" font-family="system-ui, sans-serif">Agent</text>
+              <line x1="122" y1="70" x2="178" y2="70" stroke="#57606a" stroke-width="1.5" marker-end="url(#oc-arr)"/>
+              <line x1="178" y1="90" x2="122" y2="90" stroke="#57606a" stroke-width="1.5" marker-end="url(#oc-arr)"/>
+              <text x="150" y="62" text-anchor="middle" fill="#57606a" font-size="9" font-family="system-ui, sans-serif">act</text>
+              <text x="150" y="104" text-anchor="middle" fill="#57606a" font-size="9" font-family="system-ui, sans-serif">observe</text>
+              <rect x="180" y="50" width="120" height="60" rx="8" fill="rgba(17,99,41,0.10)" stroke="#116329" stroke-width="1.5"/>
+              <text x="240" y="75" text-anchor="middle" fill="#116329" font-size="13" font-weight="700" font-family="system-ui, sans-serif">Real-World</text>
+              <text x="240" y="92" text-anchor="middle" fill="#116329" font-size="13" font-weight="700" font-family="system-ui, sans-serif">Scenario</text>
+              <line x1="150" y1="112" x2="150" y2="148" stroke="#57606a" stroke-width="1.5" marker-end="url(#oc-arr)"/>
+              <rect x="70" y="150" width="160" height="42" rx="8" fill="rgba(12,90,109,0.08)" stroke="#0c5a6d" stroke-width="1.5"/>
+              <text x="150" y="176" text-anchor="middle" fill="#0c5a6d" font-size="12" font-weight="700" font-family="system-ui, sans-serif">Interaction Log</text>
+              <line x1="232" y1="171" x2="318" y2="171" stroke="#953800" stroke-width="2" marker-end="url(#oc-arr-r)"/>
+              <text x="275" y="163" text-anchor="middle" fill="#953800" font-size="9" font-weight="600" font-family="system-ui, sans-serif">monitor</text>
+              <rect x="320" y="40" width="120" height="80" rx="8" fill="rgba(149,56,0,0.08)" stroke="#953800" stroke-width="2"/>
+              <text x="380" y="66" text-anchor="middle" fill="#953800" font-size="13" font-weight="700" font-family="system-ui, sans-serif">Daemon</text>
+              <text x="380" y="83" text-anchor="middle" fill="#953800" font-size="13" font-weight="700" font-family="system-ui, sans-serif">Agent</text>
+              <text x="380" y="108" text-anchor="middle" fill="#57606a" font-size="10" font-family="system-ui, sans-serif">triggers training</text>
+              <line x1="380" y1="122" x2="380" y2="158" stroke="#953800" stroke-width="2" marker-end="url(#oc-arr-r)"/>
+              <rect x="325" y="160" width="110" height="38" rx="8" fill="rgba(149,56,0,0.12)" stroke="#953800" stroke-width="2"/>
+              <text x="380" y="184" text-anchor="middle" fill="#953800" font-size="12" font-weight="700" font-family="system-ui, sans-serif">Resume Train</text>
+              <path d="M380,198 L380,210 L65,210 L65,110" stroke="#953800" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#oc-arr-r)" fill="none"/>
+              <text x="222" y="224" text-anchor="middle" fill="#953800" font-size="10" font-weight="600" font-family="system-ui, sans-serif">update weights</text>
+              </g>
+              <text x="230" y="234" text-anchor="middle" fill="#57606a" font-size="11" font-weight="600" font-family="system-ui, sans-serif">Online &middot; Real-world &middot; Continuous improvement</text>
+            </svg>
+            <p class="figure__cap"><b>Online &amp; continuous.</b> A deployed agent produces interaction logs in live scenarios; a daemon monitors those logs and triggers training when new data is ready, closing the loop with real-world feedback.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════ TRAINER ENGINE ══════════════════════════ -->
+<section class="section section--alt" id="trainer">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="engine-badge" style="background:rgba(5,80,174,0.08); color:var(--blue);"><span class="dot" style="background:var(--blue);"></span>ENGINE 02 — TRAINING SERVICE</span>
+      <h2 class="section-title">The Trainer Engine</h2>
+      <p class="section-lead">A modular optimization layer that consumes rollout batches, applies recipe-defined objectives on distributed GPU workers, and publishes the updated policy weights. New algorithms, model specializations, and training backends drop in cleanly — without touching rollout or environment execution.</p>
+    </div>
+
+    <div class="sub-blocks">
+
+      <!-- 1. Architecture -->
+      <div class="block-stack reveal">
+        <h3 class="block-title"><span class="num">01</span>Architecture</h3>
+        <p class="block-lead">A single training path covers GRPO, PPO, DPO, SFT, and online reward modeling — so there is no need to maintain a separate trainer implementation for each method.</p>
+        <div class="figure">
+          <svg viewBox="0 0 1060 460" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="tr-title">
+            <title id="tr-title">Trainer Architecture</title>
+            <defs>
+              <marker id="tr-arr-b" viewBox="0 0 10 7" refX="9" refY="3.5" markerWidth="8" markerHeight="6" orient="auto"><path d="M0,0 L10,3.5 L0,7z" fill="#0550ae"/></marker>
+              <marker id="tr-arr-g" viewBox="0 0 10 7" refX="9" refY="3.5" markerWidth="8" markerHeight="6" orient="auto"><path d="M0,0 L10,3.5 L0,7z" fill="#116329"/></marker>
+              <marker id="tr-arr-p" viewBox="0 0 10 7" refX="9" refY="3.5" markerWidth="8" markerHeight="6" orient="auto"><path d="M0,0 L10,3.5 L0,7z" fill="#6e40c9"/></marker>
+              <linearGradient id="tr-grad-orch" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="rgba(5,80,174,0.15)"/><stop offset="100%" stop-color="rgba(17,99,41,0.15)"/></linearGradient>
+              <linearGradient id="tr-grad-stroke" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#0550ae"/><stop offset="100%" stop-color="#116329"/></linearGradient>
+              <linearGradient id="tr-grad-text" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#0550ae"/><stop offset="100%" stop-color="#116329"/></linearGradient>
+            </defs>
+            <rect x="340" y="8" width="380" height="60" rx="12" fill="url(#tr-grad-orch)" stroke="url(#tr-grad-stroke)" stroke-width="2.5"/>
+            <text x="530" y="32" text-anchor="middle" fill="url(#tr-grad-text)" font-size="19" font-weight="800" font-family="system-ui, sans-serif">StacxTrainer</text>
+            <text x="530" y="52" text-anchor="middle" fill="#57606a" font-size="13" font-family="system-ui, sans-serif">orchestration loop &bull; dispatches to roles &bull; runs syncs</text>
+            <line x1="720" y1="38" x2="748" y2="38" stroke="rgba(110,64,201,0.4)" stroke-width="1" stroke-dasharray="3 2"/>
+            <rect x="752" y="22" width="240" height="30" rx="6" fill="none" stroke="rgba(110,64,201,0.3)" stroke-width="1.2" stroke-dasharray="4 3"/>
+            <text x="872" y="42" text-anchor="middle" fill="#6e40c9" font-size="12" font-style="italic" font-family="system-ui, sans-serif">+ add new recipe via TrainingConfig</text>
+            <path d="M 430 68 L 430 93 L 200 93 L 200 118" fill="none" stroke="#0550ae" stroke-width="2" marker-end="url(#tr-arr-b)"/>
+            <text x="315" y="88" text-anchor="middle" fill="#0550ae" font-size="12" font-weight="600" font-family="system-ui, sans-serif">shared infra</text>
+            <path d="M 630 68 L 630 93 L 830 93 L 830 118" fill="none" stroke="#116329" stroke-width="2" marker-end="url(#tr-arr-g)"/>
+            <text x="730" y="88" text-anchor="middle" fill="#116329" font-size="12" font-weight="600" font-family="system-ui, sans-serif">role-specific algo</text>
+            <rect x="50" y="118" width="300" height="58" rx="10" fill="rgba(5,80,174,0.10)" stroke="#0550ae" stroke-width="2"/>
+            <text x="200" y="142" text-anchor="middle" fill="#0550ae" font-size="16" font-weight="700" font-family="system-ui, sans-serif">TrainBackend</text>
+            <text x="200" y="162" text-anchor="middle" fill="#57606a" font-size="12" font-family="system-ui, sans-serif">Computation engine for gradient updates</text>
+            <line x1="200" y1="176" x2="200" y2="198" stroke="#0550ae" stroke-width="1.5" marker-end="url(#tr-arr-b)"/>
+            <rect x="50" y="200" width="300" height="210" rx="10" fill="rgba(5,80,174,0.02)" stroke="rgba(5,80,174,0.2)" stroke-width="1.5" stroke-dasharray="5 3"/>
+            <text x="200" y="220" text-anchor="middle" fill="#0550ae" font-size="12" font-weight="600" font-family="system-ui, sans-serif" opacity="0.6">BACKEND OPTIONS</text>
+            <rect x="75" y="232" width="250" height="46" rx="8" fill="rgba(5,80,174,0.10)" stroke="rgba(5,80,174,0.35)" stroke-width="1.5"/>
+            <text x="200" y="250" text-anchor="middle" fill="#0550ae" font-size="14" font-weight="700" font-family="system-ui, sans-serif">Megatron-LM</text>
+            <text x="200" y="268" text-anchor="middle" fill="#57606a" font-size="11" font-family="system-ui, sans-serif">TP + PP + DP + CP</text>
+            <rect x="75" y="288" width="250" height="46" rx="8" fill="rgba(5,80,174,0.06)" stroke="rgba(5,80,174,0.25)" stroke-width="1.5"/>
+            <text x="200" y="306" text-anchor="middle" fill="#2871c7" font-size="14" font-weight="700" font-family="system-ui, sans-serif">FSDP v2</text>
+            <text x="200" y="322" text-anchor="middle" fill="#57606a" font-size="11" font-family="system-ui, sans-serif">HuggingFace transformer models</text>
+            <rect x="75" y="344" width="250" height="30" rx="8" fill="none" stroke="rgba(5,80,174,0.25)" stroke-width="1.2" stroke-dasharray="4 3"/>
+            <text x="200" y="364" text-anchor="middle" fill="#0550ae" font-size="12" font-style="italic" font-family="system-ui, sans-serif" opacity="0.7">+ add new backend...</text>
+            <rect x="680" y="118" width="300" height="58" rx="10" fill="rgba(17,99,41,0.10)" stroke="#116329" stroke-width="2"/>
+            <text x="830" y="142" text-anchor="middle" fill="#116329" font-size="16" font-weight="700" font-family="system-ui, sans-serif">RoleWorker</text>
+            <text x="830" y="162" text-anchor="middle" fill="#57606a" font-size="12" font-family="system-ui, sans-serif">Per-role Ray actors for model training</text>
+            <line x1="830" y1="176" x2="830" y2="212" stroke="#116329" stroke-width="2" marker-end="url(#tr-arr-g)"/>
+            <text x="856" y="200" fill="#116329" font-size="12" font-weight="600" font-family="system-ui, sans-serif">delegates to</text>
+            <rect x="680" y="214" width="300" height="48" rx="10" fill="rgba(17,99,41,0.08)" stroke="#116329" stroke-width="2"/>
+            <text x="830" y="244" text-anchor="middle" fill="#116329" font-size="16" font-weight="700" font-family="system-ui, sans-serif">ModelSpecialization</text>
+            <line x1="830" y1="262" x2="830" y2="288" stroke="#6e40c9" stroke-width="1.5" marker-end="url(#tr-arr-p)"/>
+            <rect x="660" y="290" width="390" height="120" rx="10" fill="rgba(110,64,201,0.02)" stroke="rgba(110,64,201,0.2)" stroke-width="1.5" stroke-dasharray="5 3"/>
+            <text x="855" y="308" text-anchor="middle" fill="#6e40c9" font-size="12" font-weight="600" font-family="system-ui, sans-serif" opacity="0.6">SPECIALIZATION OPTIONS</text>
+            <rect x="678" y="318" width="80" height="30" rx="6" fill="rgba(110,64,201,0.10)" stroke="rgba(110,64,201,0.3)" stroke-width="1.2"/>
+            <text x="718" y="338" text-anchor="middle" fill="#6e40c9" font-size="13" font-weight="600" font-family="system-ui, sans-serif">Actor</text>
+            <rect x="768" y="318" width="80" height="30" rx="6" fill="rgba(110,64,201,0.10)" stroke="rgba(110,64,201,0.3)" stroke-width="1.2"/>
+            <text x="808" y="338" text-anchor="middle" fill="#6e40c9" font-size="13" font-weight="600" font-family="system-ui, sans-serif">Critic</text>
+            <rect x="858" y="318" width="64" height="30" rx="6" fill="rgba(110,64,201,0.10)" stroke="rgba(110,64,201,0.3)" stroke-width="1.2"/>
+            <text x="890" y="338" text-anchor="middle" fill="#6e40c9" font-size="13" font-weight="600" font-family="system-ui, sans-serif">DPO</text>
+            <rect x="932" y="318" width="100" height="30" rx="6" fill="rgba(110,64,201,0.08)" stroke="rgba(110,64,201,0.25)" stroke-width="1.2"/>
+            <text x="982" y="338" text-anchor="middle" fill="#6e40c9" font-size="13" font-weight="600" font-family="system-ui, sans-serif">DualRole</text>
+            <rect x="678" y="358" width="100" height="30" rx="6" fill="rgba(149,56,0,0.10)" stroke="rgba(149,56,0,0.3)" stroke-width="1.2"/>
+            <text x="728" y="378" text-anchor="middle" fill="#953800" font-size="13" font-weight="600" font-family="system-ui, sans-serif">Diffusion</text>
+            <rect x="788" y="358" width="140" height="30" rx="6" fill="none" stroke="rgba(17,99,41,0.3)" stroke-width="1.2" stroke-dasharray="4 3"/>
+            <text x="858" y="378" text-anchor="middle" fill="#116329" font-size="12" font-style="italic" font-family="system-ui, sans-serif">+ add new spec...</text>
+          </svg>
+          <p class="figure__cap"><b>StacxTrainer</b> separates shared infrastructure from role-specific algorithm logic: the backend handles the mechanics of distributed training, while role workers and model specializations carry the method-specific behavior.</p>
+        </div>
+        <div class="points points-3col points-row">
+          <div class="point v-blue">
+            <div class="point__ic"><svg viewBox="0 0 24 24"><path d="M3 12h4l3 8 4-16 3 8h4"/></svg></div>
+            <div><h4>Training orchestration</h4><p>Every step ingests a batch of rollout data, applies the recipe's optimization objective, and dispatches trainable roles to distributed GPU workers — coordinating shared weights safely throughout.</p></div>
+          </div>
+          <div class="point v-green">
+            <div class="point__ic"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18M3 9h6"/></svg></div>
+            <div><h4>Role-based workers</h4><p>Each semantic model role maps to a <code>RoleWorker</code> group on a Ray pool, cleanly separating algorithm-level responsibilities from physical resource placement.</p></div>
+          </div>
+          <div class="point v-purple">
+            <div class="point__ic"><svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h10"/></svg></div>
+            <div><h4>Backend &harr; specialization split</h4><p>Backends own system concerns — sharding, checkpointing, and weight synchronization — while model specializations define the objectives and role-specific behavior, reusable across model families.</p></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. RoleWorker flexibility -->
+      <div class="block-stack reveal">
+        <h3 class="block-title"><span class="num">02</span>RoleWorker Flexibility</h3>
+        <p class="block-lead">The specialization layer decouples a model's identity from its training role, unlocking flexible deployment across algorithms.</p>
+        <div class="figure">
+          <svg viewBox="0 0 960 360" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="rw-title">
+            <title id="rw-title">RoleWorker Flexibility</title>
+            <defs><marker id="rw-arr-p" viewBox="0 0 10 7" refX="9" refY="3.5" markerWidth="8" markerHeight="6" orient="auto"><path d="M0,0 L10,3.5 L0,7z" fill="#6e40c9"/></marker></defs>
+            <text x="220" y="24" text-anchor="middle" fill="#0550ae" font-size="18" font-weight="700" font-family="system-ui, sans-serif">One Model &rarr; Multiple Roles</text>
+            <rect x="130" y="42" width="180" height="54" rx="10" fill="rgba(5,80,174,0.12)" stroke="#0550ae" stroke-width="2"/>
+            <text x="220" y="66" text-anchor="middle" fill="#0550ae" font-size="16" font-weight="700" font-family="system-ui, sans-serif">DeepSeek-R1</text>
+            <text x="220" y="84" text-anchor="middle" fill="#57606a" font-size="12" font-family="system-ui, sans-serif">single checkpoint</text>
+            <line x1="140" y1="96" x2="80" y2="150" stroke="#6e40c9" stroke-width="2" marker-end="url(#rw-arr-p)"/>
+            <line x1="220" y1="96" x2="220" y2="150" stroke="#6e40c9" stroke-width="2" marker-end="url(#rw-arr-p)"/>
+            <line x1="300" y1="96" x2="360" y2="150" stroke="#6e40c9" stroke-width="2" marker-end="url(#rw-arr-p)"/>
+            <rect x="28" y="152" width="110" height="44" rx="8" fill="rgba(110,64,201,0.10)" stroke="#6e40c9" stroke-width="1.5"/>
+            <text x="83" y="172" text-anchor="middle" fill="#6e40c9" font-size="14" font-weight="700" font-family="system-ui, sans-serif">Actor</text>
+            <text x="83" y="188" text-anchor="middle" fill="#57606a" font-size="11" font-family="system-ui, sans-serif">policy gradient</text>
+            <rect x="165" y="152" width="110" height="44" rx="8" fill="rgba(110,64,201,0.08)" stroke="#7c52d4" stroke-width="1.5"/>
+            <text x="220" y="172" text-anchor="middle" fill="#7c52d4" font-size="14" font-weight="700" font-family="system-ui, sans-serif">Critic</text>
+            <text x="220" y="188" text-anchor="middle" fill="#57606a" font-size="11" font-family="system-ui, sans-serif">value function</text>
+            <rect x="305" y="152" width="110" height="44" rx="8" fill="rgba(110,64,201,0.06)" stroke="#8b6ad6" stroke-width="1.5"/>
+            <text x="360" y="172" text-anchor="middle" fill="#8b6ad6" font-size="14" font-weight="700" font-family="system-ui, sans-serif">Reference</text>
+            <text x="360" y="188" text-anchor="middle" fill="#57606a" font-size="11" font-family="system-ui, sans-serif">KL anchor</text>
+            <rect x="98" y="236" width="244" height="24" rx="6" fill="rgba(110,64,201,0.06)" stroke="rgba(110,64,201,0.2)" stroke-width="1"/>
+            <text x="220" y="253" text-anchor="middle" fill="#6e40c9" font-size="12" font-weight="600" font-family="system-ui, sans-serif">DualRole shares weights across roles</text>
+            <line x1="470" y1="10" x2="470" y2="295" stroke="#d1d9e0" stroke-width="1.5" stroke-dasharray="6 4"/>
+            <text x="710" y="24" text-anchor="middle" fill="#116329" font-size="18" font-weight="700" font-family="system-ui, sans-serif">Multiple Models &rarr; One Role</text>
+            <rect x="560" y="42" width="140" height="54" rx="10" fill="rgba(5,80,174,0.12)" stroke="#0550ae" stroke-width="2"/>
+            <text x="630" y="66" text-anchor="middle" fill="#0550ae" font-size="15" font-weight="700" font-family="system-ui, sans-serif">DeepSeek-V3</text>
+            <text x="630" y="84" text-anchor="middle" fill="#57606a" font-size="12" font-family="system-ui, sans-serif">model A</text>
+            <rect x="730" y="42" width="140" height="54" rx="10" fill="rgba(5,80,174,0.08)" stroke="#2871c7" stroke-width="2"/>
+            <text x="800" y="66" text-anchor="middle" fill="#2871c7" font-size="15" font-weight="700" font-family="system-ui, sans-serif">Qwen-72B</text>
+            <text x="800" y="84" text-anchor="middle" fill="#57606a" font-size="12" font-family="system-ui, sans-serif">model B</text>
+            <line x1="660" y1="96" x2="700" y2="150" stroke="#6e40c9" stroke-width="2" marker-end="url(#rw-arr-p)"/>
+            <line x1="770" y1="96" x2="730" y2="150" stroke="#6e40c9" stroke-width="2" marker-end="url(#rw-arr-p)"/>
+            <rect x="650" y="152" width="130" height="44" rx="8" fill="rgba(110,64,201,0.10)" stroke="#6e40c9" stroke-width="2"/>
+            <text x="715" y="172" text-anchor="middle" fill="#6e40c9" font-size="15" font-weight="700" font-family="system-ui, sans-serif">Policy</text>
+            <text x="715" y="188" text-anchor="middle" fill="#57606a" font-size="11" font-family="system-ui, sans-serif">same role type</text>
+            <rect x="570" y="236" width="280" height="24" rx="6" fill="rgba(17,99,41,0.06)" stroke="rgba(17,99,41,0.2)" stroke-width="1"/>
+            <text x="710" y="253" text-anchor="middle" fill="#116329" font-size="12" font-weight="600" font-family="system-ui, sans-serif">Ensemble training, model comparison</text>
+            <rect x="200" y="300" width="560" height="40" rx="8" fill="rgba(5,80,174,0.06)" stroke="rgba(5,80,174,0.15)" stroke-width="1"/>
+            <text x="480" y="325" text-anchor="middle" fill="#0550ae" font-size="14" font-weight="600" font-family="system-ui, sans-serif">RoleWorker = Ray Actor Pool &bull; Any model &#x2194; Any role via Specialization</text>
+          </svg>
+        </div>
+        <div class="callout v-blue points-row">
+          <div class="lead">RoleWorker = Ray Actor Pool</div>
+          <p>Any model maps to any role through its specialization — covering policy-only, actor-critic, reference-model, reward co-training, and heterogeneous experiments alike.</p>
+        </div>
+        <div class="points points-2col">
+          <div class="point v-blue">
+            <div class="point__ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="7" r="4"/><path d="M5 21v-1a7 7 0 0 1 14 0v1"/></svg></div>
+            <div><h4>One model &rarr; many roles</h4><p>A single checkpoint can serve as actor, critic, and reference at once. <code>DualRole</code> shares those weights across roles for PPO-colocated, GRPO, and online reward-modeling setups.</p></div>
+          </div>
+          <div class="point v-green">
+            <div class="point__ic"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><path d="M7 10v4h10v-4M12 14v4"/></svg></div>
+            <div><h4>Many models &rarr; one role</h4><p>Heterogeneous models (for example, DeepSeek-V3 alongside Qwen-72B) can fill the same semantic role within one training loop, enabling ensembles and head-to-head model comparison.</p></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. Declarative recipes -->
+      <div class="reveal">
+        <h3 class="block-title"><span class="num">03</span>Declarative Recipes</h3>
+        <p class="block-lead">Algorithms are expressed as configuration rather than hard-coded trainer paths. Each recipe declares its model roles, specializations, training behavior, weight synchronization, and inter-role data dependencies.</p>
+        <div class="split">
+        <div>
+          <div class="code">
+            <div class="code__bar"><span class="d"></span><span class="d"></span><span class="d"></span><span class="name">recipes.py</span></div>
+<pre><span class="c"># Algorithm = data</span>
+<span class="f">@recipe</span>(<span class="s">"grpo"</span>)
+<span class="f">def</span> grpo_config():
+  <span class="f">return</span> <span class="f">TrainingConfig</span>(
+    name=<span class="s">"grpo"</span>,
+    roles=(<span class="f">ModelRole</span>(name=<span class="s">"policy"</span>,
+      specialization_cls=<span class="f">ActorSpecialization</span>),),
+    syncs=(),  <span class="c"># no inter-role syncs</span>
+  )
+
+<span class="c"># Adding a new algorithm?</span>
+<span class="f">@recipe</span>(<span class="s">"my_algo"</span>)
+<span class="f">def</span> my_algo_config():
+  <span class="f">return</span> <span class="f">TrainingConfig</span>(
+    name=<span class="s">"my_algo"</span>,
+    roles=(policy_role, value_role),
+    syncs=(<span class="f">DataSync</span>(source=<span class="s">"value"</span>,
+      target=<span class="s">"policy"</span>, keys=(<span class="s">"values"</span>,)),),
+  )</pre>
+          </div>
+        </div>
+        <div>
+          <div class="recipes">
+            <div class="recipe rc-blue"><div class="rname">grpo</div><div class="rdesc">Reward-only policy</div></div>
+            <div class="recipe rc-green"><div class="rname">ppo</div><div class="rdesc">Actor-critic training</div></div>
+            <div class="recipe rc-purple"><div class="rname">dpo</div><div class="rdesc">Preference optimization</div></div>
+            <div class="recipe rc-amber"><div class="rname">sft</div><div class="rdesc">Supervised fine-tuning</div></div>
+            <div class="recipe rc-cyan"><div class="rname">reinforce_pp</div><div class="rdesc">Discounted returns</div></div>
+            <div class="recipe rc-green"><div class="rname">ppo_colocated</div><div class="rdesc">Shared actor-critic</div></div>
+            <div class="recipe rc-purple"><div class="rname">dpo_distributed</div><div class="rdesc">Distributed reference</div></div>
+            <div class="recipe rc-blue"><div class="rname">online_reward</div><div class="rdesc">Reward co-training</div></div>
+            <div class="recipe rc-amber"><div class="rname">diffusion_rwfm</div><div class="rdesc">Reward-weighted flow</div></div>
+            <div class="recipe rc-cyan"><div class="rname">diffusion_dpo</div><div class="rdesc">Preference denoising</div></div>
+          </div>
+        </div>
+        </div>
+      </div>
+
+      <!-- 4. Specializations -->
+      <div class="reveal">
+        <h3 class="block-title"><span class="num">04</span>Pluggable Specializations</h3>
+        <p class="block-lead">All model-specific logic sits behind three methods the backend calls; everything else remains shared infrastructure.</p>
+        <div class="split wide-left split--fill">
+        <div class="figure">
+          <svg viewBox="0 0 480 310" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="sp-title">
+            <title id="sp-title">Specialization Class Hierarchy</title>
+            <rect x="90" y="0" width="300" height="42" rx="10" fill="rgba(5,80,174,0.10)" stroke="#0550ae" stroke-width="2"/>
+            <text x="240" y="26" text-anchor="middle" fill="#0550ae" font-size="15" font-weight="700" font-family="system-ui, sans-serif">ModelSpecialization (ABC)</text>
+            <rect x="0" y="46" width="480" height="20" fill="rgba(17,99,41,0.04)"/>
+            <text x="240" y="60" text-anchor="middle" fill="#116329" font-size="10" font-weight="600" font-family="system-ui, sans-serif" letter-spacing="0.5">ALL SPECIALIZATIONS ARE ROLE-SPECIFIC</text>
+            <line x1="240" y1="42" x2="240" y2="46" stroke="#0550ae" stroke-width="1.5"/>
+            <line x1="240" y1="66" x2="240" y2="72" stroke="#0550ae" stroke-width="1.5"/>
+            <line x1="140" y1="72" x2="370" y2="72" stroke="#d1d9e0" stroke-width="1"/>
+            <line x1="140" y1="72" x2="140" y2="82" stroke="#0550ae" stroke-width="1.5"/>
+            <line x1="370" y1="72" x2="370" y2="82" stroke="#953800" stroke-width="1.5"/>
+            <rect x="15" y="82" width="250" height="34" rx="7" fill="rgba(5,80,174,0.08)" stroke="#0550ae" stroke-width="1.5"/>
+            <text x="140" y="104" text-anchor="middle" fill="#0550ae" font-size="13" font-weight="700" font-family="system-ui, sans-serif">CausalDecoderSpecialization</text>
+            <rect x="285" y="82" width="180" height="34" rx="7" fill="rgba(149,56,0,0.10)" stroke="#953800" stroke-width="1.5"/>
+            <text x="375" y="104" text-anchor="middle" fill="#953800" font-size="13" font-weight="700" font-family="system-ui, sans-serif">DiffusionSpecialization</text>
+            <text x="375" y="130" text-anchor="middle" fill="#953800" font-size="11" font-family="system-ui, sans-serif" opacity="0.7">flow matching loss</text>
+            <line x1="140" y1="116" x2="140" y2="130" stroke="#0550ae" stroke-width="1.2"/>
+            <line x1="50" y1="130" x2="230" y2="130" stroke="#d1d9e0" stroke-width="1"/>
+            <line x1="50" y1="130" x2="50" y2="140" stroke="#6e40c9" stroke-width="1.2"/>
+            <line x1="140" y1="130" x2="140" y2="140" stroke="#6e40c9" stroke-width="1.2"/>
+            <line x1="230" y1="130" x2="230" y2="140" stroke="#6e40c9" stroke-width="1.2"/>
+            <rect x="5" y="140" width="90" height="32" rx="6" fill="rgba(110,64,201,0.10)" stroke="#6e40c9" stroke-width="1.5"/>
+            <text x="50" y="161" text-anchor="middle" fill="#6e40c9" font-size="13" font-weight="700" font-family="system-ui, sans-serif">Actor</text>
+            <rect x="105" y="140" width="90" height="32" rx="6" fill="rgba(110,64,201,0.10)" stroke="#6e40c9" stroke-width="1.5"/>
+            <text x="150" y="161" text-anchor="middle" fill="#6e40c9" font-size="13" font-weight="700" font-family="system-ui, sans-serif">Critic</text>
+            <rect x="205" y="140" width="70" height="32" rx="6" fill="rgba(110,64,201,0.10)" stroke="#6e40c9" stroke-width="1.5"/>
+            <text x="240" y="161" text-anchor="middle" fill="#6e40c9" font-size="13" font-weight="700" font-family="system-ui, sans-serif">DPO</text>
+            <text x="50" y="186" text-anchor="middle" fill="#57606a" font-size="11" font-family="system-ui, sans-serif">PPO / GRPO</text>
+            <text x="150" y="186" text-anchor="middle" fill="#57606a" font-size="11" font-family="system-ui, sans-serif">value fn</text>
+            <text x="240" y="186" text-anchor="middle" fill="#57606a" font-size="11" font-family="system-ui, sans-serif">preference</text>
+            <line x1="50" y1="172" x2="50" y2="202" stroke="#d1d9e0" stroke-width="1"/>
+            <line x1="50" y1="202" x2="95" y2="202" stroke="#d1d9e0" stroke-width="1"/>
+            <line x1="95" y1="202" x2="95" y2="212" stroke="#6e40c9" stroke-width="1.2"/>
+            <rect x="40" y="212" width="110" height="32" rx="6" fill="rgba(110,64,201,0.08)" stroke="rgba(110,64,201,0.5)" stroke-width="1.2"/>
+            <text x="95" y="233" text-anchor="middle" fill="#6e40c9" font-size="13" font-weight="600" font-family="system-ui, sans-serif">DualRole</text>
+            <text x="95" y="258" text-anchor="middle" fill="#57606a" font-size="11" font-family="system-ui, sans-serif">actor + critic shared</text>
+            <rect x="15" y="272" width="450" height="24" rx="6" fill="rgba(17,99,41,0.05)" stroke="rgba(17,99,41,0.3)" stroke-width="1" stroke-dasharray="4 3"/>
+            <text x="240" y="289" text-anchor="middle" fill="#116329" font-size="12" font-style="italic" font-family="system-ui, sans-serif">+ your new specialization here...</text>
+          </svg>
+          <p class="figure__cap">Every algorithm lives as a <b>specialization</b>.</p>
+        </div>
+        <div>
+          <div class="points points-fill">
+            <div class="point v-purple"><div class="point__ic"><svg viewBox="0 0 24 24"><path d="M4 17l6-6-6-6M12 19h8"/></svg></div><div><h4>compute_loss()</h4><p>The core of the algorithm — returns <code>(loss, metrics)</code> and computes advantages when the objective requires them.</p></div></div>
+            <div class="point v-purple"><div class="point__ic"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="4" rx="1"/><rect x="3" y="10" width="12" height="4" rx="1"/><rect x="3" y="16" width="16" height="4" rx="1"/></svg></div><div><h4>prepare_batch()</h4><p>Transforms raw rollout data into model-ready micro-batches.</p></div></div>
+            <div class="point v-purple"><div class="point__ic"><svg viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-9-9"/><path d="M21 3v6h-6"/></svg></div><div><h4>extract_model_output()</h4><p>Pulls the right tensor out of the model's forward pass.</p></div></div>
+          </div>
+        </div>
+        </div>
+      </div>
+
+      <!-- 5. Add new algorithm -->
+      <div class="reveal">
+        <h3 class="block-title" style="text-align:center;"><span class="num">05</span>Adding a New Algorithm</h3>
+        <p class="block-lead" style="text-align:center; max-width:860px; margin:0 auto 32px;">Write a recipe and, where the objective demands it, a specialization. The trainer loop, workers, sync infrastructure, and weight export all stay untouched.</p>
+        <div class="effort-grid">
+          <div class="effort write">
+            <h4>What you write</h4>
+            <div class="step"><div class="step__n">1</div><div class="step__t"><b>TrainingConfig</b><span>~10 lines: roles, syncs, description</span></div></div>
+            <div class="step"><div class="step__n">2</div><div class="step__t"><b>ModelSpecialization</b><span>~40 lines: compute_loss, prepare_batch</span></div></div>
+            <div class="effort__total"><div class="big">~50 lines</div><div class="lbl">Total new code needed</div></div>
+          </div>
+          <div class="effort keep">
+            <h4>What you don't touch</h4>
+            <div class="untouched"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>TrainBackend (Megatron / FSDP)</div>
+            <div class="untouched"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>RoleWorker / WorkerPool</div>
+            <div class="untouched"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>Data sync infrastructure</div>
+            <div class="untouched"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>Checkpointing &amp; profiling</div>
+            <div class="untouched"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>Weight sync to SGLang</div>
+            <div class="untouched"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>StacxTrainer orchestrator</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════ ENVIRONMENT ENGINE ══════════════════════════ -->
+<section class="section" id="environment">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="engine-badge" style="background:rgba(12,90,109,0.08); color:var(--cyan);"><span class="dot" style="background:var(--cyan);"></span>ENGINE 03 — ENVIRONMENT SERVICE</span>
+      <h2 class="section-title">The Environment Engine</h2>
+      <p class="section-lead">The execution layer for agent actions. Built on <a href="https://github.com/alibaba/ROCK" target="_blank" rel="noopener">ROCK</a>, it runs isolated sandbox sessions that manage container lifecycle, tool execution, and resource isolation, while exposing only a narrow HTTP gateway to the rollout engine.</p>
+    </div>
+
+    <div class="split wide-right reveal">
+      <div class="points">
+        <div class="point v-cyan"><div class="point__ic"><svg viewBox="0 0 24 24"><path d="M4 7l8-4 8 4-8 4-8-4z"/><path d="M4 12l8 4 8-4M4 17l8 4 8-4"/></svg></div><div><h4>Independent Scaling</h4><p>Scales sandbox execution independently from training and rollout on separate CPU/GPU resource pools.</p></div></div>
+        <div class="point v-cyan"><div class="point__ic"><svg viewBox="0 0 24 24"><path d="M3 12h18M3 6h18M3 18h18"/></svg></div><div><h4>Gateway Abstraction</h4><p>Routes agent actions to the appropriate sandbox and returns normalized observations, logs, exit status, and artifacts while hiding sandbox lifecycle details.</p></div></div>
+        <div class="point v-cyan"><div class="point__ic"><svg viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-9-9"/><path d="M21 3v6h-6"/></svg></div><div><h4>Lifecycle Isolation</h4><p>Assigns each episode to its own sandbox session and releases resources predictably when the episode completes or fails.</p></div></div>
+        <div class="point v-cyan"><div class="point__ic"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M8 8h8v8H8z"/></svg></div><div><h4>Unified Environment Interface</h4><p>Represents all task environments through a common <a href="https://www.harborframework.com/" target="_blank" rel="noopener">Harbor-style</a> interface for metadata, prompts, tools, stopping conditions, and reward definitions.</p></div></div>
+      </div>
+      <div>
+        <div class="figure figure--pad" style="background:var(--ink); border-color:var(--ink-line);">
+          <svg viewBox="0 0 460 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="env-title">
+            <title id="env-title">Environment Service gateway</title>
+            <defs>
+              <marker id="ev-arr" viewBox="0 0 10 7" refX="9" refY="3.5" markerWidth="8" markerHeight="6" orient="auto"><path d="M0,0 L10,3.5 L0,7z" fill="#6fae84"/></marker>
+            </defs>
+            <rect x="12" y="118" width="104" height="64" rx="10" fill="rgba(5,80,174,0.16)" stroke="#5b9bff" stroke-width="2"/>
+            <text x="64" y="146" text-anchor="middle" fill="#9cc3ff" font-size="14" font-weight="700" font-family="system-ui, sans-serif">Rollout</text>
+            <text x="64" y="164" text-anchor="middle" fill="#9cc3ff" font-size="14" font-weight="700" font-family="system-ui, sans-serif">Engine</text>
+            <rect x="196" y="115" width="86" height="70" rx="10" fill="rgba(111,174,132,0.18)" stroke="#6fae84" stroke-width="2"/>
+            <text x="239" y="146" text-anchor="middle" fill="#9fd2b1" font-size="13" font-weight="700" font-family="system-ui, sans-serif">HTTP</text>
+            <text x="239" y="164" text-anchor="middle" fill="#9fd2b1" font-size="13" font-weight="700" font-family="system-ui, sans-serif">Gateway</text>
+            <line x1="118" y1="140" x2="194" y2="140" stroke="#6fae84" stroke-width="2" marker-end="url(#ev-arr)"/>
+            <text x="156" y="131" text-anchor="middle" fill="#7d9488" font-size="9" font-family="system-ui, sans-serif">Action</text>
+            <line x1="194" y1="162" x2="118" y2="162" stroke="#6fae84" stroke-width="2" marker-end="url(#ev-arr)"/>
+            <text x="156" y="178" text-anchor="middle" fill="#7d9488" font-size="9" font-family="system-ui, sans-serif">Observation</text>
+            <g font-family="system-ui, sans-serif">
+              <rect x="338" y="22" width="110" height="44" rx="9" fill="rgba(243,176,122,0.14)" stroke="#f3b07a" stroke-width="1.6"/>
+              <text x="393" y="42" text-anchor="middle" fill="#f3c79f" font-size="12" font-weight="700">Sandbox</text>
+              <text x="393" y="58" text-anchor="middle" fill="#bb9e86" font-size="10">ROCK session</text>
+              <rect x="338" y="74" width="110" height="44" rx="9" fill="rgba(243,176,122,0.14)" stroke="#f3b07a" stroke-width="1.6"/>
+              <text x="393" y="94" text-anchor="middle" fill="#f3c79f" font-size="12" font-weight="700">Sandbox</text>
+              <text x="393" y="110" text-anchor="middle" fill="#bb9e86" font-size="10">ROCK session</text>
+              <rect x="338" y="126" width="110" height="44" rx="9" fill="rgba(243,176,122,0.14)" stroke="#f3b07a" stroke-width="1.6"/>
+              <text x="393" y="146" text-anchor="middle" fill="#f3c79f" font-size="12" font-weight="700">Sandbox</text>
+              <text x="393" y="162" text-anchor="middle" fill="#bb9e86" font-size="10">ROCK session</text>
+              <rect x="338" y="178" width="110" height="44" rx="9" fill="rgba(243,176,122,0.14)" stroke="#f3b07a" stroke-width="1.6"/>
+              <text x="393" y="198" text-anchor="middle" fill="#f3c79f" font-size="12" font-weight="700">Sandbox</text>
+              <text x="393" y="214" text-anchor="middle" fill="#bb9e86" font-size="10">ROCK session</text>
+              <text x="393" y="246" text-anchor="middle" fill="#6fae84" font-size="11" font-weight="700">... up to 64 concurrent</text>
+            </g>
+            <line x1="284" y1="140" x2="336" y2="44" stroke="#6fae84" stroke-width="1.4" marker-end="url(#ev-arr)" opacity="0.7"/>
+            <line x1="284" y1="146" x2="336" y2="96" stroke="#6fae84" stroke-width="1.4" marker-end="url(#ev-arr)" opacity="0.7"/>
+            <line x1="284" y1="152" x2="336" y2="148" stroke="#6fae84" stroke-width="1.4" marker-end="url(#ev-arr)" opacity="0.7"/>
+            <line x1="284" y1="158" x2="336" y2="200" stroke="#6fae84" stroke-width="1.4" marker-end="url(#ev-arr)" opacity="0.7"/>
+          </svg>
+          <p class="figure__cap" style="color:#9fb6aa; border-color:var(--ink-line);">The rollout engine interacts with environments only through a narrow gateway; The environment engine manages sandbox sessions, routing, execution, and cleanup behind the interface.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="stats reveal d1" style="margin-top:48px;">
+      <div class="stat"><div class="stat__num" data-count="64" style="color:var(--cyan);">64</div><div class="stat__label">Concurrent sandbox episodes</div></div>
+      <div class="stat"><div class="stat__num" style="color:var(--cyan);">12<span style="font-size:0.5em;">h</span></div><div class="stat__label">Max single sandbox execution</div></div>
+      <div class="stat"><div class="stat__num sm" style="color:var(--cyan);">HTTP</div><div class="stat__label">Gateway interface</div></div>
+      <div class="stat"><div class="stat__num sm" style="color:var(--cyan);">Session</div><div class="stat__label">Per-episode cleanup</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════ EXPERIMENTS ══════════════════════════ -->
+<section class="section section--alt" id="experiments">
+  <div class="wrap">
+    <div class="section-head center reveal">
+      <span class="eyebrow">Experiments</span>
+      <h2 class="section-title">Validating STACX as agentic RL infrastructure</h2>
+      <p class="section-lead">We validate STACX across three agentic RL settings: end-to-end RL improves tool-integrated math reasoning, multiple post-training strategies improve software-engineering agents over their base models, and rollout-only evaluation shows that STACX reproduces reference infrastructure behavior across diverse agentic task suites.</p>
+    </div>
+
+    <!-- Tool-integrated reasoning -->
+    <div class="reveal">
+      <h3 class="block-title" style="text-align:center;">Tool-Integrated Reasoning</h3>
+      <div class="exp-tabs">
+      <div class="exp-tabs__bar" role="tablist" aria-label="Script or results view">
+        <button class="exp-tab is-active" data-tab="script" type="button"><svg viewBox="0 0 24 24"><path d="M4 17l6-6-6-6M12 19h8"/></svg>Script</button>
+        <button class="exp-tab" data-tab="results" type="button"><svg viewBox="0 0 24 24"><path d="M3 12h4l3 8 4-16 3 8h4"/></svg>Results</button>
+      </div>
+      <div class="exp-pane exp-pane--script is-active" data-pane="script">
+        <div class="code exp-code">
+          <div class="code__bar"><span class="d"></span><span class="d"></span><span class="d"></span><span class="name">rl_engine/examples/retool/scripts/rl.sh</span></div>
+          <pre><span class="c"># Tool-integrated math RL: GRPO on DAPO-Math-17K with the ReTool scaffold</span>
+git clone https://github.com/StACx-StandAloneComplex/stacx.git &amp;&amp; cd stacx
+
+<span class="c"># 1. Start a slime container with repo + data + model mounts</span>
+docker run --gpus all -d --name stacx_retool --network host --shm-size 16g \
+  --ulimit memlock=-1 --ulimit stack=67108864 --ulimit nofile=524288:524288 \
+  -v $(pwd)/rl_engine:/root/rl_engine \
+  -v $(pwd)/external/data:/root/data \
+  -v $(pwd)/external/models:/root/models \
+  -v $(pwd)/external/ckpts:/root/experiments \
+  lichangh20/slime-rl:stable sleep infinity
+
+<span class="c"># 2. Run GRPO training inside the container (rl.sh handles Ray setup)</span>
+docker exec -it stacx_retool bash -c \
+  'cd /root/rl_engine/examples/retool &amp;&amp; WANDB_API_KEY=&lt;key&gt; bash scripts/rl.sh'</pre>
+        </div>
+      </div>
+      <div class="exp-pane exp-pane--results" data-pane="results">
+<div class="chart-grid" style="margin-top:28px;">
+        <div class="chart">
+          <div class="chart__head"><span class="chart__title">MinervaMath <span class="muted">greedy</span></span><span class="chart__delta">14.0 &rarr; 18.8%</span></div>
+          <svg viewBox="0 0 480 170" xmlns="http://www.w3.org/2000/svg">
+            <line x1="42" y1="124.7" x2="468" y2="124.7" stroke="#e1e4e8" stroke-width="0.7"/><line x1="42" y1="101.3" x2="468" y2="101.3" stroke="#e1e4e8" stroke-width="0.7"/><line x1="42" y1="78.0" x2="468" y2="78.0" stroke="#e1e4e8" stroke-width="0.7"/><line x1="42" y1="54.7" x2="468" y2="54.7" stroke="#e1e4e8" stroke-width="0.7"/><line x1="42" y1="31.3" x2="468" y2="31.3" stroke="#e1e4e8" stroke-width="0.7"/><line x1="42" y1="8.0" x2="468" y2="8.0" stroke="#e1e4e8" stroke-width="0.7"/>
+            <line x1="42" y1="148" x2="468" y2="148" stroke="#d1d9e0" stroke-width="1"/><line x1="42" y1="8" x2="42" y2="148" stroke="#d1d9e0" stroke-width="1"/>
+            <text x="38" y="148" text-anchor="end" dominant-baseline="middle" fill="#8b949e" font-size="9">10%</text><text x="38" y="101.3" text-anchor="end" dominant-baseline="middle" fill="#8b949e" font-size="9">14%</text><text x="38" y="54.7" text-anchor="end" dominant-baseline="middle" fill="#8b949e" font-size="9">18%</text><text x="38" y="8" text-anchor="end" dominant-baseline="middle" fill="#8b949e" font-size="9">22%</text>
+            <text x="42" y="162" text-anchor="middle" fill="#8b949e" font-size="9">0</text><text x="468" y="162" text-anchor="middle" fill="#8b949e" font-size="9">405</text>
+            <path d="M42,101.7 L127.2,114.5 L212.4,58.8 L297.6,75.9 L382.8,50.2 L468,45.9" fill="none" stroke="#034694" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+            <g fill="#034694"><circle cx="42" cy="101.7" r="3"/><circle cx="127.2" cy="114.5" r="3"/><circle cx="212.4" cy="58.8" r="3"/><circle cx="297.6" cy="75.9" r="3"/><circle cx="382.8" cy="50.2" r="3"/><circle cx="468" cy="45.9" r="3"/></g>
+            <text x="255" y="168" text-anchor="middle" fill="#8b949e" font-size="9">Training Step</text>
+          </svg>
+        </div>
+        <div class="chart">
+          <div class="chart__head"><span class="chart__title">MATH <span class="muted">greedy</span></span><span class="chart__delta">20.6 &rarr; 27.8%</span></div>
+          <svg viewBox="0 0 480 170" xmlns="http://www.w3.org/2000/svg">
+            <line x1="42" y1="101.3" x2="468" y2="101.3" stroke="#e1e4e8" stroke-width="0.7"/><line x1="42" y1="54.7" x2="468" y2="54.7" stroke="#e1e4e8" stroke-width="0.7"/><line x1="42" y1="8" x2="468" y2="8" stroke="#e1e4e8" stroke-width="0.7"/>
+            <line x1="42" y1="148" x2="468" y2="148" stroke="#d1d9e0" stroke-width="1"/><line x1="42" y1="8" x2="42" y2="148" stroke="#d1d9e0" stroke-width="1"/>
+            <text x="38" y="148" text-anchor="end" dominant-baseline="middle" fill="#8b949e" font-size="9">15%</text><text x="38" y="101.3" text-anchor="end" dominant-baseline="middle" fill="#8b949e" font-size="9">20%</text><text x="38" y="54.7" text-anchor="end" dominant-baseline="middle" fill="#8b949e" font-size="9">25%</text><text x="38" y="8" text-anchor="end" dominant-baseline="middle" fill="#8b949e" font-size="9">30%</text>
+            <text x="42" y="162" text-anchor="middle" fill="#8b949e" font-size="9">0</text><text x="468" y="162" text-anchor="middle" fill="#8b949e" font-size="9">405</text>
+            <path d="M42,95.7 L127.2,125.6 L212.4,80.8 L297.6,47.2 L382.8,41.6 L468,28.5" fill="none" stroke="#5a2d9e" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+            <g fill="#5a2d9e"><circle cx="42" cy="95.7" r="3"/><circle cx="127.2" cy="125.6" r="3"/><circle cx="212.4" cy="80.8" r="3"/><circle cx="297.6" cy="47.2" r="3"/><circle cx="382.8" cy="41.6" r="3"/><circle cx="468" cy="28.5" r="3"/></g>
+            <text x="255" y="168" text-anchor="middle" fill="#8b949e" font-size="9">Training Step</text>
+          </svg>
+        </div>
+        <div class="chart">
+          <div class="chart__head"><span class="chart__title">GSM8K <span class="muted">greedy</span></span><span class="chart__delta">26.1 &rarr; 56.5%</span></div>
+          <svg viewBox="0 0 480 170" xmlns="http://www.w3.org/2000/svg">
+            <line x1="42" y1="116.9" x2="468" y2="116.9" stroke="#e1e4e8" stroke-width="0.7"/><line x1="42" y1="85.8" x2="468" y2="85.8" stroke="#e1e4e8" stroke-width="0.7"/><line x1="42" y1="54.7" x2="468" y2="54.7" stroke="#e1e4e8" stroke-width="0.7"/><line x1="42" y1="23.6" x2="468" y2="23.6" stroke="#e1e4e8" stroke-width="0.7"/>
+            <line x1="42" y1="148" x2="468" y2="148" stroke="#d1d9e0" stroke-width="1"/><line x1="42" y1="8" x2="42" y2="148" stroke="#d1d9e0" stroke-width="1"/>
+            <text x="38" y="148" text-anchor="end" dominant-baseline="middle" fill="#8b949e" font-size="9">20%</text><text x="38" y="116.9" text-anchor="end" dominant-baseline="middle" fill="#8b949e" font-size="9">30%</text><text x="38" y="85.8" text-anchor="end" dominant-baseline="middle" fill="#8b949e" font-size="9">40%</text><text x="38" y="54.7" text-anchor="end" dominant-baseline="middle" fill="#8b949e" font-size="9">50%</text><text x="38" y="23.6" text-anchor="end" dominant-baseline="middle" fill="#8b949e" font-size="9">60%</text>
+            <text x="42" y="162" text-anchor="middle" fill="#8b949e" font-size="9">0</text><text x="468" y="162" text-anchor="middle" fill="#8b949e" font-size="9">405</text>
+            <path d="M42,129.1 L127.2,64.2 L212.4,54.1 L297.6,39.6 L382.8,31.4 L468,34.5" fill="none" stroke="#0d4f22" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+            <g fill="#0d4f22"><circle cx="42" cy="129.1" r="3"/><circle cx="127.2" cy="64.2" r="3"/><circle cx="212.4" cy="54.1" r="3"/><circle cx="297.6" cy="39.6" r="3"/><circle cx="382.8" cy="31.4" r="3"/><circle cx="468" cy="34.5" r="3"/></g>
+            <text x="255" y="168" text-anchor="middle" fill="#8b949e" font-size="9">Training Step</text>
+          </svg>
+        </div>
+        <div class="chart">
+          <div class="chart__head"><span class="chart__title">AIME 2024 <span class="muted">greedy + BoN@4</span></span><span class="chart__delta">BoN 26.7 &rarr; 46.7%</span></div>
+          <svg viewBox="0 0 480 170" xmlns="http://www.w3.org/2000/svg">
+            <line x1="42" y1="122.5" x2="468" y2="122.5" stroke="#e1e4e8" stroke-width="0.7"/><line x1="42" y1="97.1" x2="468" y2="97.1" stroke="#e1e4e8" stroke-width="0.7"/><line x1="42" y1="71.6" x2="468" y2="71.6" stroke="#e1e4e8" stroke-width="0.7"/><line x1="42" y1="46.2" x2="468" y2="46.2" stroke="#e1e4e8" stroke-width="0.7"/><line x1="42" y1="20.7" x2="468" y2="20.7" stroke="#e1e4e8" stroke-width="0.7"/>
+            <line x1="42" y1="148" x2="468" y2="148" stroke="#d1d9e0" stroke-width="1"/><line x1="42" y1="8" x2="42" y2="148" stroke="#d1d9e0" stroke-width="1"/>
+            <text x="38" y="148" text-anchor="end" dominant-baseline="middle" fill="#8b949e" font-size="9">0%</text><text x="38" y="97.1" text-anchor="end" dominant-baseline="middle" fill="#8b949e" font-size="9">20%</text><text x="38" y="46.2" text-anchor="end" dominant-baseline="middle" fill="#8b949e" font-size="9">40%</text>
+            <text x="42" y="162" text-anchor="middle" fill="#8b949e" font-size="9">0</text><text x="468" y="162" text-anchor="middle" fill="#8b949e" font-size="9">486</text>
+            <path d="M42,105.6 L113,148 L184,122.5 L255,97.1 L326,122.5 L397,131 L468,114.1" fill="none" stroke="#7a2d00" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+            <g fill="#7a2d00"><circle cx="42" cy="105.6" r="2.6"/><circle cx="113" cy="148" r="2.6"/><circle cx="184" cy="122.5" r="2.6"/><circle cx="255" cy="97.1" r="2.6"/><circle cx="326" cy="122.5" r="2.6"/><circle cx="397" cy="131" r="2.6"/><circle cx="468" cy="114.1" r="2.6"/></g>
+            <path d="M42,80.1 L113,88.6 L184,54.7 L255,29.2 L326,63.2 L397,37.7 L468,29.2" fill="none" stroke="#034694" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+            <g fill="#034694"><circle cx="42" cy="80.1" r="2.6"/><circle cx="113" cy="88.6" r="2.6"/><circle cx="184" cy="54.7" r="2.6"/><circle cx="255" cy="29.2" r="2.6"/><circle cx="326" cy="63.2" r="2.6"/><circle cx="397" cy="37.7" r="2.6"/><circle cx="468" cy="29.2" r="2.6"/></g>
+            <line x1="300" y1="16" x2="316" y2="16" stroke="#7a2d00" stroke-width="2.2"/><text x="320" y="16" dominant-baseline="middle" fill="#7a2d00" font-size="9" font-weight="600">Greedy</text>
+            <line x1="372" y1="16" x2="388" y2="16" stroke="#034694" stroke-width="2.2"/><text x="392" y="16" dominant-baseline="middle" fill="#034694" font-size="9" font-weight="600">BoN@4</text>
+            <text x="255" y="168" text-anchor="middle" fill="#8b949e" font-size="9">Training Step</text>
+          </svg>
+        </div>
+      </div>
+      <p class="figure__cap" style="max-width:960px; margin:22px auto 0; border:0; font-size:15px; line-height:1.7;">We train Qwen3-4B-Instruct with GRPO on DAPO-Math-17K, using <a href="https://arxiv.org/pdf/2504.11536" target="_blank" rel="noopener">ReTool</a> as the tool-integrated rollout scaffold, and evaluate checkpoints across math reasoning benchmarks. Accuracy improves consistently over training on MinervaMath, MATH, GSM8K, and AIME 2024, demonstrating that STACX supports the full rollout-to-training RL loop.</p>
+      </div>
+      </div>
+    </div>
+
+    <!-- Software Engineering -->
+    <div class="reveal" style="margin-top:72px;">
+      <h3 class="block-title" style="text-align:center;">Software Engineering</h3>
+      <p class="block-lead" style="text-align:center; max-width:940px; margin:0 auto 26px;">We post-train software-engineering agents end-to-end with STACX on <b><a href="https://huggingface.co/SWE-Gym" target="_blank" rel="noopener">SWE-Gym</a></b>, generating and evaluating trajectories through the OpenHands scaffold. With a Qwen3-Coder-30B teacher, STACX supports a range of post-training strategies: SFT, On-Policy Distillation, and <a href="https://arxiv.org/pdf/2605.12913" target="_blank" rel="noopener">DAgger</a>- / <a href="https://arxiv.org/pdf/2605.12913" target="_blank" rel="noopener">AggreVaTe</a>-style mixture-policy imitation, that improve Qwen3-4B / 8B students on both SWE-Gym Holdout and SWE-Bench Verified.</p>
+      <div class="exp-tabs">
+      <div class="exp-tabs__bar" role="tablist" aria-label="Script or results view">
+        <button class="exp-tab is-active" data-tab="script" type="button"><svg viewBox="0 0 24 24"><path d="M4 17l6-6-6-6M12 19h8"/></svg>Script</button>
+        <button class="exp-tab" data-tab="results" type="button"><svg viewBox="0 0 24 24"><path d="M3 12h4l3 8 4-16 3 8h4"/></svg>Results</button>
+      </div>
+      <div class="exp-pane exp-pane--script is-active" data-pane="script">
+        <div class="code exp-code">
+          <div class="code__bar"><span class="d"></span><span class="d"></span><span class="d"></span><span class="name">scripts/train/swe/</span></div>
+          <pre><span class="c"># SWE-agent post-training: Qwen3-4B/8B student × Qwen3-Coder-30B teacher</span>
+git clone https://github.com/StACx-StandAloneComplex/stacx.git &amp;&amp; cd stacx
+
+<span class="c"># Stage models + data under external/, then start the ROCK sandbox admin</span>
+<span class="c"># (one-time setup — see scripts/train/swe/QUICKSTART_OPD.md)</span>
+rock admin start &amp;
+
+<span class="c"># Pick a post-training strategy (append _8b for the 8B student)</span>
+export WANDB_KEY=&lt;your-wandb-key&gt;
+bash scripts/train/swe/sft/sft_4b.sh                  <span class="c"># SFT</span>
+bash scripts/train/swe/opd/opd_4b.sh                  <span class="c"># On-Policy Distillation</span>
+bash scripts/train/swe/online_dagger/dagger_4b.sh     <span class="c"># DAgger</span>
+bash scripts/train/swe/online_dagger/aggrevate_4b.sh  <span class="c"># AggreVaTe</span></pre>
+        </div>
+      </div>
+      <div class="exp-pane exp-pane--results" data-pane="results">
+<div class="chart-legend">
+          <span><i style="background:#034694"></i><a href="https://arxiv.org/pdf/2605.12913" target="_blank" rel="noopener">DAgger</a></span>
+          <span><i style="background:#5a2d9e"></i><a href="https://arxiv.org/pdf/2605.12913" target="_blank" rel="noopener">AggreVaTe</a></span>
+          <span><i style="background:#7a2d00"></i>SFT</span>
+          <span><i style="background:#0d4f22"></i>On-Policy Distillation</span>
+        </div>
+        <div class="chart-grid">
+          <div class="chart"><div class="chart__head"><span class="chart__title">SWE-Gym Holdout</span></div><svg viewBox="0 0 484 336" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;"><line x1="46" y1="290.0" x2="470" y2="290.0" stroke="#e1e4e8" stroke-width="0.8"/><text x="41" y="290.0" text-anchor="end" dominant-baseline="middle" fill="#8b949e" font-size="11">4%</text><line x1="46" y1="211.1" x2="470" y2="211.1" stroke="#e1e4e8" stroke-width="0.8"/><text x="41" y="211.1" text-anchor="end" dominant-baseline="middle" fill="#8b949e" font-size="11">8%</text><line x1="46" y1="132.3" x2="470" y2="132.3" stroke="#e1e4e8" stroke-width="0.8"/><text x="41" y="132.3" text-anchor="end" dominant-baseline="middle" fill="#8b949e" font-size="11">12%</text><line x1="46" y1="53.4" x2="470" y2="53.4" stroke="#e1e4e8" stroke-width="0.8"/><text x="41" y="53.4" text-anchor="end" dominant-baseline="middle" fill="#8b949e" font-size="11">16%</text><line x1="46" y1="290" x2="470" y2="290" stroke="#d1d9e0" stroke-width="1.2"/><line x1="46" y1="14" x2="46" y2="290" stroke="#d1d9e0" stroke-width="1.2"/><text x="46.0" y="306" text-anchor="middle" fill="#8b949e" font-size="11">0</text><text x="135.3" y="306" text-anchor="middle" fill="#8b949e" font-size="11">2000</text><text x="224.5" y="306" text-anchor="middle" fill="#8b949e" font-size="11">4000</text><text x="313.8" y="306" text-anchor="middle" fill="#8b949e" font-size="11">6000</text><text x="403.1" y="306" text-anchor="middle" fill="#8b949e" font-size="11">8000</text><text x="258" y="323" text-anchor="middle" fill="#8b949e" font-size="11">Effective Training Samples</text><path d="M46.0,270.3 L150.3,171.7 L254.7,132.3 L359.0,92.9 L463.4,73.1" fill="none" stroke="#7a2d00" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" opacity="0.85"/><g fill="#7a2d00"><circle cx="46.0" cy="270.3" r="2.8"/><circle cx="150.3" cy="171.7" r="2.8"/><circle cx="254.7" cy="132.3" r="2.8"/><circle cx="359.0" cy="92.9" r="2.8"/><circle cx="463.4" cy="73.1" r="2.8"/></g><path d="M46.0,270.3 L183.1,191.4 L320.2,132.3 L457.3,53.4" fill="none" stroke="#0d4f22" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" opacity="0.85"/><g fill="#0d4f22"><circle cx="46.0" cy="270.3" r="2.8"/><circle cx="183.1" cy="191.4" r="2.8"/><circle cx="320.2" cy="132.3" r="2.8"/><circle cx="457.3" cy="53.4" r="2.8"/></g><path d="M46.0,270.3 L183.1,112.6 L320.2,53.4 L457.3,53.4" fill="none" stroke="#5a2d9e" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" opacity="1"/><g fill="#5a2d9e"><circle cx="46.0" cy="270.3" r="2.8"/><circle cx="183.1" cy="112.6" r="2.8"/><circle cx="320.2" cy="53.4" r="2.8"/><circle cx="457.3" cy="53.4" r="2.8"/></g><path d="M46.0,270.3 L183.1,132.3 L320.2,53.4 L457.3,33.7" fill="none" stroke="#034694" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" opacity="1"/><g fill="#034694"><circle cx="46.0" cy="270.3" r="2.8"/><circle cx="183.1" cy="132.3" r="2.8"/><circle cx="320.2" cy="53.4" r="2.8"/><circle cx="457.3" cy="33.7" r="2.8"/></g></svg></div>
+          <div class="chart"><div class="chart__head"><span class="chart__title">SWE-Bench Verified-100</span></div><svg viewBox="0 0 484 336" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;"><line x1="46" y1="290.0" x2="470" y2="290.0" stroke="#e1e4e8" stroke-width="0.8"/><text x="41" y="290.0" text-anchor="end" dominant-baseline="middle" fill="#8b949e" font-size="11">10%</text><line x1="46" y1="213.3" x2="470" y2="213.3" stroke="#e1e4e8" stroke-width="0.8"/><text x="41" y="213.3" text-anchor="end" dominant-baseline="middle" fill="#8b949e" font-size="11">15%</text><line x1="46" y1="136.7" x2="470" y2="136.7" stroke="#e1e4e8" stroke-width="0.8"/><text x="41" y="136.7" text-anchor="end" dominant-baseline="middle" fill="#8b949e" font-size="11">20%</text><line x1="46" y1="60.0" x2="470" y2="60.0" stroke="#e1e4e8" stroke-width="0.8"/><text x="41" y="60.0" text-anchor="end" dominant-baseline="middle" fill="#8b949e" font-size="11">25%</text><line x1="46" y1="290" x2="470" y2="290" stroke="#d1d9e0" stroke-width="1.2"/><line x1="46" y1="14" x2="46" y2="290" stroke="#d1d9e0" stroke-width="1.2"/><text x="46.0" y="306" text-anchor="middle" fill="#8b949e" font-size="11">0</text><text x="135.3" y="306" text-anchor="middle" fill="#8b949e" font-size="11">2000</text><text x="224.5" y="306" text-anchor="middle" fill="#8b949e" font-size="11">4000</text><text x="313.8" y="306" text-anchor="middle" fill="#8b949e" font-size="11">6000</text><text x="403.1" y="306" text-anchor="middle" fill="#8b949e" font-size="11">8000</text><text x="258" y="323" text-anchor="middle" fill="#8b949e" font-size="11">Effective Training Samples</text><path d="M46.0,244.0 L150.3,274.7 L254.7,167.3 L359.0,136.7 L463.4,152.0" fill="none" stroke="#7a2d00" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" opacity="0.85"/><g fill="#7a2d00"><circle cx="46.0" cy="244.0" r="2.8"/><circle cx="150.3" cy="274.7" r="2.8"/><circle cx="254.7" cy="167.3" r="2.8"/><circle cx="359.0" cy="136.7" r="2.8"/><circle cx="463.4" cy="152.0" r="2.8"/></g><path d="M46.0,244.0 L183.1,244.0 L320.2,152.0 L457.3,90.7" fill="none" stroke="#0d4f22" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" opacity="0.85"/><g fill="#0d4f22"><circle cx="46.0" cy="244.0" r="2.8"/><circle cx="183.1" cy="244.0" r="2.8"/><circle cx="320.2" cy="152.0" r="2.8"/><circle cx="457.3" cy="90.7" r="2.8"/></g><path d="M46.0,244.0 L183.1,136.7 L320.2,121.3 L457.3,75.3" fill="none" stroke="#5a2d9e" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" opacity="1"/><g fill="#5a2d9e"><circle cx="46.0" cy="244.0" r="2.8"/><circle cx="183.1" cy="136.7" r="2.8"/><circle cx="320.2" cy="121.3" r="2.8"/><circle cx="457.3" cy="75.3" r="2.8"/></g><path d="M46.0,244.0 L183.1,136.7 L320.2,90.7 L457.3,44.7" fill="none" stroke="#034694" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" opacity="1"/><g fill="#034694"><circle cx="46.0" cy="244.0" r="2.8"/><circle cx="183.1" cy="136.7" r="2.8"/><circle cx="320.2" cy="90.7" r="2.8"/><circle cx="457.3" cy="44.7" r="2.8"/></g></svg></div>
+        </div>
+      <p class="figure__cap" style="max-width:940px; margin:18px auto 0; border:0; font-size:14.5px; line-height:1.65;">Training-data scaling under matched effective-sample budgets (4B student), comparing four post-training strategies supported by STACX on SWE-Gym Holdout and SWE-Bench Verified-100.</p>
+        <div class="table-card" style="margin-top:30px;">
+          <table class="results">
+            <thead><tr><th>Method</th><th>Agent Scaffold</th><th>Train Data</th><th>SWE-Gym Holdout</th><th>SWE-Bench Verified</th></tr></thead>
+            <tbody>
+            <tr><td><b>Qwen3-4B</b></td><td>OpenHands</td><td>—</td><td>5.0%</td><td>11.2%</td></tr>
+            <tr><td>+ SFT</td><td>OpenHands</td><td>SWE-Gym</td><td>15.0%</td><td>22.9%</td></tr>
+            <tr><td>+ OPD</td><td>OpenHands</td><td>SWE-Gym</td><td>16.0%</td><td>23.4%</td></tr>
+            <tr><td>+ <a href="https://arxiv.org/pdf/2605.12913" target="_blank" rel="noopener">DAgger</a></td><td>OpenHands</td><td>SWE-Gym</td><td>17.0%</td><td>27.3%</td></tr>
+            <tr><td>+ <a href="https://arxiv.org/pdf/2605.12913" target="_blank" rel="noopener">AggreVaTe</a></td><td>OpenHands</td><td>SWE-Gym</td><td>16.0%</td><td>24.5%</td></tr>
+            <tr class="newblk"><td><b>Qwen3-8B</b></td><td>OpenHands</td><td>—</td><td>2.0%</td><td>7.7%</td></tr>
+            <tr><td>+ SFT</td><td>OpenHands</td><td>SWE-Gym</td><td>12.0%</td><td>23.4%</td></tr>
+            <tr><td>+ OPD</td><td>OpenHands</td><td>SWE-Gym</td><td>16.0%</td><td>26.2%</td></tr>
+            <tr><td>+ <a href="https://arxiv.org/pdf/2605.12913" target="_blank" rel="noopener">DAgger</a></td><td>OpenHands</td><td>SWE-Gym</td><td>19.0%</td><td>29.8%</td></tr>
+            <tr><td>+ <a href="https://arxiv.org/pdf/2605.12913" target="_blank" rel="noopener">AggreVaTe</a></td><td>OpenHands</td><td>SWE-Gym</td><td>17.0%</td><td>27.3%</td></tr>
+            </tbody>
+          </table>
+        </div>
+      <p class="figure__cap" style="max-width:940px; margin:14px auto 0; border:0;">Task-resolution rate, where higher is better. Under the same OpenHands scaffold, STACX supports multiple post-training strategies that improve Qwen3-4B and Qwen3-8B agents over their base initialization on both SWE-Gym Holdout and SWE-Bench Verified.</p>
+      </div>
+      </div>
+    </div>
+
+    <!-- Infra parity table -->
+    <div class="reveal" style="margin-top:72px;">
+      <h3 class="block-title" style="text-align:center;">Infrastructure Parity with Harbor</h3>
+      <p class="block-lead" style="text-align:center; max-width:940px; margin:0 auto 28px;">We run rollout-only evaluation under identical agent scaffolds and benchmark settings, comparing STACX against <b>Harbor</b> across five agentic task suites. STACX closely matches the reference infrastructure across OpenHands and Terminus2, validating it as a drop-in execution layer for agentic RL workloads.</p>
+      <div class="exp-tabs">
+      <div class="exp-tabs__bar" role="tablist" aria-label="Script or results view">
+        <button class="exp-tab is-active" data-tab="script" type="button"><svg viewBox="0 0 24 24"><path d="M4 17l6-6-6-6M12 19h8"/></svg>Script</button>
+        <button class="exp-tab" data-tab="results" type="button"><svg viewBox="0 0 24 24"><path d="M3 12h4l3 8 4-16 3 8h4"/></svg>Results</button>
+      </div>
+      <div class="exp-pane exp-pane--script is-active" data-pane="script">
+        <div class="code exp-code">
+          <div class="code__bar"><span class="d"></span><span class="d"></span><span class="d"></span><span class="name">rl_engine/examples/shared/docker_run_eval.sh</span></div>
+          <pre><span class="c"># Rollout-only eval: BENCH ∈ swebench | terminal_bench | seta | kernel_bench | algotune</span>
+git clone https://github.com/StACx-StandAloneComplex/stacx.git &amp;&amp; cd stacx
+
+<span class="c"># 1. Download the Harbor task tree, convert → tasks.jsonl, build images</span>
+python rl_engine/examples/shared/download_tasks.py &lt;bench&gt;@&lt;ver&gt; \
+  -o external/harbor-datasets/&lt;bench&gt;
+python rl_engine/examples/shared/prepare_jsonl.py \
+  --tasks-dir external/harbor-datasets/&lt;bench&gt; \
+  --output rl_engine/examples/&lt;bench&gt;/config/tasks.jsonl --registry &lt;bench&gt;
+bash rl_engine/examples/shared/build_images.sh \
+  rl_engine/examples/&lt;bench&gt;/config/tasks.jsonl
+
+<span class="c"># 2. Serve the model, then evaluate (SCAFFOLD = openhands | terminus2)</span>
+MODEL=&lt;hf-model&gt; PORT=9001 bash rl_engine/examples/shared/serve_sglang.sh
+BENCH=&lt;bench&gt; SCAFFOLD=openhands SGLANG_ROUTER_PORT=9001 \
+  bash rl_engine/examples/shared/docker_run_eval.sh</pre>
+        </div>
+      </div>
+      <div class="exp-pane exp-pane--results" data-pane="results">
+<div class="table-card">
+        <table class="results">
+          <thead>
+            <tr><th>System + Scaffold</th><th><a href="https://huggingface.co/datasets/SWE-bench/SWE-bench_Verified" target="_blank" rel="noopener">SWE-bench Verified</a></th><th><a href="https://huggingface.co/datasets/harborframework/terminal-bench-2.0" target="_blank" rel="noopener">Terminal-Bench 2.0</a></th><th><a href="https://huggingface.co/datasets/camel-ai/SETA-Env" target="_blank" rel="noopener">SETA</a></th><th><a href="https://huggingface.co/datasets/ScalingIntelligence/KernelBench" target="_blank" rel="noopener">KernelBench</a></th><th><a href="https://huggingface.co/datasets/oripress/AlgoTune" target="_blank" rel="noopener">AlgoTune</a></th></tr>
+          </thead>
+          <tbody>
+            <tr class="is-stacx"><td>STACX + OpenHands</td><td>47.00%</td><td>24.34%</td><td class="win">47.80%</td><td>19.00%</td><td>1.14</td></tr>
+            <tr><td>Harbor + OpenHands</td><td>47.00%</td><td>24.71%</td><td>45.67%</td><td>19.00%</td><td>1.19</td></tr>
+            <tr class="is-stacx"><td>STACX + Terminus2</td><td>57.33%</td><td>28.46%</td><td>51.67%</td><td>36.00%</td><td class="win">1.28</td></tr>
+            <tr><td>Harbor + Terminus2</td><td>57.67%</td><td>31.46%</td><td>51.83%</td><td>36.00%</td><td>1.14</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="figure__cap" style="max-width:940px; margin:14px auto 0; border:0;">SWE-bench Verified, Terminal-Bench 2.0, SETA, and KernelBench report average success rate; AlgoTune reports harmonic-mean speedup reward.</p>
+      </div>
+      </div>
+    </div>
+
+    <div class="exp-note reveal narrow" style="margin-left:auto; margin-right:auto;">
+      <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20z"/><path d="M12 8v4M12 16h.01"/></svg>
+      <p><b>More agentic results coming soon.</b> We are actively expanding evaluations across additional scaffolds, task suites, and algorithms. Numbers above reflect the current public snapshot.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════ CITATION ══════════════════════════ -->
+<section class="section" id="citation">
+  <div class="wrap narrow" style="margin:0 auto;">
+    <div class="section-head center reveal">
+      <span class="eyebrow">Citation</span>
+      <h2 class="section-title">BibTeX</h2>
+    </div>
+    <div class="cite-card reveal d1">
+      <button class="copy" id="copyBtn"><svg viewBox="0 0 24 24"><path d="M16 1H4a2 2 0 0 0-2 2v14h2V3h12V1zm3 4H8a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2zm0 16H8V7h11v14z"/></svg> Copy</button>
+<pre id="bibtex">@misc{stacx2026,
+  author       = {STACX Contributors},
+  title        = {STACX: A Modular Infrastructure for End-to-End Agentic Reinforcement Learning},
+  year         = {2026},
+  howpublished = {\url{https://github.com/StACx-StandAloneComplex/stacx}},
+  urldate      = {2026-07-15}
+}</pre>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════ FOOTER ══════════════════════════ -->
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer__top">
+      <div>
+        <div class="footer__brand">STA<span>CX</span></div>
+        <p>STandAloneCompleX: a modular infrastructure for end-to-end agentic reinforcement learning over LLMs and agentic tasks.</p>
+      </div>
+      <div class="footer__links">
+        <div class="footer__col">
+          <h5>Engines</h5>
+          <a href="#rollout">Rollout</a>
+          <a href="#trainer">Trainer</a>
+          <a href="#environment">Environment</a>
+        </div>
+        <div class="footer__col">
+          <h5>Explore</h5>
+          <a href="#motivation">Motivation</a>
+          <a href="#overview">Overview</a>
+          <a href="#features">Features</a>
+          <a href="#modes">Training Modes</a>
+          <a href="#experiments">Experiments</a>
+        </div>
+        <div class="footer__col">
+          <h5>Resources</h5>
+          <a href="https://github.com/StACx-StandAloneComplex/stacx/tree/main" target="_blank" rel="noopener">Code</a>
+          <a href="#citation">Cite</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <span>© 2026 STACX Team · Georgia Institute of Technology</span>
+      <span>Built for end-to-end agentic RL.</span>
+    </div>
+  </div>
+</footer>
+
+<script src="static/js/main.js"></script>
+</body>
+</html>

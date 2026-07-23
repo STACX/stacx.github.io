@@ -1,0 +1,1157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Environment Engine — STACX Documentation</title>
+  <style>
+/* STACX Documentation — Shared Stylesheet
+   Dark theme */
+
+:root {
+  --bg: #ffffff;
+  --surface: #f6f8fa;
+  --surface2: #eaeef2;
+  --border: #d1d9e0;
+  --text: #1f2328;
+  --text-dim: #57606a;
+  --accent-blue: #0550ae;
+  --accent-green: #116329;
+  --accent-orange: #953800;
+  --accent-purple: #6e40c9;
+  --accent-red: #cf222e;
+  --accent-cyan: #0c5a6d;
+  --nav-width: 260px;
+}
+
+[data-theme="dark"] {
+  --bg: #0d1117;
+  --surface: #161b22;
+  --surface2: #1c2128;
+  --border: #30363d;
+  --text: #e6edf3;
+  --text-dim: #8b949e;
+  --accent-blue: #58a6ff;
+  --accent-green: #3fb950;
+  --accent-orange: #d29922;
+  --accent-purple: #bc8cff;
+  --accent-red: #f85149;
+  --accent-cyan: #56d4dd;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', system-ui, sans-serif;
+  line-height: 1.6;
+}
+
+.nav-sidebar {
+  position: fixed;
+  top: 0; left: 0;
+  width: var(--nav-width);
+  height: 100vh;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  padding: 24px 0;
+  overflow-y: auto;
+  z-index: 100;
+}
+
+.nav-logo {
+  padding: 0 20px;
+  margin-bottom: 24px;
+}
+
+.nav-logo h2 {
+  font-size: 18px;
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.nav-logo .version {
+  font-size: 11px;
+  color: var(--text-dim);
+  margin-top: 2px;
+}
+
+.nav-section {
+  padding: 0 12px;
+  margin-bottom: 8px;
+}
+
+.nav-section-title {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--text-dim);
+  padding: 8px 8px 4px 8px;
+}
+
+.nav-link {
+  display: block;
+  padding: 6px 12px;
+  border-radius: 6px;
+  color: var(--text-dim);
+  text-decoration: none;
+  font-size: 13px;
+  transition: all 0.15s;
+}
+
+.nav-link:hover {
+  background: var(--surface2);
+  color: var(--text);
+}
+
+.nav-link.active {
+  background: rgba(56, 139, 253, 0.12);
+  color: var(--accent-blue);
+  font-weight: 500;
+}
+
+.nav-link .placeholder-tag {
+  font-size: 9px;
+  padding: 1px 5px;
+  border-radius: 3px;
+  background: rgba(139, 148, 158, 0.15);
+  color: var(--text-dim);
+  margin-left: 6px;
+  vertical-align: middle;
+}
+
+.main-content {
+  margin-left: var(--nav-width);
+  padding: 48px 48px 80px 48px;
+  max-width: 960px;
+}
+
+h1 {
+  font-size: 32px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.page-subtitle {
+  color: var(--text-dim);
+  font-size: 15px;
+  margin-bottom: 40px;
+}
+
+h2 {
+  font-size: 22px;
+  font-weight: 600;
+  margin: 48px 0 16px 0;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+h2 .num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--accent-blue);
+  color: var(--bg);
+  font-size: 14px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+h3 {
+  font-size: 17px;
+  font-weight: 600;
+  margin: 28px 0 10px 0;
+  color: var(--accent-blue);
+}
+
+h4 {
+  font-size: 14px;
+  font-weight: 600;
+  margin: 16px 0 6px 0;
+  color: var(--accent-green);
+}
+
+p { margin-bottom: 12px; font-size: 14px; }
+
+ul, ol {
+  margin: 8px 0 16px 24px;
+  font-size: 14px;
+}
+
+li { margin-bottom: 4px; }
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 20px 24px;
+  margin-bottom: 16px;
+}
+
+.card.blue   { border-left: 3px solid var(--accent-blue); }
+.card.green  { border-left: 3px solid var(--accent-green); }
+.card.orange { border-left: 3px solid var(--accent-orange); }
+.card.purple { border-left: 3px solid var(--accent-purple); }
+.card.red    { border-left: 3px solid var(--accent-red); }
+.card.cyan   { border-left: 3px solid var(--accent-cyan); }
+
+.card h4 { margin-top: 0; }
+.card p:last-child { margin-bottom: 0; }
+
+.callout-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px;
+  margin: 16px 0 24px 0;
+}
+
+.callout {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.callout h4 {
+  font-size: 14px;
+  font-weight: 600;
+  margin: 0 0 4px 0;
+}
+
+.callout p {
+  font-size: 13px;
+  color: var(--text-dim);
+  margin: 0;
+}
+
+code {
+  font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+  font-size: 12px;
+  background: rgba(110, 118, 129, 0.15);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+pre {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px 20px;
+  overflow-x: auto;
+  font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+  font-size: 12px;
+  line-height: 1.6;
+  margin: 10px 0 16px 0;
+  color: var(--text);
+}
+
+pre code {
+  background: none;
+  padding: 0;
+  font-size: inherit;
+}
+
+.code-ref {
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  font-size: 12px;
+  color: var(--accent-orange);
+  background: rgba(210, 153, 34, 0.1);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.kw { color: var(--accent-purple); }
+.fn { color: var(--accent-blue); }
+.cm { color: var(--text-dim); }
+.st { color: var(--accent-green); }
+.ar { color: var(--accent-orange); font-weight: 600; }
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 12px 0 24px 0;
+  font-size: 13px;
+}
+
+th {
+  text-align: left;
+  padding: 10px 12px;
+  border-bottom: 2px solid var(--border);
+  color: var(--accent-blue);
+  font-weight: 600;
+}
+
+td {
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+tr:hover td {
+  background: rgba(56, 139, 253, 0.04);
+}
+
+.diagram {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 24px;
+  margin: 16px 0;
+  overflow-x: auto;
+}
+
+.diagram pre {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  color: var(--text-dim);
+}
+
+.tag {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.tag-blue   { background: rgba(56, 139, 253, 0.15); color: var(--accent-blue); }
+.tag-green  { background: rgba(63, 185, 80, 0.15); color: var(--accent-green); }
+.tag-orange { background: rgba(210, 153, 34, 0.15); color: var(--accent-orange); }
+.tag-purple { background: rgba(188, 140, 255, 0.15); color: var(--accent-purple); }
+.tag-red    { background: rgba(248, 81, 73, 0.15); color: var(--accent-red); }
+
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+  margin: 16px 0 24px 0;
+}
+
+.feature-item {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.feature-item h4 {
+  margin: 0 0 4px 0;
+  font-size: 13px;
+}
+
+.feature-item p {
+  font-size: 12px;
+  color: var(--text-dim);
+  margin: 0;
+}
+
+@media (max-width: 900px) {
+  .nav-sidebar { display: none; }
+  .main-content { margin-left: 0; padding: 24px; }
+}
+
+.theme-toggle {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  z-index: 200;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 6px 12px;
+  color: var(--text);
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+.theme-toggle:hover {
+  background: var(--surface2);
+  border-color: var(--accent-blue);
+}
+  /* shared: readable content links in both themes */
+.main-content a, .main-content a code { color: var(--accent-blue); }
+.main-content a:hover { color: var(--accent-cyan); }
+/* page-local */
+.file-ref {
+  color: var(--text-dim);
+  font-size: 12px;
+  font-style: italic;
+}
+.fig-caption { font-size: 12px; color: var(--text-dim); margin: -4px 0 20px 0; text-align: center; }
+.diagram svg { width: 100%; height: auto; display: block; }
+td code { white-space: nowrap; }
+.crosslink {
+  display: flex; gap: 10px; align-items: flex-start;
+  background: var(--surface2); border: 1px solid var(--border);
+  border-left: 3px solid var(--accent-cyan);
+  border-radius: 8px; padding: 12px 16px; margin: 16px 0;
+  font-size: 13px;
+}
+.crosslink .cl-icon { color: var(--accent-cyan); font-weight: 700; flex-shrink: 0; }
+.crosslink p { margin: 0; font-size: 13px; }
+
+/* ── Refinement layer: typography, response, materials ── */
+
+html { scroll-behavior: smooth; scroll-padding-top: 24px; }
+
+body {
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  font-optical-sizing: auto;
+}
+
+::selection { background: rgba(56, 139, 253, 0.22); }
+
+/* Type — size-specific tracking and leading */
+h1 {
+  background: none;
+  -webkit-text-fill-color: var(--text);
+  color: var(--text);
+  letter-spacing: -0.022em;
+  line-height: 1.15;
+  text-wrap: balance;
+}
+h2 { letter-spacing: -0.015em; text-wrap: balance; }
+h3 { letter-spacing: -0.008em; }
+p { font-size: 14.5px; line-height: 1.65; }
+ul, ol { font-size: 14.5px; }
+li { line-height: 1.6; }
+.page-subtitle { font-size: 16px; text-wrap: pretty; }
+
+/* Quieter chrome — tint instead of fill, neutral table headers */
+h2 .num {
+  background: rgba(56, 139, 253, 0.13);
+  color: var(--accent-blue);
+  font-weight: 650;
+}
+th {
+  color: var(--text-dim);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+table { font-variant-numeric: tabular-nums; }
+
+/* Gentle depth on resting surfaces */
+.card, .diagram, .comparison-col { box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04); }
+
+/* Response — feedback on press, not just hover */
+.nav-link, .theme-toggle, .hero-card, .view-toggle-btn {
+  transition: background 0.15s ease-out, color 0.15s ease-out,
+              border-color 0.15s ease-out, transform 0.15s ease-out;
+}
+.nav-link:active, .view-toggle-btn:active { transform: scale(0.98); transition-duration: 0.05s; }
+.theme-toggle:active { transform: scale(0.96); transition-duration: 0.05s; }
+.hero-card:active { transform: translateY(0) scale(0.99); transition-duration: 0.05s; }
+.main-content a:active { opacity: 0.65; }
+
+:focus-visible { outline: 2px solid var(--accent-blue); outline-offset: 2px; border-radius: 4px; }
+
+.nav-sidebar { scrollbar-width: thin; }
+
+/* Floating chrome reads as material — content scrolls beneath it */
+.theme-toggle {
+  background: color-mix(in srgb, var(--surface) 72%, transparent);
+  backdrop-filter: blur(12px) saturate(180%);
+  -webkit-backdrop-filter: blur(12px) saturate(180%);
+  box-shadow: 0 1px 3px rgba(16, 24, 40, 0.07);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { transition-duration: 0.01ms !important; animation: none !important; }
+}
+@media (prefers-reduced-transparency: reduce) {
+  .theme-toggle {
+    background: var(--surface);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+}
+
+/* ── Refinement layer v2: beauty pass ── */
+
+/* Sidebar — calmer rhythm, tactile links */
+.nav-sidebar { padding: 20px 0 28px; }
+.nav-sidebar::-webkit-scrollbar { width: 8px; }
+.nav-sidebar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+.nav-logo { padding: 4px 20px 0; margin-bottom: 20px; }
+.nav-section { margin-bottom: 14px; }
+.nav-section-title { padding: 10px 10px 6px; }
+.nav-link { padding: 6px 10px; border-radius: 7px; }
+.nav-link.active { font-weight: 600; }
+
+/* Section rules — the divider fades out instead of cutting across */
+h2 { border-bottom: none; padding-bottom: 10px; position: relative; margin-top: 52px; }
+h2::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 1px;
+  background: linear-gradient(90deg, var(--border) 55%, transparent);
+}
+
+/* Surfaces — rounder, softer */
+.card, .diagram, .comparison-col { border-radius: 12px; }
+pre, .callout { border-radius: 10px; }
+
+/* Tables — enclosed, rounded, quiet */
+table {
+  border-collapse: separate; border-spacing: 0;
+  border: 1px solid var(--border); border-radius: 10px; overflow: hidden;
+}
+th { background: var(--surface); border-bottom: 1px solid var(--border); padding: 10px 14px; }
+td { padding: 9px 14px; }
+tr:last-child td { border-bottom: none; }
+th:first-child { border-top-left-radius: 9px; }
+th:last-child { border-top-right-radius: 9px; }
+tr:last-child td:first-child { border-bottom-left-radius: 9px; }
+tr:last-child td:last-child { border-bottom-right-radius: 9px; }
+
+/* Floating toggle as a pill */
+.theme-toggle { border-radius: 999px; padding: 7px 14px; font-weight: 600; }
+
+/* Landing hero — faint atmospheric wash, icon chips, deeper card lift */
+.hero { position: relative; }
+.hero::before {
+  content: ""; position: absolute; inset: -48px -80px 0; z-index: -1; pointer-events: none;
+  background:
+    radial-gradient(55% 45% at 50% 0%, rgba(56, 139, 253, 0.07), transparent 70%),
+    radial-gradient(35% 35% at 82% 12%, rgba(188, 140, 255, 0.05), transparent 70%);
+}
+.hero h1 { font-size: 54px; letter-spacing: -0.03em; }
+.hero .tagline { font-size: 19px; text-wrap: pretty; }
+.hero-card {
+  border-radius: 14px; padding: 26px 24px;
+  box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04);
+}
+.hero-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 28px rgba(16, 24, 40, 0.08);
+}
+.hero-card .icon {
+  width: 46px; height: 46px; display: inline-grid; place-items: center;
+  background: var(--surface2); border-radius: 12px;
+  font-size: 22px; margin-bottom: 14px;
+}
+
+/* ── Refinement v3: professional pass (external design review) ── */
+
+html { color-scheme: light; }
+[data-theme="dark"] { color-scheme: dark; }
+[data-theme="dark"] .diagram svg rect[fill="rgba(5,80,174,0.06)"] { fill: rgba(88,166,255,0.08); }
+[data-theme="dark"] .diagram svg rect[fill="rgba(12,90,109,0.06)"] { fill: rgba(86,212,221,0.08); }
+[data-theme="dark"] .diagram svg rect[fill="rgba(17,99,41,0.06)"] { fill: rgba(63,185,80,0.08); }
+[data-theme="dark"] .diagram svg rect[fill="rgba(149,56,0,0.06)"] { fill: rgba(210,153,34,0.10); }
+
+/* Type scale — larger, less compressed */
+body { font-size: 15.5px; }
+p, ul, ol { font-size: inherit; }
+h1 { font-size: 36px; line-height: 1.12; }
+h2 { font-size: 23px; margin: 56px 0 20px; }
+h3 { font-size: 18px; margin: 32px 0 12px; }
+h4 { font-size: 15px; }
+.page-subtitle { font-size: 17px; line-height: 1.55; max-width: 70ch; margin-bottom: 48px; }
+
+/* One accent — headings are neutral ink */
+h3, h4 { color: var(--text); }
+
+/* Code — relative inline sizing, comfortable blocks */
+code { font-size: 0.875em; padding: 0.12em 0.35em; border-radius: 4px; }
+pre { font-size: 13.5px; line-height: 1.55; padding: 18px 20px; tab-size: 2; }
+pre code { font-size: inherit; padding: 0; }
+
+/* Tables scroll instead of squeezing */
+.table-scroll { overflow-x: auto; margin: 12px 0 24px; border: 1px solid var(--border); border-radius: 10px; }
+.table-scroll table { min-width: 640px; margin: 0; border: 0; }
+td { vertical-align: top; line-height: 1.55; }
+
+/* Diagrams — legible labels, editorial captions */
+.diagram svg, .arch-diagram svg { display: block; width: 100%; height: auto; }
+.diagram svg text[font-size="9"], .diagram svg text[font-size="10"],
+.arch-diagram svg text[font-size="9"], .arch-diagram svg text[font-size="10"] { font-size: 11px; }
+.fig-caption { font-style: normal; text-align: left; font-size: 12.5px; margin: 10px 0 12px; max-width: none; }
+
+/* Landing hero actions + icon chips */
+.hero-actions { display: flex; justify-content: center; gap: 10px; margin: 26px 0 8px; }
+.main-content a.button-primary, .main-content a.button-secondary {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 9px 16px; border-radius: 8px; font-size: 14px; font-weight: 600; text-decoration: none;
+  transition: background 0.15s ease-out, border-color 0.15s ease-out,
+              filter 0.15s ease-out, transform 0.15s ease-out;
+}
+.main-content a.button-primary { background: var(--accent-blue); color: #fff; }
+.main-content a.button-primary:hover { filter: brightness(1.1); color: #fff; }
+.main-content a.button-secondary { border: 1px solid var(--border); background: var(--surface); color: var(--text); }
+.main-content a.button-secondary:hover { border-color: var(--accent-blue); color: var(--text); }
+.main-content a.button-primary:active, .main-content a.button-secondary:active { transform: scale(0.97); }
+.hero-card .icon svg { width: 22px; height: 22px; color: var(--accent-blue); }
+
+/* Mobile navigation — header + slide-in sidebar */
+.mobile-header { display: none; }
+@media (max-width: 900px) {
+  .mobile-header {
+    display: flex; position: sticky; top: 0; z-index: 220; height: 52px;
+    align-items: center; justify-content: space-between; padding: 0 16px;
+    background: var(--bg);
+    background: color-mix(in srgb, var(--bg) 88%, transparent);
+    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+  .mobile-header .mh-brand { font-weight: 700; font-size: 16px; color: var(--text); text-decoration: none; }
+  .nav-toggle {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+    padding: 6px 14px; font: inherit; font-size: 13.5px; font-weight: 600;
+    color: var(--text); cursor: pointer;
+  }
+  .nav-sidebar {
+    display: block; z-index: 240; transform: translateX(-100%);
+    transition: transform 200ms cubic-bezier(0.23, 1, 0.32, 1);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.18);
+  }
+  .nav-sidebar[data-open="true"] { transform: none; }
+  .mobile-header ~ .theme-toggle { top: 62px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .nav-sidebar { transition: none; }
+}
+
+/* ── Coding font + chromeless figures ── */
+code, pre, .code-ref {
+  font-family: ui-monospace, "SF Mono", Menlo, "JetBrains Mono", "Fira Code", Consolas, monospace;
+}
+.diagram, .arch-diagram { background: none; border: none; box-shadow: none; padding: 12px 0; }
+
+/* ── Lighter surfaces for code blocks and callouts ── */
+pre, .callout {
+  background: var(--surface);
+  background: color-mix(in srgb, var(--surface) 55%, var(--bg));
+}
+</style>
+<script>try{if(localStorage.getItem('stacx-theme')==='dark')document.documentElement.setAttribute('data-theme','dark');}catch(e){}</script>
+</head>
+<body>
+<header class="mobile-header"><a class="mh-brand" href="index.html">STACX</a><button class="nav-toggle" type="button" aria-controls="docsNav" aria-expanded="false">Menu</button></header>
+  <div class="layout">
+    <nav class="nav-sidebar" id="docsNav">
+      <div class="nav-logo">
+        <h2>STACX</h2>
+        <div class="version">v1.0 Documentation</div>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Overview</div>
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="getting-started.html" class="nav-link">Getting Started</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Trainer</div>
+        <a href="architecture.html" class="nav-link">Architecture</a>
+        <a href="backends.html" class="nav-link">Backends</a>
+        <a href="recipes.html" class="nav-link">Algorithm Recipes</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Rollout</div>
+        <a href="rollout.html" class="nav-link">Architecture</a>
+        <a href="rollout-scheduler.html" class="nav-link">Task Scheduler</a>
+        <a href="rollout-inference.html" class="nav-link">Inference Backend</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Environment</div>
+        <a href="environment.html" class="nav-link active">Architecture</a>
+        <a href="env-sandbox.html" class="nav-link">Sandbox Management</a>
+      </div>
+    </nav>
+
+    <div class="main-content">
+      <div class="page-header">
+        <h1>Environment Engine</h1>
+        <p class="page-subtitle">A standalone, ROCK-based sandbox service: a REST admin server on <code>127.0.0.1:8080</code>, Ray-scheduled GPU/CPU allocation, and Docker or Podman containers that execute agent actions for interactive RL.</p>
+      </div>
+
+      <!-- ── Section 1: Overview ── -->
+      <section>
+        <h2><span class="num">1</span> Overview</h2>
+        <p>The Environment Engine (<code class="file-ref">env_engine/</code>) is the execution backend for agentic rollouts &mdash; a <strong>self-contained service</strong> the training pipeline reaches only over a small HTTP API, sending a request and reading back a result rather than touching container logic or the scheduler directly.</p>
+
+        <p>It is built on <strong>ROCK</strong> (Reinforcement Open Construction Kit), a client&ndash;server framework that owns the container lifecycle. On the reference 8-GPU node (see <a href="getting-started.html">Getting Started</a>), the ROCK admin server runs co-located on <code>127.0.0.1:8080</code> and orchestrates one SWE-Bench container per task.</p>
+
+        <div class="callout-grid">
+          <div class="callout">
+            <h4>Decoupled service</h4>
+            <p>Runs as an independent admin server, isolated from the trainer. Swap Docker for Podman, add nodes, or change task logic without editing a line of training code.</p>
+          </div>
+          <div class="callout">
+            <h4>Ray-scheduled concurrency</h4>
+            <p>Each sandbox is a Ray actor reserving CPU/GPU. The scheduler tracks capacity, queues when exhausted, and reclaims on completion &mdash; hundreds of concurrent tasks, jobs lasting days.</p>
+          </div>
+          <div class="callout">
+            <h4>Docker <em>and</em> Podman</h4>
+            <p>Containers are managed through a pluggable deployment backend, so the same task graph runs on cloud Docker hosts or rootless Podman without changes.</p>
+          </div>
+        </div>
+
+        <div class="crosslink">
+          <span class="cl-icon">&rarr;</span>
+          <p>This page covers the <strong>engine architecture</strong> &mdash; layers, REST surface, and how rollouts consume it. For the per-container <strong>lifecycle</strong> (start &rarr; session &rarr; exec &rarr; stop, leases, failure recovery), see <a href="env-sandbox.html">Sandbox Management</a>.</p>
+        </div>
+      </section>
+
+      <!-- ── Section 2: Layered architecture ── -->
+      <section>
+        <h2><span class="num">2</span> Layered architecture</h2>
+        <p>A request travels down four layers; the result returns up:</p>
+
+        <div class="diagram">
+          <svg viewBox="0 0 960 540" role="img" aria-labelledby="eea-title" preserveAspectRatio="xMidYMid meet" font-family="system-ui, sans-serif">
+            <title id="eea-title">Environment Engine layered architecture: client, admin REST server, Ray resource scheduler, sandbox manager, and container runtimes with in-container rocklet agents.</title>
+            <defs>
+              <marker id="eea-arr" viewBox="0 0 10 7" refX="9" refY="3.5" markerWidth="8" markerHeight="6" orient="auto"><path d="M0,0 L10,3.5 L0,7z" style="fill:var(--text-dim)"/></marker>
+              <marker id="eea-arr-dim" viewBox="0 0 10 7" refX="9" refY="3.5" markerWidth="7" markerHeight="5" orient="auto"><path d="M0,0 L10,3.5 L0,7z" style="fill:var(--text-dim)"/></marker>
+            </defs>
+
+            <!-- legend (top-right) -->
+            <line x1="724" y1="34" x2="756" y2="34" style="stroke:var(--text-dim)" stroke-width="1.5" marker-end="url(#eea-arr)"/>
+            <text x="762" y="38" style="fill:var(--text-dim)" font-size="11.5" font-weight="600">request (down)</text>
+            <line x1="724" y1="56" x2="756" y2="56" style="stroke:var(--text-dim)" stroke-width="1.2" stroke-dasharray="5,3" marker-end="url(#eea-arr-dim)"/>
+            <text x="762" y="60" style="fill:var(--text-dim)" font-size="11.5" font-weight="600">result (up)</text>
+
+            <!-- L1 Client -->
+            <rect x="250" y="20" width="460" height="56" rx="10" fill="rgba(5,80,174,0.06)" style="stroke:var(--accent-blue)" stroke-width="1.5"/>
+            <text x="480" y="44" text-anchor="middle" style="fill:var(--accent-blue)" font-size="16" font-weight="700">Rollout &middot; SWE Agent</text>
+            <text x="480" y="63" text-anchor="middle" style="fill:var(--text-dim)" font-size="12">RockSandbox client &middot; rock.sdk Sandbox</text>
+
+            <!-- gap 1 -->
+            <line x1="524" y1="80" x2="524" y2="126" style="stroke:var(--text-dim)" stroke-width="1.5" marker-end="url(#eea-arr)"/>
+            <text x="536" y="107" text-anchor="start" style="fill:var(--text-dim)" font-size="11.5" font-weight="600">REST call</text>
+            <line x1="436" y1="126" x2="436" y2="80" style="stroke:var(--text-dim)" stroke-width="1.2" stroke-dasharray="5,3" marker-end="url(#eea-arr-dim)"/>
+            <text x="424" y="107" text-anchor="end" style="fill:var(--text-dim)" font-size="11.5" font-weight="600">observation</text>
+
+            <!-- L2 Admin Server -->
+            <rect x="250" y="130" width="460" height="56" rx="10" fill="rgba(12,90,109,0.06)" style="stroke:var(--accent-cyan)" stroke-width="1.5"/>
+            <text x="480" y="154" text-anchor="middle" style="fill:var(--accent-cyan)" font-size="16" font-weight="700">Admin Server &mdash; REST API</text>
+            <text x="480" y="173" text-anchor="middle" style="fill:var(--text-dim)" font-size="12">/apis/envs/sandbox/v1 &middot; 127.0.0.1:8080</text>
+
+            <!-- gap 2 -->
+            <line x1="524" y1="190" x2="524" y2="236" style="stroke:var(--text-dim)" stroke-width="1.5" marker-end="url(#eea-arr)"/>
+            <text x="536" y="217" text-anchor="start" style="fill:var(--text-dim)" font-size="11.5" font-weight="600">acquire slot</text>
+            <line x1="436" y1="236" x2="436" y2="190" style="stroke:var(--text-dim)" stroke-width="1.2" stroke-dasharray="5,3" marker-end="url(#eea-arr-dim)"/>
+            <text x="424" y="217" text-anchor="end" style="fill:var(--text-dim)" font-size="11.5" font-weight="600">release</text>
+
+            <!-- L3 Resource Scheduler -->
+            <rect x="250" y="240" width="460" height="56" rx="10" fill="rgba(12,90,109,0.06)" style="stroke:var(--accent-cyan)" stroke-width="1.5"/>
+            <text x="480" y="264" text-anchor="middle" style="fill:var(--accent-cyan)" font-size="16" font-weight="700">Resource Scheduler (Ray)</text>
+            <text x="480" y="283" text-anchor="middle" style="fill:var(--text-dim)" font-size="12">GPU / CPU actors &middot; queue &middot; auto-clear lease</text>
+
+            <!-- gap 3 -->
+            <line x1="524" y1="300" x2="524" y2="346" style="stroke:var(--text-dim)" stroke-width="1.5" marker-end="url(#eea-arr)"/>
+            <text x="536" y="327" text-anchor="start" style="fill:var(--text-dim)" font-size="11.5" font-weight="600">start &middot; exec &middot; stop</text>
+            <line x1="436" y1="346" x2="436" y2="300" style="stroke:var(--text-dim)" stroke-width="1.2" stroke-dasharray="5,3" marker-end="url(#eea-arr-dim)"/>
+            <text x="424" y="327" text-anchor="end" style="fill:var(--text-dim)" font-size="11.5" font-weight="600">stdout &middot; exit</text>
+
+            <!-- L4 Sandbox Manager -->
+            <rect x="250" y="350" width="460" height="56" rx="10" fill="rgba(12,90,109,0.06)" style="stroke:var(--accent-cyan)" stroke-width="1.5"/>
+            <text x="480" y="374" text-anchor="middle" style="fill:var(--accent-cyan)" font-size="16" font-weight="700">Sandbox Manager</text>
+            <text x="480" y="393" text-anchor="middle" style="fill:var(--text-dim)" font-size="12">lifecycle &middot; sessions &middot; Docker / Podman deployment</text>
+
+            <!-- fan-out bus -->
+            <line x1="480" y1="406" x2="480" y2="430" style="stroke:var(--text-dim)" stroke-width="1.5"/>
+            <line x1="250" y1="430" x2="740" y2="430" style="stroke:var(--text-dim)" stroke-width="1.5"/>
+            <text x="496" y="424" text-anchor="start" style="fill:var(--text-dim)" font-size="11.5" font-weight="600">spawn / run</text>
+            <line x1="250" y1="430" x2="250" y2="450" style="stroke:var(--text-dim)" stroke-width="1.5" marker-end="url(#eea-arr-dim)"/>
+            <line x1="480" y1="430" x2="480" y2="450" style="stroke:var(--text-dim)" stroke-width="1.5" marker-end="url(#eea-arr-dim)"/>
+            <line x1="740" y1="430" x2="740" y2="450" style="stroke:var(--text-dim)" stroke-width="1.5" marker-end="url(#eea-arr-dim)"/>
+
+            <!-- container A -->
+            <rect x="150" y="452" width="200" height="70" rx="10" fill="rgba(87,96,106,0.05)" stroke="none"/>
+            <text x="250" y="473" text-anchor="middle" style="fill:var(--text)" font-size="13" font-weight="700">Sandbox container</text>
+            <rect x="205" y="482" width="90" height="22" rx="5" fill="rgba(149,56,0,0.06)" style="stroke:var(--accent-orange)" stroke-width="1.2"/>
+            <text x="250" y="497" text-anchor="middle" style="fill:var(--accent-orange)" font-size="11" font-weight="600">rocklet</text>
+            <text x="250" y="516" text-anchor="middle" style="fill:var(--text-dim)" font-size="11">Docker / Podman</text>
+
+            <!-- container B -->
+            <rect x="380" y="452" width="200" height="70" rx="10" fill="rgba(87,96,106,0.05)" stroke="none"/>
+            <text x="480" y="473" text-anchor="middle" style="fill:var(--text)" font-size="13" font-weight="700">Sandbox container</text>
+            <rect x="435" y="482" width="90" height="22" rx="5" fill="rgba(149,56,0,0.06)" style="stroke:var(--accent-orange)" stroke-width="1.2"/>
+            <text x="480" y="497" text-anchor="middle" style="fill:var(--accent-orange)" font-size="11" font-weight="600">rocklet</text>
+            <text x="480" y="516" text-anchor="middle" style="fill:var(--text-dim)" font-size="11">Docker / Podman</text>
+
+            <!-- container N -->
+            <rect x="610" y="452" width="200" height="70" rx="10" fill="rgba(87,96,106,0.05)" stroke="none"/>
+            <text x="710" y="473" text-anchor="middle" style="fill:var(--text)" font-size="13" font-weight="700">Sandbox container N</text>
+            <rect x="665" y="482" width="90" height="22" rx="5" fill="rgba(149,56,0,0.06)" style="stroke:var(--accent-orange)" stroke-width="1.2" stroke-dasharray="4,2"/>
+            <text x="710" y="497" text-anchor="middle" style="fill:var(--accent-orange)" font-size="11" font-weight="600">rocklet</text>
+            <text x="710" y="516" text-anchor="middle" style="fill:var(--text-dim)" font-size="11">Docker / Podman</text>
+          </svg>
+        </div>
+        <p>Every layer maps to a concrete module under <code class="file-ref">env_engine/rock/</code>:</p>
+
+        <div class="table-scroll"><table>
+          <tr><th>Layer</th><th>Module</th><th>Role</th></tr>
+          <tr>
+            <td><span class="tag tag-blue">Client</span></td>
+            <td><code>rl_engine/rollout/sandbox/rock.py</code><br><code>rock/sdk/sandbox/client.py</code></td>
+            <td>The rollout's <code>RockSandbox</code> wrapper and the ROCK <code>Sandbox</code> SDK &mdash; the only surfaces training code touches.</td>
+          </tr>
+          <tr>
+            <td><span class="tag tag-blue" style="background:rgba(12,90,109,0.15);color:var(--accent-cyan)">Admin</span></td>
+            <td><code>rock/admin/entrypoints/sandbox_api.py</code><br><code>rock/admin/main.py</code></td>
+            <td>FastAPI router mounted at <code>/apis/envs/sandbox/v1</code>; validates requests and delegates to the <code>SandboxManager</code>.</td>
+          </tr>
+          <tr>
+            <td><span class="tag tag-purple">Scheduler</span></td>
+            <td><code>rock/admin/core/ray_service.py</code><br><code>rock/deployments/ray.py</code></td>
+            <td><code>RayService</code> calls <code>ray.init(resources=&hellip;)</code>; each sandbox is a Ray actor reserving <code>actor_resource</code> units, so Ray queues when capacity is full.</td>
+          </tr>
+          <tr>
+            <td><span class="tag tag-green">Sandbox mgr</span></td>
+            <td><code>rock/sandbox/sandbox_manager.py</code><br><code>rock/deployments/manager.py</code></td>
+            <td>Owns start / session / exec / stop and container placement; <code>DeploymentManager</code> selects the Docker/Podman/Ray deployment.</td>
+          </tr>
+          <tr>
+            <td><span class="tag tag-orange">Runtime</span></td>
+            <td><code>rock/deployments/docker.py</code><br><code>rock/rocklet/</code></td>
+            <td>Launches the container and starts the in-container <code>rocklet</code> agent (<code>rocklet/server.py</code>), which runs commands and streams back stdout / exit code.</td>
+          </tr>
+        </table></div>
+
+        <div class="card cyan">
+          <h4>The rocklet</h4>
+          <p>The rocklet is a lightweight execution agent <em>inside</em> each container (based on SWE-ReX, per <code class="file-ref">env_engine/README_ROCK.md</code>) that owns persistent bash sessions, file I/O, and process management.</p>
+        </div>
+      </section>
+
+      <!-- ── Section 3: The sandbox REST API ── -->
+      <section>
+        <h2><span class="num">3</span> The sandbox REST API</h2>
+        <p>All sandbox verbs are registered on <code>sandbox_router</code> (<code class="file-ref">rock/admin/entrypoints/sandbox_api.py</code>) and mounted with a version prefix in <code class="file-ref">rock/admin/main.py</code>:</p>
+
+        <pre><code><span class="cm"># rock/admin/main.py</span>
+app.include_router(sandbox_router, prefix=<span class="st">"/apis/envs/sandbox/v1"</span>, tags=[<span class="st">"sandbox"</span>])
+app.include_router(warmup_router,  prefix=<span class="st">"/apis/envs/sandbox/v1"</span>, tags=[<span class="st">"warmup"</span>])
+app.include_router(gem_router,     prefix=<span class="st">"/apis/v1/envs/gem"</span>,   tags=[<span class="st">"gem"</span>])</code></pre>
+
+        <p>Every handler is wrapped by <code>@handle_exceptions(&hellip;)</code> and returns a <code>RockResponse[T]</code> envelope whose <code>status</code> field is <code>"Success"</code> or <code>"Failed"</code>. The core lifecycle verbs:</p>
+
+        <div class="table-scroll"><table>
+          <tr><th>Method &amp; path</th><th>Handler</th><th>Purpose</th></tr>
+          <tr><td><code>POST /start</code></td><td><code>start</code></td><td>Launch a container from an image; returns a <code>sandbox_id</code>.</td></tr>
+          <tr><td><code>POST /start_async</code></td><td><code>start_async</code></td><td>Non-blocking start for warmup / pre-provisioning.</td></tr>
+          <tr><td><code>POST /create_session</code></td><td><code>create_session</code></td><td>Open a persistent bash session inside the container.</td></tr>
+          <tr><td><code>POST /run_in_session</code></td><td><code>run</code></td><td>Run a command in a session (shell state persists); returns a <code>BashObservation</code>.</td></tr>
+          <tr><td><code>POST /execute</code></td><td><code>execute</code></td><td>One-shot stateless command; returns a <code>CommandResponse</code>.</td></tr>
+          <tr><td><code>POST /close_session</code></td><td><code>close_session</code></td><td>Tear down a single session.</td></tr>
+          <tr><td><code>POST /read_file</code> &middot; <code>/write_file</code> &middot; <code>/upload</code></td><td><code>read_file</code>&hellip;</td><td>File transfer in and out of the container.</td></tr>
+          <tr><td><code>GET /is_alive</code> &middot; <code>/get_status</code></td><td><code>is_alive</code></td><td>Health / liveness probe (see &sect;8).</td></tr>
+          <tr><td><code>GET /get_sandbox_statistics</code></td><td><code>get_sandbox_statistics</code></td><td>Per-sandbox resource / usage stats.</td></tr>
+          <tr><td><code>POST /stop</code></td><td><code>close</code></td><td>Terminate the container and release its Ray slot.</td></tr>
+        </table></div>
+
+        <p>Two sibling routers share the same prefix: <code class="file-ref">warmup_api.py</code> pre-pulls task images so the first task avoids full cold-start, and <code class="file-ref">sandbox_proxy_api.py</code> routes each request to the node owning that sandbox. A separate GEM router (<code class="file-ref">rock/admin/gem/api.py</code>, <code>/apis/v1/envs/gem</code>) exposes the Gym-style <code>make / reset / step</code> protocol for turn-based environments like the Sokoban demo.</p>
+      </section>
+
+      <!-- ── Section 4: Python SDK ── -->
+      <section>
+        <h2><span class="num">4</span> Python SDK</h2>
+        <p>Callers use the async SDK in <code class="file-ref">rock/sdk/sandbox/</code>: <code>Sandbox</code> (in <code>client.py</code>) wraps every REST verb as a coroutine, and <code>SandboxConfig</code> (in <code>config.py</code>) declares the container spec. The canonical smoke test from <code class="file-ref">env_engine/README_ROCK.md</code>:</p>
+
+        <pre><code><span class="kw">import</span> asyncio
+<span class="kw">from</span> rock.actions <span class="kw">import</span> CreateBashSessionRequest
+<span class="kw">from</span> rock.sdk.sandbox.client <span class="kw">import</span> Sandbox
+<span class="kw">from</span> rock.sdk.sandbox.config <span class="kw">import</span> SandboxConfig
+
+<span class="kw">async def</span> <span class="fn">run_sandbox</span>():
+    cfg = <span class="fn">SandboxConfig</span>(image=<span class="st">"python:3.11"</span>, memory=<span class="st">"8g"</span>, cpus=<span class="ar">2.0</span>)
+    sb  = <span class="fn">Sandbox</span>(cfg)
+    <span class="kw">await</span> sb.<span class="fn">start</span>()                                            <span class="cm"># POST /start</span>
+    <span class="kw">await</span> sb.<span class="fn">create_session</span>(<span class="fn">CreateBashSessionRequest</span>(session=<span class="st">"bash-1"</span>))
+    r = <span class="kw">await</span> sb.<span class="fn">arun</span>(cmd=<span class="st">"echo Hello Rock"</span>, session=<span class="st">"bash-1"</span>)  <span class="cm"># /run_in_session</span>
+    <span class="kw">await</span> sb.<span class="fn">stop</span>()                                             <span class="cm"># POST /stop</span>
+
+asyncio.<span class="fn">run</span>(<span class="fn">run_sandbox</span>())</code></pre>
+
+        <p><code>Sandbox</code> also exposes <code>execute</code>, <code>run_nohup_and_wait</code>, <code>write_file</code>/<code>read_file</code>, <code>upload</code>, <code>commit</code>, and <code>close</code>; <code>SandboxGroup</code> starts a pool of identical sandboxes with bounded start concurrency and retry. The config surface:</p>
+
+        <div class="table-scroll"><table>
+          <tr><th>Field</th><th>Default</th><th>Meaning</th></tr>
+          <tr><td><code>image</code></td><td><code>"python:3.11"</code></td><td>Container image; per-instance override in SWE (see &sect;5).</td></tr>
+          <tr><td><code>memory</code></td><td><code>"8g"</code></td><td>Container memory limit.</td></tr>
+          <tr><td><code>cpus</code></td><td><code>2</code></td><td>CPU limit.</td></tr>
+          <tr><td><code>startup_timeout</code></td><td><code>ROCK_SANDBOX_STARTUP_TIMEOUT_SECONDS</code> (180)</td><td>Max wait for the container to become ready.</td></tr>
+          <tr><td><code>auto_clear_seconds</code></td><td><code>14400</code> (4 h)</td><td>Idle lease; ROCK reclaims the container if untouched this long.</td></tr>
+          <tr><td><code>route_key</code></td><td><code>None</code></td><td>Sticky key to pin related sandboxes to one node.</td></tr>
+          <tr><td><code>cluster</code></td><td><code>"zb"</code></td><td>Target cluster label for placement.</td></tr>
+          <tr><td><code>base_url</code></td><td><code>ROCK_BASE_URL</code> (<code>http://localhost:8080</code>)</td><td>Admin server the client talks to.</td></tr>
+        </table></div>
+      </section>
+
+      <!-- ── Section 5: How training consumes it ── -->
+      <section>
+        <h2><span class="num">5</span> How training consumes it</h2>
+        <p>The in-house SWE agent skips the high-level SDK: <code class="file-ref">rl_engine/rollout/sandbox/rock.py</code> defines a thin <code>RockSandbox</code> wrapper that POSTs to the same <code>/apis/envs/sandbox/v1</code> endpoints with <code>aiohttp</code> &mdash; deliberately dependency-free ("ROCK API is NOT mandatory"), so the rollout never imports ROCK:</p>
+
+        <div class="table-scroll"><table>
+          <tr><th>RockSandbox method</th><th>REST call</th><th>Notes</th></tr>
+          <tr><td><code>start(image, cpus, memory)</code></td><td><code>/start</code></td><td>Up to 10 retries with backoff; returns <code>sandbox_id</code>.</td></tr>
+          <tr><td><code>execute_in_session(cmd, session)</code></td><td><code>/run_in_session</code></td><td>Persistent shell; scrubs prompt / broken-pipe artifacts from output.</td></tr>
+          <tr><td><code>execute(cmd)</code></td><td><code>/execute</code></td><td>Stateless one-shot command.</td></tr>
+          <tr><td><code>upload_dir(local, container)</code></td><td><code>/upload</code></td><td>Tars a host dir and extracts it inside the container.</td></tr>
+          <tr><td><code>stop()</code> &middot; <code>remove_image()</code></td><td><code>/stop</code> &middot; <code>/remove_image</code></td><td>Teardown; <code>remove_image</code> reclaims host disk (logs a LEAKED IMAGE warning on failure).</td></tr>
+        </table></div>
+
+        <h3>The SWE-Bench per-step flow</h3>
+        <p>Task configuration lives in <code class="file-ref">rl_engine/examples/swe_agent/environment/swe_sandbox.py</code> (<code>SWE_TOOL_CONFIGS</code>). For each task the agent:</p>
+        <ol>
+          <li>resolves the per-instance image with <code>get_swe_bench_image(instance_id)</code> &mdash; e.g. <code>swebench/sweb.eval.x86_64.django_1776_django-16911:latest</code>;</li>
+          <li>starts a container (<code>cpus=4</code>, <code>memory="16g"</code>) with the editor entrypoint bind-mounted read-only (<code>SWE_ENTRYPOINT_LOCAL</code>; mount details in <a href="env-sandbox.html">Sandbox Management</a> &sect;5);</li>
+          <li>dispatches each tool call into a bash session (through <code>run_in_session</code>) under <code>conda activate testbed</code> &mdash; file-edit actions run <code>python3 /home/swe_execute_sandbox.py --action &hellip; --params &hellip;</code>; bash actions run the command directly.</li>
+        </ol>
+
+        <div class="diagram">
+          <svg viewBox="0 0 960 400" role="img" aria-labelledby="ees-title" preserveAspectRatio="xMidYMid meet" font-family="system-ui, sans-serif">
+            <title id="ees-title">Sequence of one environment step: SWE agent to RockSandbox to admin REST server to the sandbox container running the entrypoint, and results returning back up.</title>
+            <defs>
+              <marker id="ees-arr" viewBox="0 0 10 7" refX="9" refY="3.5" markerWidth="8" markerHeight="6" orient="auto"><path d="M0,0 L10,3.5 L0,7z" style="fill:var(--text-dim)"/></marker>
+            </defs>
+
+            <!-- lifeline heads -->
+            <rect x="30"  y="16" width="200" height="48" rx="9" fill="rgba(5,80,174,0.06)"   style="stroke:var(--accent-blue)"   stroke-width="1.5"/>
+            <text x="130" y="37" text-anchor="middle" style="fill:var(--accent-blue)" font-size="14" font-weight="700">SWE Agent</text>
+            <text x="130" y="54" text-anchor="middle" style="fill:var(--text-dim)" font-size="11">evaluator loop</text>
+
+            <rect x="270" y="16" width="200" height="48" rx="9" fill="rgba(5,80,174,0.06)"  style="stroke:var(--accent-blue)"   stroke-width="1.5"/>
+            <text x="370" y="37" text-anchor="middle" style="fill:var(--accent-blue)" font-size="14" font-weight="700">RockSandbox</text>
+            <text x="370" y="54" text-anchor="middle" style="fill:var(--text-dim)" font-size="11">rollout SDK client</text>
+
+            <rect x="510" y="16" width="200" height="48" rx="9" fill="rgba(12,90,109,0.06)" style="stroke:var(--accent-cyan)" stroke-width="1.5"/>
+            <text x="610" y="37" text-anchor="middle" style="fill:var(--accent-cyan)" font-size="14" font-weight="700">Admin Server</text>
+            <text x="610" y="54" text-anchor="middle" style="fill:var(--text-dim)" font-size="11">REST /run_in_session</text>
+
+            <rect x="750" y="16" width="200" height="48" rx="9" fill="rgba(17,99,41,0.06)"   style="stroke:var(--accent-green)"  stroke-width="1.5"/>
+            <text x="850" y="34" text-anchor="middle" style="fill:var(--accent-green)" font-size="14" font-weight="700">Sandbox container</text>
+            <text x="850" y="51" text-anchor="middle" style="fill:var(--text-dim)" font-size="11">rocklet + entrypoint</text>
+
+            <!-- lifelines -->
+            <line x1="130" y1="64" x2="130" y2="366" style="stroke:var(--border)" stroke-width="1.2" stroke-dasharray="4,4"/>
+            <line x1="370" y1="64" x2="370" y2="366" style="stroke:var(--border)" stroke-width="1.2" stroke-dasharray="4,4"/>
+            <line x1="610" y1="64" x2="610" y2="366" style="stroke:var(--border)" stroke-width="1.2" stroke-dasharray="4,4"/>
+            <line x1="850" y1="64" x2="850" y2="366" style="stroke:var(--border)" stroke-width="1.2" stroke-dasharray="4,4"/>
+
+            <!-- m1 A->B -->
+            <text x="250" y="80" text-anchor="middle" style="fill:var(--text-dim)" font-size="11.5" font-weight="600">tool call</text>
+            <text x="250" y="94" text-anchor="middle" style="fill:var(--text-dim)" font-size="11.5" font-weight="600">execute_in_session(cmd)</text>
+            <line x1="130" y1="102" x2="370" y2="102" style="stroke:var(--text-dim)" stroke-width="1.5" marker-end="url(#ees-arr)"/>
+
+            <!-- m2 B->C -->
+            <text x="490" y="128" text-anchor="middle" style="fill:var(--text-dim)" font-size="11.5" font-weight="600">POST /run_in_session</text>
+            <line x1="370" y1="136" x2="610" y2="136" style="stroke:var(--text-dim)" stroke-width="1.5" marker-end="url(#ees-arr)"/>
+
+            <!-- m3 C->D -->
+            <text x="730" y="164" text-anchor="middle" style="fill:var(--text-dim)" font-size="11.5" font-weight="600">dispatch to bash session</text>
+            <line x1="610" y1="172" x2="850" y2="172" style="stroke:var(--text-dim)" stroke-width="1.5" marker-end="url(#ees-arr)"/>
+
+            <!-- m4 D self-loop -->
+            <line x1="850" y1="188" x2="892" y2="188" style="stroke:var(--text-dim)" stroke-width="1.5"/>
+            <line x1="892" y1="188" x2="892" y2="210" style="stroke:var(--text-dim)" stroke-width="1.5"/>
+            <line x1="892" y1="210" x2="850" y2="210" style="stroke:var(--text-dim)" stroke-width="1.5" marker-end="url(#ees-arr)"/>
+            <text x="842" y="194" text-anchor="end" style="fill:var(--text-dim)" font-size="11.5" font-weight="600">run swe_execute_sandbox.py</text>
+            <text x="842" y="211" text-anchor="end" style="fill:var(--text-dim)" font-size="11">COMMAND_TIMEOUT = 120 s</text>
+
+            <!-- m5 D->C return -->
+            <text x="730" y="242" text-anchor="middle" style="fill:var(--text-dim)" font-size="11.5" font-weight="600">stdout &middot; exit_code</text>
+            <line x1="850" y1="250" x2="610" y2="250" style="stroke:var(--text-dim)" stroke-width="1.3" stroke-dasharray="5,3" marker-end="url(#ees-arr)"/>
+
+            <!-- m6 C->B return -->
+            <text x="490" y="264" text-anchor="middle" style="fill:var(--text-dim)" font-size="11.5" font-weight="600">BashObservation</text>
+            <text x="490" y="278" text-anchor="middle" style="fill:var(--text-dim)" font-size="11.5" font-weight="600">{output, exit_code}</text>
+            <line x1="610" y1="286" x2="370" y2="286" style="stroke:var(--text-dim)" stroke-width="1.3" stroke-dasharray="5,3" marker-end="url(#ees-arr)"/>
+
+            <!-- m7 B->A return -->
+            <text x="250" y="314" text-anchor="middle" style="fill:var(--text-dim)" font-size="11.5" font-weight="600">observation &rarr; manage_context()</text>
+            <line x1="370" y1="322" x2="130" y2="322" style="stroke:var(--text-dim)" stroke-width="1.3" stroke-dasharray="5,3" marker-end="url(#ees-arr)"/>
+
+            <!-- legend -->
+            <line x1="40" y1="356" x2="72" y2="356" style="stroke:var(--text-dim)" stroke-width="1.5" marker-end="url(#ees-arr)"/>
+            <text x="78" y="360" style="fill:var(--text-dim)" font-size="11">call</text>
+            <line x1="150" y1="356" x2="182" y2="356" style="stroke:var(--text-dim)" stroke-width="1.3" stroke-dasharray="5,3" marker-end="url(#ees-arr)"/>
+            <text x="188" y="360" style="fill:var(--text-dim)" font-size="11">return</text>
+          </svg>
+        </div>
+        <p class="fig-caption">One <code>env.step</code> round trip against an already-started sandbox; container start is a separate call (timing below).</p>
+
+        <h3>Startup timing &amp; image supply</h3>
+        <div class="callout-grid">
+          <div class="callout">
+            <h4>Warm start</h4>
+            <p>With the SWE-Bench image already in the local Docker cache, <code>start()</code> returns in <strong>~15&ndash;25&nbsp;s</strong>; later <code>env.step</code> RPCs are dominated by command runtime.</p>
+          </div>
+          <div class="callout">
+            <h4>Cold start</h4>
+            <p>The first time an instance is hit, ROCK pulls a <strong>1&ndash;8&nbsp;GB</strong> image from Docker Hub (several minutes); <code>startup_timeout</code> defaults to <strong>300&nbsp;s</strong>, overridable via <code>STACX_SANDBOX_STARTUP_TIMEOUT</code>.</p>
+          </div>
+          <div class="callout">
+            <h4>Docker Hub auth</h4>
+            <p>Anonymous pulls are rate-limited (100 / 6&nbsp;h / IP) and a run may touch 200+ unique images, so <code>docker login</code> first (<code class="file-ref">AGENTS.md</code>); ROCK inherits the daemon login.</p>
+          </div>
+        </div>
+
+        <div class="card orange">
+          <h4>Offline tar-cache fallback</h4>
+          <p>Before pulling from a registry, <code>DockerDeployment</code> checks <code>DOCKER_IMAGE_CACHE_DIR</code> (<code class="file-ref">rock/deployments/docker.py</code>); a matching tar is loaded with <code>docker load</code> instead, letting air-gapped or tmpfs-backed hosts re-hydrate images without network access.</p>
+        </div>
+      </section>
+
+      <!-- ── Section 6: Deployments & configuration ── -->
+      <section>
+        <h2><span class="num">6</span> Deployments &amp; configuration</h2>
+        <p>The bottom layer is a family of deployment backends under <code class="file-ref">rock/deployments/</code>, selected by <code>DeploymentManager</code> (<code>manager.py</code>) and sharing the <code>AbstractDeployment</code> contract (<code>abstract.py</code>):</p>
+
+        <div class="table-scroll"><table>
+          <tr><th>Module</th><th>Backend</th></tr>
+          <tr><td><code>deployments/docker.py</code></td><td><code>DockerDeployment</code> &mdash; local Docker (or Podman) container; hosts the tar-cache fallback.</td></tr>
+          <tr><td><code>deployments/ray.py</code></td><td><code>RayDeployment(DockerDeployment)</code> &mdash; wraps the Docker deployment as a Ray actor with <code>resources={actor_resource: actor_resource_num}</code> reservations.</td></tr>
+          <tr><td><code>deployments/local.py</code></td><td>In-process / local runtime for tests and demos.</td></tr>
+          <tr><td><code>deployments/remote.py</code></td><td>Attach to a container on a remote node.</td></tr>
+        </table></div>
+
+        <p>Podman is not a separate module &mdash; <code>DockerDeployment</code> shells out through a container provider (<code class="file-ref">rock/utils/providers/</code>) that abstracts over both runtimes, so the same task graph runs unchanged on either.</p>
+
+        <h3>Configuration files</h3>
+        <p>Runtime config lives in <code class="file-ref">env_engine/rock-conf/</code>: <code>rock-local.yml</code> drives single-node development, <code>rock-test.yml</code> targets the test suite:</p>
+        <pre><code><span class="cm"># env_engine/rock-conf/rock-local.yml (excerpt)</span>
+ray:
+    runtime_env:
+        working_dir: <span class="st">./</span>
+        pip: [<span class="st">"apscheduler"</span>, <span class="st">"opentelemetry-api"</span>, <span class="st">"gem-llm"</span>, <span class="cm">...</span>]
+    namespace: <span class="st">"rock-sandbox-local"</span>
+warmup:
+    images: [<span class="st">"python:3.11"</span>]
+runtime:
+    enable_auto_clear: <span class="kw">true</span></code></pre>
+
+        <h3>The rock CLI</h3>
+        <p>The <code>rock</code> command (<code class="file-ref">rock/cli/main.py</code>, subcommands under <code class="file-ref">rock/cli/command/</code>) manages the admin process via <code>AdminCommand</code>, with two actions:</p>
+        <pre><code><span class="cm"># start the admin server (default 127.0.0.1:8080)</span>
+rock admin start
+
+<span class="cm"># graceful SIGTERM to running admin processes</span>
+rock admin stop</code></pre>
+        <p>Install independently of the trainer: build the ROCK venv per <code class="file-ref">env_engine/README_ROCK.md</code> (uv-managed Python recommended), then <code>rock admin start</code>; a source/pip install also needs <code>ROCK_WORKER_ENV_TYPE=pip</code>. Launch scripts health-check this server before every run and abort if it is down (<code class="file-ref">AGENTS.md</code>).</p>
+      </section>
+
+      <!-- ── Section 7: Directory tour ── -->
+      <section>
+        <h2><span class="num">7</span> Directory tour</h2>
+        <div class="table-scroll"><table>
+          <tr><th>Path</th><th>Contents</th></tr>
+          <tr><td><code>rock/actions/</code></td><td>Action schemas &mdash; <code>sandbox/</code> (bash, file, config requests/responses) and <code>envs/</code> (GEM); <code>CreateBashSessionRequest</code> is re-exported from <code>rock.actions</code>.</td></tr>
+          <tr><td><code>rock/admin/</code></td><td>Admin server: <code>main.py</code>, <code>entrypoints/</code> (sandbox / proxy / warmup APIs), <code>core/</code> (<code>ray_service.py</code>, tables), <code>gem/</code>, <code>metrics/</code>, <code>proto/</code>.</td></tr>
+          <tr><td><code>rock/sandbox/</code></td><td>Sandbox abstraction: <code>sandbox_manager.py</code>, <code>sandbox_actor.py</code>, <code>gem_manager.py</code>, <code>remote_sandbox.py</code>, <code>job/</code>, <code>service/</code>.</td></tr>
+          <tr><td><code>rock/rocklet/</code></td><td>In-container agent: <code>server.py</code>, <code>local_sandbox.py</code>, <code>local_api.py</code>, <code>__main__.py</code>.</td></tr>
+          <tr><td><code>rock/sdk/</code></td><td>Python client: <code>sandbox/</code> (<code>Sandbox</code>, <code>SandboxConfig</code>), <code>envs/</code> (Gym registration), <code>envhub/</code>, <code>builder/</code> (image builders).</td></tr>
+          <tr><td><code>rock/deployments/</code></td><td>Backends: <code>docker.py</code>, <code>ray.py</code>, <code>local.py</code>, <code>remote.py</code>, <code>manager.py</code>, <code>abstract.py</code>.</td></tr>
+          <tr><td><code>rock/envhub/</code></td><td>Environment registry service: <code>server.py</code>, <code>api/</code>, <code>core/</code>, <code>database/</code>.</td></tr>
+          <tr><td><code>rock/cli/</code></td><td>CLI: <code>main.py</code>, <code>command/</code> (<code>admin.py</code>), <code>loader.py</code>, <code>config.py</code>.</td></tr>
+          <tr><td><code>rock/utils/</code></td><td>Shared: container <code>providers/</code>, <code>docker.py</code>, <code>http.py</code>, retry, DB, concurrency helpers.</td></tr>
+          <tr><td><code>rock/config.py</code> &middot; <code>rock/env_vars.py</code></td><td>Typed config model and the <code>ROCK_*</code> environment-variable registry.</td></tr>
+          <tr><td><code>rock-conf/</code></td><td><code>rock-local.yml</code>, <code>rock-test.yml</code>.</td></tr>
+          <tr><td><code>examples/</code></td><td><code>sandbox_demo.py</code>, <code>sandbox_files_demo.py</code>, <code>sokoban_demo.py</code>.</td></tr>
+          <tr><td><code>tests/</code></td><td><code>unit/</code> (admin, sandbox, rocklet, cli, utils) and <code>integration/</code>.</td></tr>
+          <tr><td><code>pyproject.toml</code> &middot; <code>LICENSE</code></td><td>Package metadata / dependencies; ROCK ships under its own Apache-2.0 license.</td></tr>
+        </table></div>
+      </section>
+
+      <!-- ── Section 8: Operations reference ── -->
+      <section>
+        <h2><span class="num">8</span> Operations reference</h2>
+
+        <h3>Ports &amp; health</h3>
+        <div class="table-scroll"><table>
+          <tr><th>Endpoint</th><th>Default</th><th>Purpose</th></tr>
+          <tr><td>Admin REST</td><td><code>127.0.0.1:8080</code></td><td>Sandbox API (<code>ROCK_BASE_URL</code>); the trainer's <code>ROCK_PORT</code>.</td></tr>
+          <tr><td>EnvHub</td><td><code>127.0.0.1:8081</code></td><td>Environment registry (<code>ROCK_ENVHUB_BASE_URL</code>), SQLite-backed (<code>ROCK_ENVHUB_DB_URL</code>, default <code>~/.rock/rock_envs.db</code>).</td></tr>
+          <tr><td>Health probe</td><td><code>GET /apis/envs/sandbox/v1/get_status?sandbox_id=&hellip;</code></td><td>Returns <code>SandboxStatusResponse{is_alive, host_name}</code>; <code>is_alive()</code> wraps it.</td></tr>
+        </table></div>
+
+        <h3>Key environment variables</h3>
+        <p>The full registry is <code class="file-ref">rock/env_vars.py</code>; the knobs that matter most in training:</p>
+        <div class="table-scroll"><table>
+          <tr><th>Variable</th><th>Default</th><th>Effect</th></tr>
+          <tr><td><code>ROCK_BASE_URL</code></td><td><code>http://localhost:8080</code></td><td>Admin server the SDK / client targets.</td></tr>
+          <tr><td><code>ROCK_SANDBOX_STARTUP_TIMEOUT_SECONDS</code></td><td><code>180</code></td><td>SDK-level <code>SandboxConfig.startup_timeout</code> default.</td></tr>
+          <tr><td><code>STACX_SANDBOX_STARTUP_TIMEOUT</code></td><td><code>300</code></td><td>SWE-agent start timeout (<code class="file-ref">swe_sandbox.py</code>); raise for slow networks.</td></tr>
+          <tr><td><code>DOCKER_IMAGE_CACHE_DIR</code></td><td>unset</td><td>Directory of image tars loaded before any registry pull (&sect;5).</td></tr>
+          <tr><td><code>ROCK_DEFAULT_AUTO_CLEAR_TIME_MINUTES</code></td><td><code>360</code></td><td>Idle-container reclaim window (6&nbsp;h).</td></tr>
+          <tr><td><code>ROCK_RAY_NAMESPACE</code></td><td><code>xrl-sandbox</code></td><td>Ray namespace for sandbox actors (overridden by <code>rock-local.yml</code>).</td></tr>
+          <tr><td><code>ROCK_WORKER_ENV_TYPE</code></td><td><code>local</code></td><td>Runtime env type; set to <code>pip</code> for PyPI installs.</td></tr>
+          <tr><td><code>ROCK_MONITOR_ENABLE</code></td><td><code>false</code></td><td>Toggle metrics collection (<code class="file-ref">rock/admin/metrics/</code>).</td></tr>
+        </table></div>
+
+        <h3>EnvHub</h3>
+        <p>EnvHub (<code class="file-ref">rock/envhub/server.py</code>) is a standalone, SQLite-backed registry for reproducible environment definitions. The SWE lane bypasses it (images come from Docker Hub by instance id); Gym-style environments resolve their images through it.</p>
+
+        <h3>Where to look next</h3>
+        <div class="feature-grid">
+          <div class="feature-item">
+            <h4><a href="env-sandbox.html">Sandbox Management</a></h4>
+            <p>Container lifecycle, sessions, auto-clear leases, and multi-node failure recovery.</p>
+          </div>
+          <div class="feature-item">
+            <h4><a href="rollout.html">Rollout Architecture</a></h4>
+            <p>How evaluators drive <code>env.step()</code> and fold observations back into samples.</p>
+          </div>
+          <div class="feature-item">
+            <h4><code class="file-ref">env_engine/README_ROCK.md</code></h4>
+            <p>ROCK install, admin startup, GEM protocol, and the SDK smoke test.</p>
+          </div>
+        </div>
+      </section>
+
+    </div><!-- .main-content -->
+  </div><!-- .layout -->
+<button class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark mode">Dark</button>
+<script>
+(function() {
+  var toggle = document.getElementById('themeToggle');
+  var saved = localStorage.getItem('stacx-theme');
+  if (saved === 'dark') {
+    document.documentElement.setAttribute('data-theme', 'dark');
+    toggle.textContent = 'Light';
+  }
+  toggle.addEventListener('click', function() {
+    var current = document.documentElement.getAttribute('data-theme');
+    if (current === 'dark') {
+      document.documentElement.removeAttribute('data-theme');
+      toggle.textContent = 'Dark';
+      localStorage.setItem('stacx-theme', 'light');
+    } else {
+      document.documentElement.setAttribute('data-theme', 'dark');
+      toggle.textContent = 'Light';
+      localStorage.setItem('stacx-theme', 'dark');
+    }
+  });
+})();
+</script>
+<script>
+(function(){
+  var nav=document.getElementById('docsNav'),btn=document.querySelector('.nav-toggle');
+  if(!nav||!btn)return;
+  btn.addEventListener('click',function(e){e.stopPropagation();var open=nav.getAttribute('data-open')==='true';nav.setAttribute('data-open',String(!open));btn.setAttribute('aria-expanded',String(!open));});
+  document.addEventListener('click',function(e){if(nav.getAttribute('data-open')==='true'&&!nav.contains(e.target))nav.setAttribute('data-open','false');});
+})();
+</script>
+</body>
+</html>

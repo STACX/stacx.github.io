@@ -1,0 +1,1347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Algorithm Recipes — STACX Documentation</title>
+  <style>
+/* STACX Documentation — Shared Stylesheet
+   Dark theme */
+
+:root {
+  --bg: #ffffff;
+  --surface: #f6f8fa;
+  --surface2: #eaeef2;
+  --border: #d1d9e0;
+  --text: #1f2328;
+  --text-dim: #57606a;
+  --accent-blue: #0550ae;
+  --accent-green: #116329;
+  --accent-orange: #953800;
+  --accent-purple: #6e40c9;
+  --accent-red: #cf222e;
+  --accent-cyan: #0c5a6d;
+  --nav-width: 260px;
+}
+
+[data-theme="dark"] {
+  --bg: #0d1117;
+  --surface: #161b22;
+  --surface2: #1c2128;
+  --border: #30363d;
+  --text: #e6edf3;
+  --text-dim: #8b949e;
+  --accent-blue: #58a6ff;
+  --accent-green: #3fb950;
+  --accent-orange: #d29922;
+  --accent-purple: #bc8cff;
+  --accent-red: #f85149;
+  --accent-cyan: #56d4dd;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', system-ui, sans-serif;
+  line-height: 1.6;
+}
+
+/* ── Navigation Sidebar ────────────────────────────────── */
+
+.nav-sidebar {
+  position: fixed;
+  top: 0; left: 0;
+  width: var(--nav-width);
+  height: 100vh;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  padding: 24px 0;
+  overflow-y: auto;
+  z-index: 100;
+}
+
+.nav-logo {
+  padding: 0 20px;
+  margin-bottom: 24px;
+}
+
+.nav-logo h2 {
+  font-size: 18px;
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.nav-logo .version {
+  font-size: 11px;
+  color: var(--text-dim);
+  margin-top: 2px;
+}
+
+.nav-section {
+  padding: 0 12px;
+  margin-bottom: 8px;
+}
+
+.nav-section-title {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--text-dim);
+  padding: 8px 8px 4px 8px;
+}
+
+.nav-link {
+  display: block;
+  padding: 6px 12px;
+  border-radius: 6px;
+  color: var(--text-dim);
+  text-decoration: none;
+  font-size: 13px;
+  transition: all 0.15s;
+}
+
+.nav-link:hover {
+  background: var(--surface2);
+  color: var(--text);
+}
+
+.nav-link.active {
+  background: rgba(56, 139, 253, 0.12);
+  color: var(--accent-blue);
+  font-weight: 500;
+}
+
+.nav-link .placeholder-tag {
+  font-size: 9px;
+  padding: 1px 5px;
+  border-radius: 3px;
+  background: rgba(139, 148, 158, 0.15);
+  color: var(--text-dim);
+  margin-left: 6px;
+  vertical-align: middle;
+}
+
+/* ── Main Content ──────────────────────────────────────── */
+
+.main-content {
+  margin-left: var(--nav-width);
+  padding: 48px 48px 80px 48px;
+  max-width: 960px;
+}
+
+h1 {
+  font-size: 32px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.page-subtitle {
+  color: var(--text-dim);
+  font-size: 15px;
+  margin-bottom: 40px;
+}
+
+h2 {
+  font-size: 22px;
+  font-weight: 600;
+  margin: 48px 0 16px 0;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+h2 .num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--accent-blue);
+  color: var(--bg);
+  font-size: 14px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+h3 {
+  font-size: 17px;
+  font-weight: 600;
+  margin: 28px 0 10px 0;
+  color: var(--accent-blue);
+}
+
+h4 {
+  font-size: 14px;
+  font-weight: 600;
+  margin: 16px 0 6px 0;
+  color: var(--accent-green);
+}
+
+p { margin-bottom: 12px; font-size: 14px; }
+
+ul, ol {
+  margin: 8px 0 16px 24px;
+  font-size: 14px;
+}
+
+li { margin-bottom: 4px; }
+
+/* ── Cards ─────────────────────────────────────────────── */
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 20px 24px;
+  margin-bottom: 16px;
+}
+
+.card.blue   { border-left: 3px solid var(--accent-blue); }
+.card.green  { border-left: 3px solid var(--accent-green); }
+.card.orange { border-left: 3px solid var(--accent-orange); }
+.card.purple { border-left: 3px solid var(--accent-purple); }
+.card.red    { border-left: 3px solid var(--accent-red); }
+.card.cyan   { border-left: 3px solid var(--accent-cyan); }
+
+.card h4 { margin-top: 0; }
+.card p:last-child { margin-bottom: 0; }
+
+/* ── Callout Grid ──────────────────────────────────────── */
+
+.callout-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px;
+  margin: 16px 0 24px 0;
+}
+
+.callout {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.callout h4 {
+  font-size: 14px;
+  font-weight: 600;
+  margin: 0 0 4px 0;
+}
+
+.callout p {
+  font-size: 13px;
+  color: var(--text-dim);
+  margin: 0;
+}
+
+/* ── Code ──────────────────────────────────────────────── */
+
+code {
+  font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+  font-size: 12px;
+  background: rgba(110, 118, 129, 0.15);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+pre {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px 20px;
+  overflow-x: auto;
+  font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+  font-size: 12px;
+  line-height: 1.6;
+  margin: 10px 0 16px 0;
+  color: var(--text);
+}
+
+pre code {
+  background: none;
+  padding: 0;
+  font-size: inherit;
+}
+
+.code-ref {
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  font-size: 12px;
+  color: var(--accent-orange);
+  background: rgba(210, 153, 34, 0.1);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.file-ref {
+  color: var(--text-dim);
+  font-size: 12px;
+  font-style: italic;
+}
+
+/* syntax coloring in pre blocks */
+.kw { color: var(--accent-purple); }
+.fn { color: var(--accent-blue); }
+.cm { color: var(--text-dim); }
+.st { color: var(--accent-green); }
+.ar { color: var(--accent-orange); font-weight: 600; }
+
+/* ── Tables ────────────────────────────────────────────── */
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 12px 0 24px 0;
+  font-size: 13px;
+}
+
+th {
+  text-align: left;
+  padding: 10px 12px;
+  border-bottom: 2px solid var(--border);
+  color: var(--accent-blue);
+  font-weight: 600;
+}
+
+td {
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+tr:hover td {
+  background: rgba(56, 139, 253, 0.04);
+}
+
+/* ── Flow Diagrams ─────────────────────────────────────── */
+
+.diagram {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 24px;
+  margin: 16px 0;
+  overflow-x: auto;
+}
+
+.diagram pre {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  color: var(--text-dim);
+}
+
+/* ── Tags / Badges ─────────────────────────────────────── */
+
+.tag {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.tag-blue   { background: rgba(56, 139, 253, 0.15); color: var(--accent-blue); }
+.tag-green  { background: rgba(63, 185, 80, 0.15); color: var(--accent-green); }
+.tag-orange { background: rgba(210, 153, 34, 0.15); color: var(--accent-orange); }
+.tag-purple { background: rgba(188, 140, 255, 0.15); color: var(--accent-purple); }
+.tag-red    { background: rgba(248, 81, 73, 0.15); color: var(--accent-red); }
+
+/* ── Placeholder Banner ────────────────────────────────── */
+
+.placeholder-banner {
+  background: var(--surface2);
+  border: 1px dashed var(--border);
+  border-radius: 10px;
+  padding: 48px 32px;
+  text-align: center;
+  margin: 32px 0;
+}
+
+.placeholder-banner h3 {
+  color: var(--text-dim);
+  margin-bottom: 8px;
+}
+
+.placeholder-banner p {
+  color: var(--text-dim);
+  font-size: 14px;
+}
+
+/* ── Comparison Grid ───────────────────────────────────── */
+
+.comparison-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin: 16px 0;
+}
+
+.comparison-col {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+  overflow-x: auto;
+}
+
+.comparison-col h3 {
+  font-size: 16px;
+  text-align: center;
+  margin-top: 0;
+}
+
+/* ── Feature Grid ──────────────────────────────────────── */
+
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+  margin: 16px 0 24px 0;
+}
+
+.feature-item {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.feature-item h4 {
+  margin: 0 0 4px 0;
+  font-size: 13px;
+}
+
+.feature-item p {
+  font-size: 12px;
+  color: var(--text-dim);
+  margin: 0;
+}
+
+/* ── Responsive ────────────────────────────────────────── */
+
+@media (max-width: 900px) {
+  .nav-sidebar { display: none; }
+  .main-content { margin-left: 0; padding: 24px; }
+  .comparison-grid { grid-template-columns: 1fr; }
+}
+
+  .flow-chart {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 24px;
+    margin: 16px 0;
+    overflow-x: auto;
+  }
+  .flow-node {
+    display: inline-block;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 6px 14px;
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    font-size: 12px;
+    color: var(--accent-blue);
+    margin: 4px 0;
+  }
+  .flow-node.flow-root {
+    background: rgba(56,139,253,0.15);
+    border-color: var(--accent-blue);
+    font-weight: 600;
+    font-size: 13px;
+  }
+  .flow-node.flow-small {
+    font-size: 11px;
+    padding: 4px 10px;
+  }
+  .flow-node.flow-green { color: var(--accent-green); border-color: var(--accent-green); }
+  .flow-node.flow-orange { color: var(--accent-orange); border-color: var(--accent-orange); }
+  .flow-node.flow-purple { color: var(--accent-purple); border-color: var(--accent-purple); }
+  .flow-children {
+    margin-left: 28px;
+    padding-left: 16px;
+    border-left: 2px solid var(--border);
+  }
+  .flow-branch {
+    position: relative;
+    padding: 2px 0;
+  }
+  .flow-branch::before {
+    content: '';
+    position: absolute;
+    left: -16px;
+    top: 14px;
+    width: 16px;
+    height: 0;
+    border-top: 2px solid var(--border);
+  }
+  .flow-arrow {
+    display: block;
+    text-align: center;
+    color: var(--text-dim);
+    font-size: 18px;
+    margin: 4px 0;
+    line-height: 1;
+  }
+
+.theme-toggle {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  z-index: 200;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 6px 12px;
+  color: var(--text);
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+.theme-toggle:hover {
+  background: var(--surface2);
+  border-color: var(--accent-blue);
+}
+  /* shared: readable content links in both themes */
+.main-content a, .main-content a code { color: var(--accent-blue); }
+.main-content a:hover { color: var(--accent-cyan); }
+
+/* page-local */
+.eqn {
+  display: block;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent-blue);
+  border-radius: 6px;
+  padding: 12px 18px;
+  margin: 12px 0 16px 0;
+  font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+  font-size: 13px;
+  color: var(--text);
+  overflow-x: auto;
+}
+.eqn .lbl { color: var(--text-dim); }
+.eqn.green  { border-left-color: var(--accent-green); }
+.eqn.purple { border-left-color: var(--accent-purple); }
+.eqn.orange { border-left-color: var(--accent-orange); }
+.eqn.red    { border-left-color: var(--accent-red); }
+.role-chip {
+  display: inline-block;
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  font-size: 11px;
+  padding: 1px 7px;
+  border-radius: 4px;
+  background: rgba(110, 118, 129, 0.15);
+  color: var(--text-dim);
+  white-space: nowrap;
+}
+table.recipes td:first-child code { white-space: nowrap; }
+.diagram-caption {
+  color: var(--text-dim);
+  font-size: 12px;
+  font-style: italic;
+  margin: -6px 0 20px 0;
+}
+
+/* diffusion pipeline figure legend */
+.fig-legend {
+  display: flex; flex-wrap: wrap; gap: 8px 20px; justify-content: center;
+  margin: 4px 0 18px 0; font-size: 12px; color: var(--text-dim);
+}
+.fig-legend span { display: inline-flex; align-items: center; gap: 6px; }
+.fig-legend i {
+  width: 22px; height: 0; border-top-width: 3px; border-top-style: solid; border-radius: 2px;
+  display: inline-block; flex-shrink: 0;
+}
+.fig-legend i.dash { border-top-style: dashed; }
+.fig-cap { font-size: 12px; color: var(--text-dim); text-align: center; margin-top: 6px; }
+
+/* ── Refinement layer: typography, response, materials ── */
+
+html { scroll-behavior: smooth; scroll-padding-top: 24px; }
+
+body {
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  font-optical-sizing: auto;
+}
+
+::selection { background: rgba(56, 139, 253, 0.22); }
+
+/* Type — size-specific tracking and leading */
+h1 {
+  background: none;
+  -webkit-text-fill-color: var(--text);
+  color: var(--text);
+  letter-spacing: -0.022em;
+  line-height: 1.15;
+  text-wrap: balance;
+}
+h2 { letter-spacing: -0.015em; text-wrap: balance; }
+h3 { letter-spacing: -0.008em; }
+p { font-size: 14.5px; line-height: 1.65; }
+ul, ol { font-size: 14.5px; }
+li { line-height: 1.6; }
+.page-subtitle { font-size: 16px; text-wrap: pretty; }
+
+/* Quieter chrome — tint instead of fill, neutral table headers */
+h2 .num {
+  background: rgba(56, 139, 253, 0.13);
+  color: var(--accent-blue);
+  font-weight: 650;
+}
+th {
+  color: var(--text-dim);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+table { font-variant-numeric: tabular-nums; }
+
+/* Gentle depth on resting surfaces */
+.card, .diagram, .comparison-col { box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04); }
+
+/* Response — feedback on press, not just hover */
+.nav-link, .theme-toggle, .hero-card, .view-toggle-btn {
+  transition: background 0.15s ease-out, color 0.15s ease-out,
+              border-color 0.15s ease-out, transform 0.15s ease-out;
+}
+.nav-link:active, .view-toggle-btn:active { transform: scale(0.98); transition-duration: 0.05s; }
+.theme-toggle:active { transform: scale(0.96); transition-duration: 0.05s; }
+.hero-card:active { transform: translateY(0) scale(0.99); transition-duration: 0.05s; }
+.main-content a:active { opacity: 0.65; }
+
+:focus-visible { outline: 2px solid var(--accent-blue); outline-offset: 2px; border-radius: 4px; }
+
+.nav-sidebar { scrollbar-width: thin; }
+
+/* Floating chrome reads as material — content scrolls beneath it */
+.theme-toggle {
+  background: color-mix(in srgb, var(--surface) 72%, transparent);
+  backdrop-filter: blur(12px) saturate(180%);
+  -webkit-backdrop-filter: blur(12px) saturate(180%);
+  box-shadow: 0 1px 3px rgba(16, 24, 40, 0.07);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { transition-duration: 0.01ms !important; animation: none !important; }
+}
+@media (prefers-reduced-transparency: reduce) {
+  .theme-toggle {
+    background: var(--surface);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+}
+
+/* ── Refinement layer v2: beauty pass ── */
+
+/* Sidebar — calmer rhythm, tactile links */
+.nav-sidebar { padding: 20px 0 28px; }
+.nav-sidebar::-webkit-scrollbar { width: 8px; }
+.nav-sidebar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+.nav-logo { padding: 4px 20px 0; margin-bottom: 20px; }
+.nav-section { margin-bottom: 14px; }
+.nav-section-title { padding: 10px 10px 6px; }
+.nav-link { padding: 6px 10px; border-radius: 7px; }
+.nav-link.active { font-weight: 600; }
+
+/* Section rules — the divider fades out instead of cutting across */
+h2 { border-bottom: none; padding-bottom: 10px; position: relative; margin-top: 52px; }
+h2::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 1px;
+  background: linear-gradient(90deg, var(--border) 55%, transparent);
+}
+
+/* Surfaces — rounder, softer */
+.card, .diagram, .comparison-col { border-radius: 12px; }
+pre, .callout { border-radius: 10px; }
+
+/* Tables — enclosed, rounded, quiet */
+table {
+  border-collapse: separate; border-spacing: 0;
+  border: 1px solid var(--border); border-radius: 10px; overflow: hidden;
+}
+th { background: var(--surface); border-bottom: 1px solid var(--border); padding: 10px 14px; }
+td { padding: 9px 14px; }
+tr:last-child td { border-bottom: none; }
+th:first-child { border-top-left-radius: 9px; }
+th:last-child { border-top-right-radius: 9px; }
+tr:last-child td:first-child { border-bottom-left-radius: 9px; }
+tr:last-child td:last-child { border-bottom-right-radius: 9px; }
+
+/* Floating toggle as a pill */
+.theme-toggle { border-radius: 999px; padding: 7px 14px; font-weight: 600; }
+
+/* Landing hero — faint atmospheric wash, icon chips, deeper card lift */
+.hero { position: relative; }
+.hero::before {
+  content: ""; position: absolute; inset: -48px -80px 0; z-index: -1; pointer-events: none;
+  background:
+    radial-gradient(55% 45% at 50% 0%, rgba(56, 139, 253, 0.07), transparent 70%),
+    radial-gradient(35% 35% at 82% 12%, rgba(188, 140, 255, 0.05), transparent 70%);
+}
+.hero h1 { font-size: 54px; letter-spacing: -0.03em; }
+.hero .tagline { font-size: 19px; text-wrap: pretty; }
+.hero-card {
+  border-radius: 14px; padding: 26px 24px;
+  box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04);
+}
+.hero-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 28px rgba(16, 24, 40, 0.08);
+}
+.hero-card .icon {
+  width: 46px; height: 46px; display: inline-grid; place-items: center;
+  background: var(--surface2); border-radius: 12px;
+  font-size: 22px; margin-bottom: 14px;
+}
+
+/* ── Refinement v3: professional pass (external design review) ── */
+
+html { color-scheme: light; }
+[data-theme="dark"] { color-scheme: dark; }
+
+/* Type scale — larger, less compressed */
+body { font-size: 15.5px; }
+p, ul, ol { font-size: inherit; }
+h1 { font-size: 36px; line-height: 1.12; }
+h2 { font-size: 23px; margin: 56px 0 20px; }
+h3 { font-size: 18px; margin: 32px 0 12px; }
+h4 { font-size: 15px; }
+.page-subtitle { font-size: 17px; line-height: 1.55; max-width: 70ch; margin-bottom: 48px; }
+
+/* One accent — headings are neutral ink */
+h3, h4 { color: var(--text); }
+
+/* Code — relative inline sizing, comfortable blocks */
+code { font-size: 0.875em; padding: 0.12em 0.35em; border-radius: 4px; }
+pre { font-size: 13.5px; line-height: 1.55; padding: 18px 20px; tab-size: 2; }
+pre code { font-size: inherit; padding: 0; }
+
+/* Tables scroll instead of squeezing */
+.table-scroll { overflow-x: auto; margin: 12px 0 24px; border: 1px solid var(--border); border-radius: 10px; }
+.table-scroll table { min-width: 640px; margin: 0; border: 0; }
+td { vertical-align: top; line-height: 1.55; }
+
+/* Diagrams — legible labels, editorial captions */
+.diagram svg, .arch-diagram svg { display: block; width: 100%; height: auto; }
+.diagram svg text[font-size="9"], .diagram svg text[font-size="10"],
+.arch-diagram svg text[font-size="9"], .arch-diagram svg text[font-size="10"] { font-size: 11px; }
+.fig-caption { font-style: normal; text-align: left; font-size: 12.5px; margin: 10px 0 12px; max-width: none; }
+
+/* Landing hero actions + icon chips */
+.hero-actions { display: flex; justify-content: center; gap: 10px; margin: 26px 0 8px; }
+.main-content a.button-primary, .main-content a.button-secondary {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 9px 16px; border-radius: 8px; font-size: 14px; font-weight: 600; text-decoration: none;
+  transition: background 0.15s ease-out, border-color 0.15s ease-out,
+              filter 0.15s ease-out, transform 0.15s ease-out;
+}
+.main-content a.button-primary { background: var(--accent-blue); color: #fff; }
+.main-content a.button-primary:hover { filter: brightness(1.1); color: #fff; }
+.main-content a.button-secondary { border: 1px solid var(--border); background: var(--surface); color: var(--text); }
+.main-content a.button-secondary:hover { border-color: var(--accent-blue); color: var(--text); }
+.main-content a.button-primary:active, .main-content a.button-secondary:active { transform: scale(0.97); }
+.hero-card .icon svg { width: 22px; height: 22px; color: var(--accent-blue); }
+
+/* Mobile navigation — header + slide-in sidebar */
+.mobile-header { display: none; }
+@media (max-width: 900px) {
+  .mobile-header {
+    display: flex; position: sticky; top: 0; z-index: 220; height: 52px;
+    align-items: center; justify-content: space-between; padding: 0 16px;
+    background: var(--bg);
+    background: color-mix(in srgb, var(--bg) 88%, transparent);
+    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+  .mobile-header .mh-brand { font-weight: 700; font-size: 16px; color: var(--text); text-decoration: none; }
+  .nav-toggle {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+    padding: 6px 14px; font: inherit; font-size: 13.5px; font-weight: 600;
+    color: var(--text); cursor: pointer;
+  }
+  .nav-sidebar {
+    display: block; z-index: 240; transform: translateX(-100%);
+    transition: transform 200ms cubic-bezier(0.23, 1, 0.32, 1);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.18);
+  }
+  .nav-sidebar[data-open="true"] { transform: none; }
+  .mobile-header ~ .theme-toggle { top: 62px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .nav-sidebar { transition: none; }
+}
+
+/* ── Coding font + chromeless figures ── */
+code, pre, .code-ref {
+  font-family: ui-monospace, "SF Mono", Menlo, "JetBrains Mono", "Fira Code", Consolas, monospace;
+}
+.diagram, .arch-diagram { background: none; border: none; box-shadow: none; padding: 12px 0; }
+
+/* ── Lighter surfaces for code blocks and callouts ── */
+pre, .callout {
+  background: var(--surface);
+  background: color-mix(in srgb, var(--surface) 55%, var(--bg));
+}
+</style>
+<script>try{if(localStorage.getItem('stacx-theme')==='dark')document.documentElement.setAttribute('data-theme','dark');}catch(e){}</script>
+</head>
+<body>
+<header class="mobile-header"><a class="mh-brand" href="index.html">STACX</a><button class="nav-toggle" type="button" aria-controls="docsNav" aria-expanded="false">Menu</button></header>
+  <div class="layout">
+    <nav class="nav-sidebar" id="docsNav">
+      <div class="nav-logo">
+        <h2>STACX</h2>
+        <div class="version">v1.0 Documentation</div>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Overview</div>
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="getting-started.html" class="nav-link">Getting Started</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Trainer</div>
+        <a href="architecture.html" class="nav-link">Architecture</a>
+        <a href="backends.html" class="nav-link">Backends</a>
+        <a href="recipes.html" class="nav-link active">Algorithm Recipes</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Rollout</div>
+        <a href="rollout.html" class="nav-link">Architecture</a>
+        <a href="rollout-scheduler.html" class="nav-link">Task Scheduler</a>
+        <a href="rollout-inference.html" class="nav-link">Inference Backend</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Environment</div>
+        <a href="environment.html" class="nav-link">Architecture</a>
+        <a href="env-sandbox.html" class="nav-link">Sandbox Management</a>
+      </div>
+
+    </nav>
+
+    <div class="main-content">
+      <div class="page-header">
+        <h1>Algorithm Recipes</h1>
+        <p class="page-subtitle">A recipe is a frozen <code>TrainingConfig</code> in <span class="file-ref">rl_engine/trainer/recipes.py</span> — roles, syncs, and specializations resolved into workers at launch. Includes experimental diffusion recipes (RWFM, NFT, DPO, MMDiT).</p>
+      </div>
+
+      <!-- Section 1: recipes.py — registry -->
+      <section class="content-section">
+        <h2><span class="num">1</span> recipes.py — TrainingConfig</h2>
+        <p>All algorithms live in <code>TRAINING_CONFIGS</code> (<span class="file-ref">rl_engine/trainer/recipes.py</span>) as frozen <code>TrainingConfig</code> dataclasses (<span class="file-ref">rl_engine/trainer/config.py</span>). Three dataclass types cover the entire authoring surface:</p>
+
+        <div class="callout-grid">
+          <div class="callout">
+            <h4>Named model roles</h4>
+            <p>Each <code>ModelRole</code> pairs a name with a specialization class that owns <code>compute_loss()</code>.</p>
+          </div>
+          <div class="callout">
+            <h4>Declared data syncs</h4>
+            <p>Cross-role dependencies are <code>DataSync</code> objects — <em>inject</em> (Ray object store) or <em>exchange</em> (bidirectional NCCL).</p>
+          </div>
+          <div class="callout">
+            <h4>Zero backend changes</h4>
+            <p>Adding an algorithm means one <code>@recipe</code> function. Megatron/FSDP backends and the trainer are untouched.</p>
+          </div>
+        </div>
+
+        <div class="table-scroll"><table>
+          <thead>
+            <tr><th>Dataclass</th><th>Field</th><th>Default</th><th>Meaning</th></tr>
+          </thead>
+          <tbody>
+            <tr><td rowspan="9"><code>ModelRole</code></td><td><code>name</code></td><td>—</td><td>Role key, e.g. <code>"policy"</code>, <code>"value"</code>, <code>"reference"</code>.</td></tr>
+            <tr><td><code>specialization_cls</code></td><td>—</td><td>Class defining <code>compute_loss()</code> / <code>prepare_batch()</code> / <code>compute_advantages()</code>.</td></tr>
+            <tr><td><code>backend</code></td><td><code>"megatron"</code></td><td>Training backend: <code>"megatron"</code> or <code>"fsdp"</code>.</td></tr>
+            <tr><td><code>trainable</code></td><td><code>True</code></td><td><code>False</code> for frozen reference models (no optimizer step).</td></tr>
+            <tr><td><code>num_nodes</code></td><td><code>None</code></td><td>Node count; <code>None</code> resolves from args (<code>actor_num_nodes</code>).</td></tr>
+            <tr><td><code>num_gpus_per_node</code></td><td><code>None</code></td><td>GPUs/node; <code>None</code> resolves from args.</td></tr>
+            <tr><td><code>init_kwargs</code></td><td><code>{}</code></td><td>Extra kwargs to <code>async_init</code>, e.g. <code>with_ref=True</code>.</td></tr>
+            <tr><td><code>shares_pool_with</code></td><td><code>None</code></td><td>Name of another role to share a <code>WorkerPool</code> (same GPUs/model).</td></tr>
+            <tr><td><code>sync_to_rollout</code></td><td><code>False</code></td><td>Push trained weights to the rollout inference engine (SGLang) after each step.</td></tr>
+            <tr><td rowspan="4"><code>DataSync</code></td><td><code>source</code> / <code>target</code></td><td>—</td><td>Producing / consuming role names.</td></tr>
+            <tr><td><code>keys</code></td><td>—</td><td>Source output keys to transfer, e.g. <code>("values",)</code>.</td></tr>
+            <tr><td><code>stage</code></td><td><code>"inject"</code></td><td><code>"inject"</code> (Ray object store) or <code>"exchange"</code> (NCCL). Validated in <code>__post_init__</code>.</td></tr>
+            <tr><td><code>target_keys</code></td><td><code>None</code></td><td>Optional rename on the target side; must match <code>keys</code> length.</td></tr>
+            <tr><td rowspan="4"><code>TrainingConfig</code></td><td><code>name</code></td><td>—</td><td>Algorithm name (matches the registry key).</td></tr>
+            <tr><td><code>roles</code></td><td>—</td><td>Ordered tuple of <code>ModelRole</code>.</td></tr>
+            <tr><td><code>syncs</code></td><td><code>()</code></td><td>Tuple of <code>DataSync</code> dependencies.</td></tr>
+            <tr><td><code>description</code></td><td><code>""</code></td><td>Human-readable one-liner (shown in <code>--help</code> / logs).</td></tr>
+          </tbody>
+        </table></div>
+        <p><code>TrainingConfig.__post_init__</code> validates at import time: unique role names, sync endpoints resolve, non-empty keys, pool-sharing acyclic — a malformed recipe fails at import, not mid-run.</p>
+
+        <h3>The <code>@recipe</code> decorator</h3>
+        <pre><span class="cm"># rl_engine/trainer/recipes.py</span>
+TRAINING_CONFIGS: dict[str, TrainingConfig] = {}
+
+<span class="kw">def</span> <span class="fn">recipe</span>(name: str):
+    <span class="st">"""Decorator to register a training config."""</span>
+    <span class="kw">def</span> <span class="fn">decorator</span>(fn):
+        TRAINING_CONFIGS[name] = fn()   <span class="cm"># build + register at import</span>
+        <span class="kw">return</span> fn
+    <span class="kw">return</span> decorator</pre>
+
+        <div class="diagram">
+          <svg viewBox="0 0 960 470" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ra-title ra-desc" font-family="system-ui, sans-serif">
+            <title id="ra-title">Recipe anatomy</title>
+            <desc id="ra-desc">A TrainingConfig frozen dataclass resolved by the factory into model roles with specializations and backends, data syncs, and validation.</desc>
+            <defs>
+              <marker id="ra-arw" viewBox="0 0 10 7" refX="9" refY="3.5" markerWidth="8" markerHeight="6" orient="auto"><path d="M0,0 L10,3.5 L0,7z" style="fill:var(--text-dim)"/></marker>
+            </defs>
+            <text x="24" y="34" style="fill:var(--text)" font-size="15" font-weight="700">Algorithm = one frozen dataclass, resolved at launch</text>
+
+            <!-- TrainingConfig card -->
+            <rect x="24" y="80" width="250" height="270" rx="10" fill="rgba(5,80,174,0.06)" stroke="none"/>
+            <text x="149" y="106" text-anchor="middle" style="fill:var(--accent-blue)" font-size="16" font-weight="700">TrainingConfig</text>
+            <text x="149" y="124" text-anchor="middle" style="fill:var(--text-dim)" font-size="12">@recipe · frozen dataclass</text>
+            <rect x="40" y="140" width="218" height="30" rx="5" fill="rgba(87,96,106,0.05)" style="stroke:var(--border)" stroke-width="1"/>
+            <text x="52" y="159" style="fill:var(--text)" font-size="12" font-weight="600">name: str</text>
+            <rect x="40" y="188" width="218" height="40" rx="5" fill="rgba(17,99,41,0.06)" style="stroke:var(--accent-green)" stroke-width="1"/>
+            <text x="52" y="205" style="fill:var(--accent-green)" font-size="12" font-weight="700">roles: tuple[ModelRole]</text>
+            <text x="52" y="220" style="fill:var(--text-dim)" font-size="11">policy · value · ref · reward</text>
+            <rect x="40" y="246" width="218" height="40" rx="5" fill="rgba(149,56,0,0.06)" style="stroke:var(--accent-orange)" stroke-width="1"/>
+            <text x="52" y="263" style="fill:var(--accent-orange)" font-size="12" font-weight="700">syncs: tuple[DataSync]</text>
+            <text x="52" y="278" style="fill:var(--text-dim)" font-size="11">inject / exchange topology</text>
+            <rect x="40" y="304" width="218" height="30" rx="5" fill="rgba(87,96,106,0.05)" style="stroke:var(--border)" stroke-width="1"/>
+            <text x="52" y="323" style="fill:var(--text)" font-size="12" font-weight="600">description: str</text>
+
+            <!-- factory node -->
+            <rect x="334" y="210" width="200" height="48" rx="8" fill="rgba(87,96,106,0.05)" style="stroke:var(--border)" stroke-width="1.5"/>
+            <text x="434" y="230" text-anchor="middle" style="fill:var(--text)" font-size="13" font-weight="700">factory.create_trainer()</text>
+            <text x="434" y="247" text-anchor="middle" style="fill:var(--text-dim)" font-size="11">RoleWorkers per role</text>
+            <line x1="274" y1="234" x2="332" y2="234" style="stroke:var(--text-dim)" stroke-width="1.5" marker-end="url(#ra-arw)"/>
+            <text x="303" y="226" text-anchor="middle" style="fill:var(--text-dim)" font-size="11" font-weight="600">lookup</text>
+
+            <!-- bus from factory -->
+            <line x1="534" y1="234" x2="560" y2="234" style="stroke:var(--text-dim)" stroke-width="1.5"/>
+            <line x1="560" y1="148" x2="560" y2="401" style="stroke:var(--text-dim)" stroke-width="1.5"/>
+            <line x1="560" y1="148" x2="600" y2="148" style="stroke:var(--text-dim)" stroke-width="1.5" marker-end="url(#ra-arw)"/>
+            <line x1="560" y1="304" x2="600" y2="304" style="stroke:var(--text-dim)" stroke-width="1.5" marker-end="url(#ra-arw)"/>
+            <line x1="560" y1="401" x2="600" y2="401" style="stroke:var(--text-dim)" stroke-width="1.5" marker-end="url(#ra-arw)"/>
+
+            <!-- box 1: ModelRole -> RoleWorkers -->
+            <rect x="600" y="46" width="348" height="204" rx="10" fill="rgba(17,99,41,0.06)" stroke="none"/>
+            <text x="774" y="70" text-anchor="middle" style="fill:var(--accent-green)" font-size="14" font-weight="700">ModelRole → RoleWorkers</text>
+            <rect x="616" y="82" width="316" height="26" rx="5" fill="rgba(17,99,41,0.05)" style="stroke:var(--border)" stroke-width="1"/>
+            <text x="774" y="99" text-anchor="middle" style="fill:var(--text)" font-size="11" font-weight="600">specialization_cls.compute_loss()</text>
+            <rect x="616" y="126" width="316" height="26" rx="5" fill="rgba(17,99,41,0.05)" style="stroke:var(--border)" stroke-width="1"/>
+            <text x="774" y="143" text-anchor="middle" style="fill:var(--text)" font-size="11" font-weight="600">backend = megatron | fsdp</text>
+            <rect x="616" y="170" width="316" height="26" rx="5" fill="rgba(17,99,41,0.05)" style="stroke:var(--border)" stroke-width="1"/>
+            <text x="774" y="187" text-anchor="middle" style="fill:var(--text)" font-size="11" font-weight="600">sync_to_rollout → SGLang weights</text>
+            <rect x="616" y="214" width="316" height="26" rx="5" fill="rgba(17,99,41,0.05)" style="stroke:var(--border)" stroke-width="1"/>
+            <text x="774" y="231" text-anchor="middle" style="fill:var(--text-dim)" font-size="11" font-weight="600">trainable · init_kwargs(with_ref=…)</text>
+
+            <!-- box 2: DataSync -->
+            <rect x="600" y="268" width="348" height="72" rx="10" fill="rgba(149,56,0,0.06)" stroke="none"/>
+            <text x="774" y="290" text-anchor="middle" style="fill:var(--accent-orange)" font-size="14" font-weight="700">DataSync</text>
+            <rect x="616" y="302" width="148" height="28" rx="5" fill="rgba(149,56,0,0.05)" style="stroke:var(--border)" stroke-width="1"/>
+            <text x="690" y="320" text-anchor="middle" style="fill:var(--text)" font-size="11" font-weight="600">inject → Ray store</text>
+            <rect x="784" y="302" width="148" height="28" rx="5" fill="rgba(149,56,0,0.05)" style="stroke:var(--border)" stroke-width="1"/>
+            <text x="858" y="320" text-anchor="middle" style="fill:var(--text)" font-size="11" font-weight="600">exchange → NCCL</text>
+
+            <!-- box 3: validation -->
+            <rect x="600" y="358" width="348" height="86" rx="10" fill="rgba(87,96,106,0.05)" style="stroke:var(--border)" stroke-width="1.5"/>
+            <text x="774" y="380" text-anchor="middle" style="fill:var(--text)" font-size="14" font-weight="700">__post_init__ validation</text>
+            <text x="774" y="402" text-anchor="middle" style="fill:var(--text-dim)" font-size="11">unique role names · sync refs resolve</text>
+            <text x="774" y="420" text-anchor="middle" style="fill:var(--text-dim)" font-size="11">non-empty keys · pool-sharing acyclic</text>
+          </svg>
+        </div>
+        <p class="diagram-caption"><code>factory.create_trainer()</code> (<span class="file-ref">rl_engine/trainer/factory.py</span>) builds a <code>RoleWorkers</code> per role, connects <code>exchange</code> syncs over NCCL, and hands the graph to <code>StacxTrainer</code>.</p>
+      </section>
+
+      <!-- Section 2: Recipe registry -->
+      <section class="content-section">
+        <h2><span class="num">2</span> Recipe catalog</h2>
+        <p>22 recipes ship in <code>recipes.py</code> — 16 LLM plus 6 experimental diffusion.</p>
+
+        <h3>LLM recipes</h3>
+        <div class="table-scroll"><table class="recipes">
+          <thead>
+            <tr><th>Recipe</th><th>Roles</th><th>Syncs</th><th>Specialization</th><th>Typical launcher</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>grpo</code></td><td>policy (with_ref)</td><td>none</td><td><span class="tag tag-blue">ActorSpecialization</span></td><td><code>grpo/grpo_4b.sh</code></td></tr>
+            <tr><td><code>gspo</code></td><td>policy</td><td>none</td><td><span class="tag tag-blue">ActorSpecialization</span></td><td><code>--advantage-estimator gspo</code></td></tr>
+            <tr><td><code>reinforce_pp</code></td><td>policy</td><td>none</td><td><span class="tag tag-blue">ActorSpecialization</span></td><td><code>--advantage-estimator reinforce_plus_plus</code></td></tr>
+            <tr><td><code>reinforce_pp_baseline</code></td><td>policy</td><td>none</td><td><span class="tag tag-blue">ActorSpecialization</span></td><td><code>reinforce_plus_plus_baseline</code></td></tr>
+            <tr><td><code>ppo</code></td><td>policy, value</td><td>2 exchange</td><td><span class="tag tag-blue">Actor</span> + <span class="tag tag-green">Critic</span></td><td><code>--algorithm ppo</code></td></tr>
+            <tr><td><code>ppo_colocated</code></td><td>policy</td><td>none</td><td><span class="tag tag-orange">DualRoleSpecialization</span></td><td><code>--algorithm ppo_colocated</code></td></tr>
+            <tr><td><code>ppo_colocated_async</code></td><td>policy, value</td><td>2 exchange</td><td><span class="tag tag-blue">Actor</span> + <span class="tag tag-green">Critic</span></td><td><code>--algorithm ppo_colocated_async</code></td></tr>
+            <tr><td><code>ppo_colocated_async_shared</code></td><td>policy, value <span class="role-chip">shared pool</span></td><td>none</td><td><span class="tag tag-blue">Actor</span> + <span class="tag tag-green">Critic</span></td><td><code>ppo_colocated_async_shared</code></td></tr>
+            <tr><td><code>dpo</code></td><td>policy (with_ref)</td><td>none</td><td><span class="tag tag-purple">DPOSpecialization</span></td><td><code>--algorithm dpo</code></td></tr>
+            <tr><td><code>dpo_distributed</code></td><td>policy, reference</td><td>1 inject</td><td><span class="tag tag-purple">DPOSpecialization</span></td><td><code>--algorithm dpo_distributed</code></td></tr>
+            <tr><td><code>online_reward</code></td><td>policy, reward</td><td>1 inject</td><td><span class="tag tag-blue">Actor</span> + <span class="tag tag-green">Reward</span></td><td><code>--algorithm online_reward</code></td></tr>
+            <tr><td><code>sft</code></td><td>policy</td><td>none</td><td><span class="tag tag-orange">CausalDecoderSpecialization</span></td><td><code>--algorithm sft</code></td></tr>
+            <tr><td><code>online_dagger</code></td><td>policy</td><td>none</td><td><span class="tag tag-orange">CausalDecoderSpecialization</span></td><td><code>sft/sft_4b.sh</code> (iter-SFT)</td></tr>
+            <tr><td><code>on_policy_distillation</code></td><td>policy</td><td>none</td><td><span class="tag tag-purple">DistillSpecialization</span></td><td><code>opd/opd_4b.sh</code></td></tr>
+            <tr><td><code>mixture_dagger_opd</code></td><td>policy</td><td>none</td><td><span class="tag tag-red">MixedLossDaggerOPD</span></td><td><code>online_dagger/dagger_4b.sh</code></td></tr>
+            <tr><td><code>mixture_aggrevate_opd</code></td><td>policy</td><td>none</td><td><span class="tag tag-red">MixedLossDaggerOPD</span></td><td><code>online_dagger/aggrevate_4b.sh</code></td></tr>
+          </tbody>
+        </table></div>
+
+        <h3>Diffusion recipes <span class="tag tag-orange">experimental</span></h3>
+        <p>Flow-matching kernels for DiT/MMDiT models; loss math in <span class="file-ref">rl_engine/trainer/objectives/diffusion_loss.py</span>.</p>
+        <div class="table-scroll"><table class="recipes">
+          <thead>
+            <tr><th>Recipe</th><th>Specialization</th><th>Objective</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>diffusion_rwfm</code></td><td><span class="tag tag-purple">DiffusionSpecialization</span></td><td>Reward-weighted flow matching — advantage-weighted denoising MSE on <code>z_0</code>.</td></tr>
+            <tr><td><code>diffusion_sft</code></td><td><span class="tag tag-purple">DiffusionSpecialization</span></td><td>Supervised flow matching (no advantages).</td></tr>
+            <tr><td><code>diffusion_dpo</code></td><td><span class="tag tag-purple">DiffusionDPOSpecialization</span></td><td>Preference-weighted denoising; needs precomputed <code>ref_loss</code> injected.</td></tr>
+            <tr><td><code>diffusion_nft</code></td><td><span class="tag tag-purple">DiffusionNFTSpecialization</span></td><td>Noise-Free Reward Tuning; <code>with_ref=True</code> + frozen <code>old_actor</code> snapshot.</td></tr>
+            <tr><td><code>mmdit_rwfm</code></td><td><span class="tag tag-purple">MMDiTSpecialization</span></td><td>RWFM for dual-stream Flux / SD3 / Lumina models.</td></tr>
+            <tr><td><code>mmdit_nft</code></td><td><span class="tag tag-purple">MMDiT+NFT</span> (mixed MRO)</td><td>NFT loss with MMDiT dual-stream input packing.</td></tr>
+          </tbody>
+        </table></div>
+
+        <h3>Recipe selection — <code>infer_algorithm()</code></h3>
+        <p>The runtime key <code>args.algorithm</code> (<span class="file-ref">rl_engine/trainer/factory.py</span>) resolves as:</p>
+        <ul>
+          <li><code>--algorithm</code> set explicitly → wins verbatim (DAgger / distillation / diffusion always use this).</li>
+          <li><code>use_critic</code> set → <code>ppo</code>.</li>
+          <li>Otherwise <code>--advantage-estimator</code> maps to the matching recipe (e.g. <code>reinforce_plus_plus → reinforce_pp</code>).</li>
+        </ul>
+      </section>
+
+      <!-- Section 3: Objectives reference -->
+      <section class="content-section">
+        <h2><span class="num">3</span> Algorithm objectives</h2>
+        <p>Stateless loss functions in <span class="file-ref">rl_engine/trainer/objectives/</span>; specializations in <span class="file-ref">rl_engine/trainer/specialization/</span> compose them inside <code>compute_loss()</code>.</p>
+
+        <h3>GRPO — PPO-clipped PG on group-normalized rewards</h3>
+        <p><code>ActorSpecialization.compute_loss</code> (<span class="file-ref">specialization/agent.py</span>). <code>compute_grpo_advantages()</code> (<span class="file-ref">objectives/advantage.py</span>) broadcasts the scalar reward to every response token and whitens across the group. Optional KL anchor: <code>--use-kl-loss --kl-loss-type low_var_kl --kl-loss-coef 0.001</code> + <code>--ref-load</code> (in-Megatron reference, no separate worker). <code>gspo</code> and <code>reinforce_pp[_baseline]</code> reuse this specialization with a different estimator.</p>
+
+        <h3>SFT &amp; iter-SFT — supervised cross-entropy</h3>
+        <p><code>CausalDecoderSpecialization.compute_loss</code> (<span class="file-ref">specialization/causal_decoder.py</span>): per-token CE on the response, masked to <code>loss_masks</code>. The iter-SFT baseline uses <code>--algorithm online_dagger</code> with <code>STACX_DAGGER_SFT_MODE=trajectory</code> to replay a pre-saved teacher corpus instead of live rollout.</p>
+
+        <h3>On-policy distillation (OPD) — K3 reverse-KL vs. a frozen teacher</h3>
+        <p><code>DistillSpecialization</code> (<span class="file-ref">specialization/distill.py</span>): reverse KL against a frozen teacher SGLang server, whose per-token logprobs arrive as rollout fields. Mode chosen by <code>STACX_DISTILL_KL_MODE</code>:</p>
+        <ul>
+          <li><strong><code>k3_sample</code></strong> (default) — single-sample MC estimate on the chosen token; TP-aware, higher variance.</li>
+          <li><strong><code>topk</code></strong> (TP=1 only) — RKL over the union of student and teacher top-K supports; lower variance.</li>
+        </ul>
+
+        <h3>Mixed-loss DAgger-OPD — per-token CE / K3 dispatch</h3>
+        <p><code>MixedLossDaggerOPDSpecialization</code> (<span class="file-ref">specialization/mixed_loss_dagger.py</span>) routes each action token by executor — teacher-executed → CE, student-executed → K3 reverse-KL — via a sign sentinel packed into <code>teacher_log_probs</code> (SGLang logprobs are ≤ 0; rollout writes <code>+1.0</code> at teacher positions). WandB tracks <code>ce_mean</code>, <code>k3_mean</code>, <code>teacher_action_frac</code>.</p>
+
+        <div class="diagram">
+          <svg viewBox="0 0 960 466" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="mx-title mx-desc" font-family="system-ui, sans-serif">
+            <title id="mx-title">Mixed CE / K3 per-token dispatch</title>
+            <desc id="mx-desc">A packed trajectory strip where teacher-executed action tokens carry a +1.0 sentinel and route to cross-entropy, while student-executed action tokens carry a real teacher logprob and route to K3 reverse-KL.</desc>
+            <defs>
+              <marker id="mx-arw" viewBox="0 0 10 7" refX="9" refY="3.5" markerWidth="8" markerHeight="6" orient="auto"><path d="M0,0 L10,3.5 L0,7z" style="fill:var(--text-dim)"/></marker>
+            </defs>
+            <text x="24" y="30" style="fill:var(--text)" font-size="15" font-weight="700">One packed trajectory · per-token executor-driven loss</text>
+
+            <!-- row labels -->
+            <text x="138" y="81" text-anchor="end" style="fill:var(--text-dim)" font-size="11" font-weight="600">tokens</text>
+            <text x="138" y="119" text-anchor="end" style="fill:var(--text-dim)" font-size="11" font-weight="600">teacher_log_probs</text>
+            <text x="138" y="147" text-anchor="end" style="fill:var(--text-dim)" font-size="11" font-weight="600">loss_mask</text>
+
+            <!-- cell 0: prompt -->
+            <rect x="150" y="54" width="58" height="44" rx="6" fill="rgba(87,96,106,0.08)" style="stroke:var(--text-dim)" stroke-width="1.2"/>
+            <text x="179" y="81" text-anchor="middle" style="fill:var(--text-dim)" font-size="12" font-weight="600">sys</text>
+            <text x="179" y="119" text-anchor="middle" style="fill:var(--text-dim)" font-size="11">—</text>
+            <rect x="150" y="132" width="58" height="22" rx="4" fill="rgba(87,96,106,0.08)" style="stroke:var(--text-dim)" stroke-width="1"/>
+            <text x="179" y="148" text-anchor="middle" style="fill:var(--text-dim)" font-size="11" font-weight="700">0</text>
+            <!-- cell 1: teacher -->
+            <rect x="214" y="54" width="58" height="44" rx="6" fill="rgba(5,80,174,0.08)" style="stroke:var(--accent-blue)" stroke-width="1.5"/>
+            <text x="243" y="81" text-anchor="middle" style="fill:var(--accent-blue)" font-size="12" font-weight="700">aᵀ</text>
+            <text x="243" y="119" text-anchor="middle" style="fill:var(--accent-blue)" font-size="11" font-weight="700">+1.0</text>
+            <rect x="214" y="132" width="58" height="22" rx="4" fill="rgba(5,80,174,0.08)" style="stroke:var(--accent-blue)" stroke-width="1"/>
+            <text x="243" y="148" text-anchor="middle" style="fill:var(--accent-blue)" font-size="11" font-weight="700">1</text>
+            <!-- cell 2: student -->
+            <rect x="278" y="54" width="58" height="44" rx="6" fill="rgba(17,99,41,0.08)" style="stroke:var(--accent-green)" stroke-width="1.5"/>
+            <text x="307" y="81" text-anchor="middle" style="fill:var(--accent-green)" font-size="12" font-weight="700">aˢ</text>
+            <text x="307" y="119" text-anchor="middle" style="fill:var(--accent-green)" font-size="11" font-weight="700">−0.6</text>
+            <rect x="278" y="132" width="58" height="22" rx="4" fill="rgba(17,99,41,0.08)" style="stroke:var(--accent-green)" stroke-width="1"/>
+            <text x="307" y="148" text-anchor="middle" style="fill:var(--accent-green)" font-size="11" font-weight="700">1</text>
+            <!-- cell 3: obs -->
+            <rect x="342" y="54" width="58" height="44" rx="6" fill="rgba(87,96,106,0.08)" style="stroke:var(--text-dim)" stroke-width="1.2"/>
+            <text x="371" y="81" text-anchor="middle" style="fill:var(--text-dim)" font-size="12" font-weight="600">obs</text>
+            <text x="371" y="119" text-anchor="middle" style="fill:var(--text-dim)" font-size="11">—</text>
+            <rect x="342" y="132" width="58" height="22" rx="4" fill="rgba(87,96,106,0.08)" style="stroke:var(--text-dim)" stroke-width="1"/>
+            <text x="371" y="148" text-anchor="middle" style="fill:var(--text-dim)" font-size="11" font-weight="700">0</text>
+            <!-- cell 4: teacher -->
+            <rect x="406" y="54" width="58" height="44" rx="6" fill="rgba(5,80,174,0.08)" style="stroke:var(--accent-blue)" stroke-width="1.5"/>
+            <text x="435" y="81" text-anchor="middle" style="fill:var(--accent-blue)" font-size="12" font-weight="700">aᵀ</text>
+            <text x="435" y="119" text-anchor="middle" style="fill:var(--accent-blue)" font-size="11" font-weight="700">+1.0</text>
+            <rect x="406" y="132" width="58" height="22" rx="4" fill="rgba(5,80,174,0.08)" style="stroke:var(--accent-blue)" stroke-width="1"/>
+            <text x="435" y="148" text-anchor="middle" style="fill:var(--accent-blue)" font-size="11" font-weight="700">1</text>
+            <!-- cell 5: student -->
+            <rect x="470" y="54" width="58" height="44" rx="6" fill="rgba(17,99,41,0.08)" style="stroke:var(--accent-green)" stroke-width="1.5"/>
+            <text x="499" y="81" text-anchor="middle" style="fill:var(--accent-green)" font-size="12" font-weight="700">aˢ</text>
+            <text x="499" y="119" text-anchor="middle" style="fill:var(--accent-green)" font-size="11" font-weight="700">−1.2</text>
+            <rect x="470" y="132" width="58" height="22" rx="4" fill="rgba(17,99,41,0.08)" style="stroke:var(--accent-green)" stroke-width="1"/>
+            <text x="499" y="148" text-anchor="middle" style="fill:var(--accent-green)" font-size="11" font-weight="700">1</text>
+            <!-- cell 6: student -->
+            <rect x="534" y="54" width="58" height="44" rx="6" fill="rgba(17,99,41,0.08)" style="stroke:var(--accent-green)" stroke-width="1.5"/>
+            <text x="563" y="81" text-anchor="middle" style="fill:var(--accent-green)" font-size="12" font-weight="700">aˢ</text>
+            <text x="563" y="119" text-anchor="middle" style="fill:var(--accent-green)" font-size="11" font-weight="700">−0.4</text>
+            <rect x="534" y="132" width="58" height="22" rx="4" fill="rgba(17,99,41,0.08)" style="stroke:var(--accent-green)" stroke-width="1"/>
+            <text x="563" y="148" text-anchor="middle" style="fill:var(--accent-green)" font-size="11" font-weight="700">1</text>
+            <!-- cell 7: obs -->
+            <rect x="598" y="54" width="58" height="44" rx="6" fill="rgba(87,96,106,0.08)" style="stroke:var(--text-dim)" stroke-width="1.2"/>
+            <text x="627" y="81" text-anchor="middle" style="fill:var(--text-dim)" font-size="12" font-weight="600">obs</text>
+            <text x="627" y="119" text-anchor="middle" style="fill:var(--text-dim)" font-size="11">—</text>
+            <rect x="598" y="132" width="58" height="22" rx="4" fill="rgba(87,96,106,0.08)" style="stroke:var(--text-dim)" stroke-width="1"/>
+            <text x="627" y="148" text-anchor="middle" style="fill:var(--text-dim)" font-size="11" font-weight="700">0</text>
+            <!-- cell 8: teacher -->
+            <rect x="662" y="54" width="58" height="44" rx="6" fill="rgba(5,80,174,0.08)" style="stroke:var(--accent-blue)" stroke-width="1.5"/>
+            <text x="691" y="81" text-anchor="middle" style="fill:var(--accent-blue)" font-size="12" font-weight="700">aᵀ</text>
+            <text x="691" y="119" text-anchor="middle" style="fill:var(--accent-blue)" font-size="11" font-weight="700">+1.0</text>
+            <rect x="662" y="132" width="58" height="22" rx="4" fill="rgba(5,80,174,0.08)" style="stroke:var(--accent-blue)" stroke-width="1"/>
+            <text x="691" y="148" text-anchor="middle" style="fill:var(--accent-blue)" font-size="11" font-weight="700">1</text>
+            <!-- cell 9: student -->
+            <rect x="726" y="54" width="58" height="44" rx="6" fill="rgba(17,99,41,0.08)" style="stroke:var(--accent-green)" stroke-width="1.5"/>
+            <text x="755" y="81" text-anchor="middle" style="fill:var(--accent-green)" font-size="12" font-weight="700">aˢ</text>
+            <text x="755" y="119" text-anchor="middle" style="fill:var(--accent-green)" font-size="11" font-weight="700">−0.9</text>
+            <rect x="726" y="132" width="58" height="22" rx="4" fill="rgba(17,99,41,0.08)" style="stroke:var(--accent-green)" stroke-width="1"/>
+            <text x="755" y="148" text-anchor="middle" style="fill:var(--accent-green)" font-size="11" font-weight="700">1</text>
+            <!-- cell 10: obs -->
+            <rect x="790" y="54" width="58" height="44" rx="6" fill="rgba(87,96,106,0.08)" style="stroke:var(--text-dim)" stroke-width="1.2"/>
+            <text x="819" y="81" text-anchor="middle" style="fill:var(--text-dim)" font-size="12" font-weight="600">obs</text>
+            <text x="819" y="119" text-anchor="middle" style="fill:var(--text-dim)" font-size="11">—</text>
+            <rect x="790" y="132" width="58" height="22" rx="4" fill="rgba(87,96,106,0.08)" style="stroke:var(--text-dim)" stroke-width="1"/>
+            <text x="819" y="148" text-anchor="middle" style="fill:var(--text-dim)" font-size="11" font-weight="700">0</text>
+            <!-- cell 11: student -->
+            <rect x="854" y="54" width="58" height="44" rx="6" fill="rgba(17,99,41,0.08)" style="stroke:var(--accent-green)" stroke-width="1.5"/>
+            <text x="883" y="81" text-anchor="middle" style="fill:var(--accent-green)" font-size="12" font-weight="700">aˢ</text>
+            <text x="883" y="119" text-anchor="middle" style="fill:var(--accent-green)" font-size="11" font-weight="700">−0.7</text>
+            <rect x="854" y="132" width="58" height="22" rx="4" fill="rgba(17,99,41,0.08)" style="stroke:var(--accent-green)" stroke-width="1"/>
+            <text x="883" y="148" text-anchor="middle" style="fill:var(--accent-green)" font-size="11" font-weight="700">1</text>
+
+            <!-- sentinel decode node -->
+            <line x1="490" y1="154" x2="490" y2="176" style="stroke:var(--text-dim)" stroke-width="1.5" marker-end="url(#mx-arw)"/>
+            <rect x="380" y="176" width="220" height="42" rx="8" fill="rgba(87,96,106,0.05)" style="stroke:var(--border)" stroke-width="1.5"/>
+            <text x="490" y="196" text-anchor="middle" style="fill:var(--text)" font-size="12" font-weight="700">sentinel decode</text>
+            <text x="490" y="211" text-anchor="middle" style="fill:var(--text-dim)" font-size="11">teacher_log_probs &gt; 0 ?</text>
+
+            <!-- routes to CE / K3 -->
+            <path d="M430,218 L430,236 L271,236 L271,252" fill="none" style="stroke:var(--text-dim)" stroke-width="1.5" marker-end="url(#mx-arw)"/>
+            <text x="330" y="230" text-anchor="middle" style="fill:var(--accent-blue)" font-size="11" font-weight="600">lp &gt; 0 (teacher)</text>
+            <path d="M550,218 L550,236 L710,236 L710,252" fill="none" style="stroke:var(--text-dim)" stroke-width="1.5" marker-end="url(#mx-arw)"/>
+            <text x="650" y="230" text-anchor="middle" style="fill:var(--accent-green)" font-size="11" font-weight="600">lp ≤ 0 (student)</text>
+
+            <!-- CE box -->
+            <rect x="96" y="252" width="350" height="94" rx="10" fill="rgba(5,80,174,0.06)" style="stroke:var(--accent-blue)" stroke-width="1.5"/>
+            <text x="271" y="276" text-anchor="middle" style="fill:var(--accent-blue)" font-size="13" font-weight="700">teacher-executed → Cross-Entropy</text>
+            <text x="271" y="302" text-anchor="middle" style="fill:var(--text)" font-size="13" font-family="'SF Mono', monospace">ℓ = − log p_s(c)</text>
+            <text x="271" y="328" text-anchor="middle" style="fill:var(--text-dim)" font-size="11">β = 1 ⇒ all teacher ⇒ pure CE  (= online_dagger)</text>
+
+            <!-- K3 box -->
+            <rect x="510" y="252" width="390" height="94" rx="10" fill="rgba(17,99,41,0.06)" style="stroke:var(--accent-green)" stroke-width="1.5"/>
+            <text x="705" y="276" text-anchor="middle" style="fill:var(--accent-green)" font-size="13" font-weight="700">student-executed → K3 reverse-KL</text>
+            <text x="705" y="302" text-anchor="middle" style="fill:var(--text)" font-size="13" font-family="'SF Mono', monospace">ℓ = exp(r) − r − 1,  r = log p_t(c) − log p_s(c)</text>
+            <text x="705" y="328" text-anchor="middle" style="fill:var(--text-dim)" font-size="11">β = 0 ⇒ all student ⇒ pure K3  (= OPD baseline)</text>
+
+            <!-- reduction note -->
+            <rect x="96" y="364" width="804" height="34" rx="8" fill="rgba(87,96,106,0.05)" style="stroke:var(--border)" stroke-width="1.2"/>
+            <text x="498" y="385" text-anchor="middle" style="fill:var(--text)" font-size="12">one reduction: <tspan font-family="'SF Mono', monospace">sum_of_sample_mean</tspan> over the union loss_mask → equal weight per action token</text>
+
+            <!-- legend -->
+            <rect x="96" y="418" width="16" height="16" rx="3" fill="rgba(5,80,174,0.08)" style="stroke:var(--accent-blue)" stroke-width="1.4"/>
+            <text x="120" y="431" style="fill:var(--text-dim)" font-size="11">teacher: sentinel +1.0</text>
+            <rect x="300" y="418" width="16" height="16" rx="3" fill="rgba(17,99,41,0.08)" style="stroke:var(--accent-green)" stroke-width="1.4"/>
+            <text x="324" y="431" style="fill:var(--text-dim)" font-size="11">student: teacher logprob ≤ 0</text>
+            <rect x="560" y="418" width="16" height="16" rx="3" fill="rgba(87,96,106,0.08)" style="stroke:var(--text-dim)" stroke-width="1.4"/>
+            <text x="584" y="431" style="fill:var(--text-dim)" font-size="11">observation / prompt: loss_mask 0 (ignored)</text>
+          </svg>
+        </div>
+        <p class="diagram-caption">Both endpoints asserted in <span class="file-ref">tests/trainer/test_mixed_loss_dagger.py</span>.</p>
+
+        <h4>Rollin protocols — β vs. κ</h4>
+        <p>Both recipes share the loss kernel but differ in how the teacher/student split is produced (<code>STACX_DAGGER_SAMPLING_MODE</code>):</p>
+        <ul>
+          <li><code>mixture_dagger_opd</code> — per-turn β-mixture: each turn flips <code>Bernoulli(β)</code>, β decaying over training (<code>linear</code> / <code>cosine</code> / <code>exponential</code> / <code>step</code>; launcher default linear 1.0→0.0 over 5 iters).</li>
+          <li><code>mixture_aggrevate_opd</code> — trajectory-level AggreVaTe: κ ~ U{0, T_max(i)} per task; student leads turns 0..κ−1, teacher force-decodes the tail. T_max(i) = min(start + step·i, cap), launcher default 0/20/100.</li>
+        </ul>
+
+        <h3>DPO — contrastive preference loss</h3>
+        <div class="feature-grid">
+          <div class="feature-item">
+            <h4>dpo / dpo_distributed</h4>
+            <p><code>compute_dpo_loss</code> (<code>objectives/dpo.py</code>): <code>L = −log σ(β·(Δ_w − Δ_l))</code> with log-ratios vs. a reference (IPO / cDPO variants supported). Colocated switches ref weights in place; distributed runs a frozen <code>reference</code> role with a <code>log_probs → ref_log_probs</code> inject sync.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 4: Data syncs -->
+      <section class="content-section">
+        <h2><span class="num">4</span> Data syncs: inject vs. exchange</h2>
+        <div class="comparison-grid">
+          <div class="comparison-col">
+            <h3>inject</h3>
+            <p style="font-size:13px">One-way via the Ray object store: the trainer runs <code>forward_only()</code> on the source, pulls <code>keys</code> (optionally renamed to <code>target_keys</code>), and merges them into target rollout data. No NCCL group.</p>
+            <p style="font-size:13px">Used by: <code>dpo_distributed</code> (<code>log_probs→ref_log_probs</code>), <code>online_reward</code> (<code>reward_scores</code>).</p>
+          </div>
+          <div class="comparison-col">
+            <h3>exchange</h3>
+            <p style="font-size:13px">Bidirectional concurrent NCCL: both roles call <code>train()</code> simultaneously and swap tensors mid-step.</p>
+            <p style="font-size:13px">Used by: <code>ppo</code> / <code>ppo_colocated_async</code> — critic → <code>values</code>; actor → <code>log_probs, ref_log_probs</code>.</p>
+          </div>
+        </div>
+        <p>Single-role recipes declare <code>syncs=()</code>; the external SGLang teacher server needs no sync entry.</p>
+      </section>
+
+      <!-- Section 5: Adding an algorithm -->
+      <section class="content-section">
+        <h2><span class="num">5</span> Adding an algorithm</h2>
+        <p>A new algorithm is a specialization (only if no existing loss fits) plus one <code>@recipe</code>. No backend, Ray, or orchestrator changes needed.</p>
+
+        <h3>Step 1 — Subclass a specialization</h3>
+        <pre><span class="cm"># rl_engine/trainer/specialization/my_algo.py</span>
+<span class="kw">from</span> collections.abc <span class="kw">import</span> Callable
+<span class="kw">from</span> typing <span class="kw">import</span> Any
+<span class="kw">import</span> torch
+<span class="kw">from</span> rl_engine.trainer.specialization.causal_decoder <span class="kw">import</span> CausalDecoderSpecialization
+<span class="kw">from</span> rl_engine.trainer.objectives.policy_loss <span class="kw">import</span> sum_of_sample_mean
+
+<span class="kw">class</span> <span class="fn">MyAlgoSpecialization</span>(CausalDecoderSpecialization):
+    <span class="kw">def</span> <span class="fn">compute_loss</span>(
+        self,
+        model_output: torch.Tensor,          <span class="cm"># [seq_len, vocab] (TP-local shard if TP&gt;1)</span>
+        batch: dict[str, Any],
+        reducer: Callable[[torch.Tensor], torch.Tensor],
+    ) -&gt; tuple[torch.Tensor, dict[str, torch.Tensor]]:
+        response_lengths = batch[<span class="st">"response_lengths"</span>]
+        loss_masks = batch[<span class="st">"loss_masks"</span>]
+        <span class="cm"># ... derive per-token student logprobs from model_output, then:</span>
+        per_token = my_kernel(...)                       <span class="cm"># shape [N_response]</span>
+        loss = sum_of_sample_mean(per_token, response_lengths, loss_masks)
+        loss = reducer(loss)                             <span class="cm"># slime CP-aware reduction</span>
+        <span class="kw">return</span> loss, {<span class="st">"my_loss"</span>: loss.detach()}</pre>
+
+        <h3>Step 2 — Register the recipe</h3>
+        <pre><span class="cm"># rl_engine/trainer/recipes.py</span>
+<span class="ar">@recipe</span>(<span class="st">"my_algo"</span>)
+<span class="kw">def</span> <span class="fn">my_algo_config</span>():
+    <span class="kw">from</span> rl_engine.trainer.specialization.my_algo <span class="kw">import</span> MyAlgoSpecialization
+    <span class="kw">return</span> TrainingConfig(
+        name=<span class="st">"my_algo"</span>,
+        roles=(
+            ModelRole(
+                name=<span class="st">"policy"</span>,
+                specialization_cls=MyAlgoSpecialization,
+                sync_to_rollout=<span class="kw">True</span>,          <span class="cm"># push weights to SGLang each step</span>
+            ),
+        ),
+        syncs=(),                                <span class="cm"># single role → no cross-model sync</span>
+        description=<span class="st">"My custom reverse-KL algorithm"</span>,
+    )</pre>
+
+        <h3>Step 3 — Launch it</h3>
+        <pre>python -m rl_engine.train <span class="ar">--algorithm</span> my_algo \
+    <span class="ar">--hf-checkpoint</span> /root/models/&lt;student&gt; \
+    <span class="ar">--ref-load</span> /root/models/&lt;student&gt;_torch_dist \
+    ...   <span class="cm"># the SWE launchers under scripts/train/swe/ wrap this</span></pre>
+
+        <div class="card green">
+          <h4>Scope of a recipe change</h4>
+          <p>Adding a second model is one more <code>ModelRole</code> + <code>DataSync</code> — the trainer wires the inject / exchange transport automatically; no orchestrator code.</p>
+        </div>
+      </section>
+
+      <!-- Section 6: Objectives reference -->
+      <section class="content-section">
+        <h2><span class="num">6</span> Objectives reference</h2>
+        <div class="table-scroll"><table>
+          <thead>
+            <tr><th>Module</th><th>Function</th><th>Role</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>policy_loss.py</code></td><td><code>compute_ppo_loss()</code></td><td>PPO clipped PG loss (+ optional dual-clip).</td></tr>
+            <tr><td><code>policy_loss.py</code></td><td><code>sum_of_sample_mean()</code></td><td>Sum-of-per-sample-means reduction (CP-aware denominator).</td></tr>
+            <tr><td><code>value_loss.py</code></td><td><code>compute_clipped_value_loss()</code></td><td>PPO-style clipped value loss.</td></tr>
+            <tr><td><code>logprob.py</code></td><td><code>compute_log_probs_and_entropy()</code></td><td>Logprob + entropy extraction from logits.</td></tr>
+            <tr><td><code>kl.py</code></td><td><code>compute_kl_divergence()</code></td><td>K1 / K2 / K3 / low_var_kl estimators.</td></tr>
+            <tr><td><code>advantage.py</code></td><td><code>compute_grpo_advantages()</code> / <code>compute_grpo_returns()</code></td><td>GRPO reward broadcast + whitening.</td></tr>
+            <tr><td><code>advantage.py</code></td><td><code>compute_chunked_gae()</code></td><td>Parallel-prefix GAE for PPO.</td></tr>
+            <tr><td><code>advantage.py</code></td><td><code>compute_reinforce_pp_returns()</code> / <code>…_baseline_advantages()</code></td><td>REINFORCE++ returns / baseline advantages.</td></tr>
+            <tr><td><code>advantage.py</code></td><td><code>apply_opd_kl_penalty()</code></td><td>Advantage-side OPD reverse-KL penalty.</td></tr>
+            <tr><td><code>dpo.py</code></td><td><code>compute_dpo_loss()</code></td><td>DPO / IPO / cDPO contrastive loss.</td></tr>
+            <tr><td><code>distillation_loss.py</code></td><td><code>compute_rkl_k3_sample()</code> / <code>compute_rkl_topk()</code></td><td>On-policy distillation reverse-KL (chosen-token / union-top-K).</td></tr>
+            <tr><td><code>divergences.py</code></td><td><code>compute_k3_kl()</code> / <code>compute_jsd_contribution()</code></td><td>Eval-time one-sample KL / JSD estimators (not training losses).</td></tr>
+            <tr><td><code>diffusion_loss.py</code></td><td><code>compute_flow_matching_loss()</code> / <code>compute_diffusion_rl_loss()</code></td><td>Flow-matching + reward-weighted diffusion objectives.</td></tr>
+          </tbody>
+        </table></div>
+      </section>
+
+      <!-- Section 7: Knob reference -->
+      <section class="content-section">
+        <h2><span class="num">7</span> Algorithm knobs</h2>
+        <p>Algorithm-level flags and env vars. Full launcher catalog: <span class="file-ref">scripts/train/swe/ENV_REFERENCE.md</span>.</p>
+        <div class="table-scroll"><table>
+          <thead>
+            <tr><th>Flag / env</th><th>Applies to</th><th>Default</th><th>Effect</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>--algorithm</code></td><td>all</td><td>inferred</td><td>Recipe key into <code>TRAINING_CONFIGS</code>; overrides <code>--advantage-estimator</code> inference.</td></tr>
+            <tr><td><code>--advantage-estimator</code></td><td>grpo family</td><td><code>grpo</code></td><td>Maps to <code>grpo</code> / <code>gspo</code> / <code>ppo</code> / <code>reinforce_pp[_baseline]</code>.</td></tr>
+            <tr><td><code>--use-kl-loss</code> + <code>--kl-loss-type</code> + <code>--kl-loss-coef</code></td><td>GRPO</td><td>off / <code>k1</code> / <code>0.1</code></td><td>KL anchor vs. <code>--ref-load</code>. GRPO launcher sets <code>low_var_kl</code>, <code>0.001</code>.</td></tr>
+            <tr><td><code>--dagger-schedule</code></td><td>dagger</td><td><code>linear</code></td><td>β decay: <code>linear</code> / <code>cosine</code> / <code>exponential</code> / <code>step</code>.</td></tr>
+            <tr><td><code>--dagger-beta-start</code> / <code>--dagger-beta-end</code></td><td>dagger</td><td><code>1.0</code> / <code>0.0</code></td><td>β at iter 0 / after decay (1.0 = teacher, 0.0 = student).</td></tr>
+            <tr><td><code>--dagger-decay-iters</code> / <code>--dagger-warmup-iters</code></td><td>dagger</td><td><code>10</code> / <code>0</code></td><td>Iters over which β decays / held at start first.</td></tr>
+            <tr><td><code>--dagger-tmax-start</code> / <code>-step</code> / <code>-cap</code></td><td>aggrevate</td><td><code>0/0/0</code> (launcher <code>0/20/100</code>)</td><td>κ-schedule <code>T_max(i)=min(start+step·i, cap)</code>; per-task <code>κ~U{0,T_max}</code>.</td></tr>
+            <tr><td><code>STACX_DAGGER_SAMPLING_MODE</code></td><td>dagger</td><td><code>mixture</code></td><td><code>mixture</code> (per-turn β) or <code>aggrevate_pure</code> (prefix/tail).</td></tr>
+            <tr><td><code>STACX_MIXED_LOSS_DAGGER</code></td><td>dagger</td><td><code>0</code></td><td><code>1</code> enables the per-token CE/K3 sentinel dispatch (auto-set for aggrevate).</td></tr>
+            <tr><td><code>STACX_DISTILL_KL_MODE</code></td><td>OPD</td><td><code>k3_sample</code></td><td><code>k3_sample</code> (TP-any) or <code>topk</code> (TP=1 only).</td></tr>
+            <tr><td><code>STACX_DISTILL_TOPK</code></td><td>OPD (topk)</td><td><code>20</code></td><td>Union-top-K size; must match rollout capture K.</td></tr>
+          </tbody>
+        </table></div>
+      </section>
+
+    </div><!-- .main-content -->
+  </div><!-- .layout -->
+<button class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark mode">Dark</button>
+<script>
+(function() {
+  var toggle = document.getElementById('themeToggle');
+  var saved = localStorage.getItem('stacx-theme');
+  if (saved === 'dark') {
+    document.documentElement.setAttribute('data-theme', 'dark');
+    toggle.textContent = 'Light';
+  }
+  toggle.addEventListener('click', function() {
+    var current = document.documentElement.getAttribute('data-theme');
+    if (current === 'dark') {
+      document.documentElement.removeAttribute('data-theme');
+      toggle.textContent = 'Dark';
+      localStorage.setItem('stacx-theme', 'light');
+    } else {
+      document.documentElement.setAttribute('data-theme', 'dark');
+      toggle.textContent = 'Light';
+      localStorage.setItem('stacx-theme', 'dark');
+    }
+  });
+})();
+</script>
+<script>
+(function(){
+  var nav=document.getElementById('docsNav'),btn=document.querySelector('.nav-toggle');
+  if(!nav||!btn)return;
+  btn.addEventListener('click',function(e){e.stopPropagation();var open=nav.getAttribute('data-open')==='true';nav.setAttribute('data-open',String(!open));btn.setAttribute('aria-expanded',String(!open));});
+  document.addEventListener('click',function(e){if(nav.getAttribute('data-open')==='true'&&!nav.contains(e.target))nav.setAttribute('data-open','false');});
+})();
+</script>
+</body>
+</html>

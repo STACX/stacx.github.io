@@ -1,0 +1,1312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Training Backends — STACX</title>
+<style>
+/* STACX Documentation — Shared Stylesheet
+   Dark theme */
+
+:root {
+  --bg: #ffffff;
+  --surface: #f6f8fa;
+  --surface2: #eaeef2;
+  --border: #d1d9e0;
+  --text: #1f2328;
+  --text-dim: #57606a;
+  --accent-blue: #0550ae;
+  --accent-green: #116329;
+  --accent-orange: #953800;
+  --accent-purple: #6e40c9;
+  --accent-red: #cf222e;
+  --accent-cyan: #0c5a6d;
+  --nav-width: 260px;
+}
+
+[data-theme="dark"] {
+  --bg: #0d1117;
+  --surface: #161b22;
+  --surface2: #1c2128;
+  --border: #30363d;
+  --text: #e6edf3;
+  --text-dim: #8b949e;
+  --accent-blue: #58a6ff;
+  --accent-green: #3fb950;
+  --accent-orange: #d29922;
+  --accent-purple: #bc8cff;
+  --accent-red: #f85149;
+  --accent-cyan: #56d4dd;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', system-ui, sans-serif;
+  line-height: 1.6;
+}
+
+/* ── Navigation Sidebar ────────────────────────────────── */
+
+.nav-sidebar {
+  position: fixed;
+  top: 0; left: 0;
+  width: var(--nav-width);
+  height: 100vh;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  padding: 24px 0;
+  overflow-y: auto;
+  z-index: 100;
+}
+
+.nav-logo {
+  padding: 0 20px;
+  margin-bottom: 24px;
+}
+
+.nav-logo h2 {
+  font-size: 18px;
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.nav-logo .version {
+  font-size: 11px;
+  color: var(--text-dim);
+  margin-top: 2px;
+}
+
+.nav-section {
+  padding: 0 12px;
+  margin-bottom: 8px;
+}
+
+.nav-section-title {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--text-dim);
+  padding: 8px 8px 4px 8px;
+}
+
+.nav-link {
+  display: block;
+  padding: 6px 12px;
+  border-radius: 6px;
+  color: var(--text-dim);
+  text-decoration: none;
+  font-size: 13px;
+  transition: all 0.15s;
+}
+
+.nav-link:hover {
+  background: var(--surface2);
+  color: var(--text);
+}
+
+.nav-link.active {
+  background: rgba(56, 139, 253, 0.12);
+  color: var(--accent-blue);
+  font-weight: 500;
+}
+
+.nav-link .placeholder-tag {
+  font-size: 9px;
+  padding: 1px 5px;
+  border-radius: 3px;
+  background: rgba(139, 148, 158, 0.15);
+  color: var(--text-dim);
+  margin-left: 6px;
+  vertical-align: middle;
+}
+
+/* ── Main Content ──────────────────────────────────────── */
+
+.main-content {
+  margin-left: var(--nav-width);
+  padding: 48px 48px 80px 48px;
+  max-width: 960px;
+}
+
+h1 {
+  font-size: 32px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.page-subtitle {
+  color: var(--text-dim);
+  font-size: 15px;
+  margin-bottom: 40px;
+}
+
+h2 {
+  font-size: 22px;
+  font-weight: 600;
+  margin: 48px 0 16px 0;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+h2 .num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--accent-blue);
+  color: var(--bg);
+  font-size: 14px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+h3 {
+  font-size: 17px;
+  font-weight: 600;
+  margin: 28px 0 10px 0;
+  color: var(--accent-blue);
+}
+
+h4 {
+  font-size: 14px;
+  font-weight: 600;
+  margin: 16px 0 6px 0;
+  color: var(--accent-green);
+}
+
+p { margin-bottom: 12px; font-size: 14px; }
+
+ul, ol {
+  margin: 8px 0 16px 24px;
+  font-size: 14px;
+}
+
+li { margin-bottom: 4px; }
+
+/* ── Cards ─────────────────────────────────────────────── */
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 20px 24px;
+  margin-bottom: 16px;
+}
+
+.card.blue   { border-left: 3px solid var(--accent-blue); }
+.card.green  { border-left: 3px solid var(--accent-green); }
+.card.orange { border-left: 3px solid var(--accent-orange); }
+.card.purple { border-left: 3px solid var(--accent-purple); }
+.card.red    { border-left: 3px solid var(--accent-red); }
+.card.cyan   { border-left: 3px solid var(--accent-cyan); }
+
+.card h4 { margin-top: 0; }
+.card p:last-child { margin-bottom: 0; }
+
+/* ── Callout Grid ──────────────────────────────────────── */
+
+.callout-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px;
+  margin: 16px 0 24px 0;
+}
+
+.callout {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.callout h4 {
+  font-size: 14px;
+  font-weight: 600;
+  margin: 0 0 4px 0;
+}
+
+.callout p {
+  font-size: 13px;
+  color: var(--text-dim);
+  margin: 0;
+}
+
+/* ── Code ──────────────────────────────────────────────── */
+
+code {
+  font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+  font-size: 12px;
+  background: rgba(110, 118, 129, 0.15);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+pre {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px 20px;
+  overflow-x: auto;
+  font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+  font-size: 12px;
+  line-height: 1.6;
+  margin: 10px 0 16px 0;
+  color: var(--text);
+}
+
+pre code {
+  background: none;
+  padding: 0;
+  font-size: inherit;
+}
+
+.code-ref {
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  font-size: 12px;
+  color: var(--accent-orange);
+  background: rgba(210, 153, 34, 0.1);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.file-ref {
+  color: var(--text-dim);
+  font-size: 12px;
+  font-style: italic;
+}
+
+/* syntax coloring in pre blocks */
+.kw { color: var(--accent-purple); }
+.fn { color: var(--accent-blue); }
+.cm { color: var(--text-dim); }
+.st { color: var(--accent-green); }
+.ar { color: var(--accent-orange); font-weight: 600; }
+
+/* ── Tables ────────────────────────────────────────────── */
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 12px 0 24px 0;
+  font-size: 13px;
+}
+
+th {
+  text-align: left;
+  padding: 10px 12px;
+  border-bottom: 2px solid var(--border);
+  color: var(--accent-blue);
+  font-weight: 600;
+}
+
+td {
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+tr:hover td {
+  background: rgba(56, 139, 253, 0.04);
+}
+
+/* ── Flow Diagrams ─────────────────────────────────────── */
+
+.diagram {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 24px;
+  margin: 16px 0;
+  overflow-x: auto;
+}
+
+.diagram pre {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  color: var(--text-dim);
+}
+
+/* ── Tags / Badges ─────────────────────────────────────── */
+
+.tag {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.tag-blue   { background: rgba(56, 139, 253, 0.15); color: var(--accent-blue); }
+.tag-green  { background: rgba(63, 185, 80, 0.15); color: var(--accent-green); }
+.tag-orange { background: rgba(210, 153, 34, 0.15); color: var(--accent-orange); }
+.tag-purple { background: rgba(188, 140, 255, 0.15); color: var(--accent-purple); }
+.tag-red    { background: rgba(248, 81, 73, 0.15); color: var(--accent-red); }
+
+/* ── Placeholder Banner ────────────────────────────────── */
+
+.placeholder-banner {
+  background: var(--surface2);
+  border: 1px dashed var(--border);
+  border-radius: 10px;
+  padding: 48px 32px;
+  text-align: center;
+  margin: 32px 0;
+}
+
+.placeholder-banner h3 {
+  color: var(--text-dim);
+  margin-bottom: 8px;
+}
+
+.placeholder-banner p {
+  color: var(--text-dim);
+  font-size: 14px;
+}
+
+/* ── Comparison Grid ───────────────────────────────────── */
+
+.comparison-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin: 16px 0;
+}
+
+.comparison-col {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+  overflow-x: auto;
+}
+
+.comparison-col h3 {
+  font-size: 16px;
+  text-align: center;
+  margin-top: 0;
+}
+
+/* ── Feature Grid ──────────────────────────────────────── */
+
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+  margin: 16px 0 24px 0;
+}
+
+.feature-item {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.feature-item h4 {
+  margin: 0 0 4px 0;
+  font-size: 13px;
+}
+
+.feature-item p {
+  font-size: 12px;
+  color: var(--text-dim);
+  margin: 0;
+}
+
+/* ── Responsive ────────────────────────────────────────── */
+
+@media (max-width: 900px) {
+  .nav-sidebar { display: none; }
+  .main-content { margin-left: 0; padding: 24px; }
+  .comparison-grid { grid-template-columns: 1fr; }
+}
+
+.flow-chart {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 24px;
+  margin: 16px 0;
+  overflow-x: auto;
+}
+.flow-node {
+  display: inline-block;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 6px 14px;
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  font-size: 12px;
+  color: var(--accent-blue);
+  margin: 4px 0;
+}
+.flow-node.flow-root {
+  background: rgba(56,139,253,0.15);
+  border-color: var(--accent-blue);
+  font-weight: 600;
+  font-size: 13px;
+}
+.flow-node.flow-small {
+  font-size: 11px;
+  padding: 4px 10px;
+}
+.flow-node.flow-green { color: var(--accent-green); border-color: var(--accent-green); }
+.flow-node.flow-orange { color: var(--accent-orange); border-color: var(--accent-orange); }
+.flow-node.flow-purple { color: var(--accent-purple); border-color: var(--accent-purple); }
+.flow-children {
+  margin-left: 28px;
+  padding-left: 16px;
+  border-left: 2px solid var(--border);
+}
+.flow-branch {
+  position: relative;
+  padding: 2px 0;
+}
+.flow-branch::before {
+  content: '';
+  position: absolute;
+  left: -16px;
+  top: 14px;
+  width: 16px;
+  height: 0;
+  border-top: 2px solid var(--border);
+}
+.flow-arrow {
+  display: block;
+  text-align: center;
+  color: var(--text-dim);
+  font-size: 18px;
+  margin: 4px 0;
+  line-height: 1;
+}
+
+.theme-toggle {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  z-index: 200;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 6px 12px;
+  color: var(--text);
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+.theme-toggle:hover {
+  background: var(--surface2);
+  border-color: var(--accent-blue);
+}
+/* shared: readable content links in both themes */
+.main-content a, .main-content a code { color: var(--accent-blue); }
+.main-content a:hover { color: var(--accent-cyan); }
+
+/* page-local */
+.diagram svg { width: 100%; height: auto; display: block; }
+.fig-cap { color: var(--text-dim); font-size: 12px; margin: 4px 0 0 0; text-align: center; }
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 16px 0; }
+.two-col > div { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 16px 20px; }
+.two-col h4 { margin-top: 0; }
+.two-col ul { margin-bottom: 0; }
+@media (max-width: 900px) { .two-col { grid-template-columns: 1fr; } }
+td code { white-space: nowrap; }
+
+/* ── Infra-section additions ───────────────────────────── */
+.wsync-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin: 16px 0 24px; }
+.wsync-grid .card { margin-bottom: 0; }
+.subtle { color: var(--text-dim); font-size: 13px; }
+.diagram .cap { color: var(--text-dim); font-size: 12px; line-height: 1.5; margin-top: 12px; text-align: center; }
+
+/* ── Refinement layer: typography, response, materials ── */
+
+html { scroll-behavior: smooth; scroll-padding-top: 24px; }
+
+body {
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  font-optical-sizing: auto;
+}
+
+::selection { background: rgba(56, 139, 253, 0.22); }
+
+/* Type — size-specific tracking and leading */
+h1 {
+  background: none;
+  -webkit-text-fill-color: var(--text);
+  color: var(--text);
+  letter-spacing: -0.022em;
+  line-height: 1.15;
+  text-wrap: balance;
+}
+h2 { letter-spacing: -0.015em; text-wrap: balance; }
+h3 { letter-spacing: -0.008em; }
+p { font-size: 14.5px; line-height: 1.65; }
+ul, ol { font-size: 14.5px; }
+li { line-height: 1.6; }
+.page-subtitle { font-size: 16px; text-wrap: pretty; }
+
+/* Quieter chrome — tint instead of fill, neutral table headers */
+h2 .num {
+  background: rgba(56, 139, 253, 0.13);
+  color: var(--accent-blue);
+  font-weight: 650;
+}
+th {
+  color: var(--text-dim);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+table { font-variant-numeric: tabular-nums; }
+
+/* Gentle depth on resting surfaces */
+.card, .diagram, .comparison-col { box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04); }
+
+/* Response — feedback on press, not just hover */
+.nav-link, .theme-toggle, .hero-card, .view-toggle-btn {
+  transition: background 0.15s ease-out, color 0.15s ease-out,
+              border-color 0.15s ease-out, transform 0.15s ease-out;
+}
+.nav-link:active, .view-toggle-btn:active { transform: scale(0.98); transition-duration: 0.05s; }
+.theme-toggle:active { transform: scale(0.96); transition-duration: 0.05s; }
+.hero-card:active { transform: translateY(0) scale(0.99); transition-duration: 0.05s; }
+.main-content a:active { opacity: 0.65; }
+
+:focus-visible { outline: 2px solid var(--accent-blue); outline-offset: 2px; border-radius: 4px; }
+
+.nav-sidebar { scrollbar-width: thin; }
+
+/* Floating chrome reads as material — content scrolls beneath it */
+.theme-toggle {
+  background: color-mix(in srgb, var(--surface) 72%, transparent);
+  backdrop-filter: blur(12px) saturate(180%);
+  -webkit-backdrop-filter: blur(12px) saturate(180%);
+  box-shadow: 0 1px 3px rgba(16, 24, 40, 0.07);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { transition-duration: 0.01ms !important; animation: none !important; }
+}
+@media (prefers-reduced-transparency: reduce) {
+  .theme-toggle {
+    background: var(--surface);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+}
+
+/* ── Refinement layer v2: beauty pass ── */
+
+/* Sidebar — calmer rhythm, tactile links */
+.nav-sidebar { padding: 20px 0 28px; }
+.nav-sidebar::-webkit-scrollbar { width: 8px; }
+.nav-sidebar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+.nav-logo { padding: 4px 20px 0; margin-bottom: 20px; }
+.nav-section { margin-bottom: 14px; }
+.nav-section-title { padding: 10px 10px 6px; }
+.nav-link { padding: 6px 10px; border-radius: 7px; }
+.nav-link.active { font-weight: 600; }
+
+/* Section rules — the divider fades out instead of cutting across */
+h2 { border-bottom: none; padding-bottom: 10px; position: relative; margin-top: 52px; }
+h2::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 1px;
+  background: linear-gradient(90deg, var(--border) 55%, transparent);
+}
+
+/* Surfaces — rounder, softer */
+.card, .diagram, .comparison-col { border-radius: 12px; }
+pre, .callout { border-radius: 10px; }
+
+/* Tables — enclosed, rounded, quiet */
+table {
+  border-collapse: separate; border-spacing: 0;
+  border: 1px solid var(--border); border-radius: 10px; overflow: hidden;
+}
+th { background: var(--surface); border-bottom: 1px solid var(--border); padding: 10px 14px; }
+td { padding: 9px 14px; }
+tr:last-child td { border-bottom: none; }
+th:first-child { border-top-left-radius: 9px; }
+th:last-child { border-top-right-radius: 9px; }
+tr:last-child td:first-child { border-bottom-left-radius: 9px; }
+tr:last-child td:last-child { border-bottom-right-radius: 9px; }
+
+/* Floating toggle as a pill */
+.theme-toggle { border-radius: 999px; padding: 7px 14px; font-weight: 600; }
+
+/* Landing hero — faint atmospheric wash, icon chips, deeper card lift */
+.hero { position: relative; }
+.hero::before {
+  content: ""; position: absolute; inset: -48px -80px 0; z-index: -1; pointer-events: none;
+  background:
+    radial-gradient(55% 45% at 50% 0%, rgba(56, 139, 253, 0.07), transparent 70%),
+    radial-gradient(35% 35% at 82% 12%, rgba(188, 140, 255, 0.05), transparent 70%);
+}
+.hero h1 { font-size: 54px; letter-spacing: -0.03em; }
+.hero .tagline { font-size: 19px; text-wrap: pretty; }
+.hero-card {
+  border-radius: 14px; padding: 26px 24px;
+  box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04);
+}
+.hero-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 28px rgba(16, 24, 40, 0.08);
+}
+.hero-card .icon {
+  width: 46px; height: 46px; display: inline-grid; place-items: center;
+  background: var(--surface2); border-radius: 12px;
+  font-size: 22px; margin-bottom: 14px;
+}
+
+/* ── Refinement v3: professional pass (external design review) ── */
+
+html { color-scheme: light; }
+[data-theme="dark"] { color-scheme: dark; }
+
+/* Type scale — larger, less compressed */
+body { font-size: 15.5px; }
+p, ul, ol { font-size: inherit; }
+h1 { font-size: 36px; line-height: 1.12; }
+h2 { font-size: 23px; margin: 56px 0 20px; }
+h3 { font-size: 18px; margin: 32px 0 12px; }
+h4 { font-size: 15px; }
+.page-subtitle { font-size: 17px; line-height: 1.55; max-width: 70ch; margin-bottom: 48px; }
+
+/* One accent — headings are neutral ink */
+h3, h4 { color: var(--text); }
+
+/* Code — relative inline sizing, comfortable blocks */
+code { font-size: 0.875em; padding: 0.12em 0.35em; border-radius: 4px; }
+pre { font-size: 13.5px; line-height: 1.55; padding: 18px 20px; tab-size: 2; }
+pre code { font-size: inherit; padding: 0; }
+
+/* Tables scroll instead of squeezing */
+.table-scroll { overflow-x: auto; margin: 12px 0 24px; border: 1px solid var(--border); border-radius: 10px; }
+.table-scroll table { min-width: 640px; margin: 0; border: 0; }
+td { vertical-align: top; line-height: 1.55; }
+
+/* Diagrams — legible labels, editorial captions */
+.diagram svg, .arch-diagram svg { display: block; width: 100%; height: auto; }
+.diagram svg text[font-size="9"], .diagram svg text[font-size="10"],
+.arch-diagram svg text[font-size="9"], .arch-diagram svg text[font-size="10"] { font-size: 11px; }
+.fig-caption { font-style: normal; text-align: left; font-size: 12.5px; margin: 10px 0 12px; max-width: none; }
+
+/* Landing hero actions + icon chips */
+.hero-actions { display: flex; justify-content: center; gap: 10px; margin: 26px 0 8px; }
+.main-content a.button-primary, .main-content a.button-secondary {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 9px 16px; border-radius: 8px; font-size: 14px; font-weight: 600; text-decoration: none;
+  transition: background 0.15s ease-out, border-color 0.15s ease-out,
+              filter 0.15s ease-out, transform 0.15s ease-out;
+}
+.main-content a.button-primary { background: var(--accent-blue); color: #fff; }
+.main-content a.button-primary:hover { filter: brightness(1.1); color: #fff; }
+.main-content a.button-secondary { border: 1px solid var(--border); background: var(--surface); color: var(--text); }
+.main-content a.button-secondary:hover { border-color: var(--accent-blue); color: var(--text); }
+.main-content a.button-primary:active, .main-content a.button-secondary:active { transform: scale(0.97); }
+.hero-card .icon svg { width: 22px; height: 22px; color: var(--accent-blue); }
+
+/* Mobile navigation — header + slide-in sidebar */
+.mobile-header { display: none; }
+@media (max-width: 900px) {
+  .mobile-header {
+    display: flex; position: sticky; top: 0; z-index: 220; height: 52px;
+    align-items: center; justify-content: space-between; padding: 0 16px;
+    background: var(--bg);
+    background: color-mix(in srgb, var(--bg) 88%, transparent);
+    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+  .mobile-header .mh-brand { font-weight: 700; font-size: 16px; color: var(--text); text-decoration: none; }
+  .nav-toggle {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+    padding: 6px 14px; font: inherit; font-size: 13.5px; font-weight: 600;
+    color: var(--text); cursor: pointer;
+  }
+  .nav-sidebar {
+    display: block; z-index: 240; transform: translateX(-100%);
+    transition: transform 200ms cubic-bezier(0.23, 1, 0.32, 1);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.18);
+  }
+  .nav-sidebar[data-open="true"] { transform: none; }
+  .mobile-header ~ .theme-toggle { top: 62px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .nav-sidebar { transition: none; }
+}
+
+/* ── Coding font + chromeless figures ── */
+code, pre, .code-ref {
+  font-family: ui-monospace, "SF Mono", Menlo, "JetBrains Mono", "Fira Code", Consolas, monospace;
+}
+.diagram, .arch-diagram { background: none; border: none; box-shadow: none; padding: 12px 0; }
+
+/* ── Lighter surfaces for code blocks and callouts ── */
+pre, .callout {
+  background: var(--surface);
+  background: color-mix(in srgb, var(--surface) 55%, var(--bg));
+}
+</style>
+<script>try{if(localStorage.getItem('stacx-theme')==='dark')document.documentElement.setAttribute('data-theme','dark');}catch(e){}</script>
+</head>
+<body>
+<header class="mobile-header"><a class="mh-brand" href="index.html">STACX</a><button class="nav-toggle" type="button" aria-controls="docsNav" aria-expanded="false">Menu</button></header>
+
+<nav class="nav-sidebar" id="docsNav">
+  <div class="nav-logo">
+    <h2>STACX</h2>
+    <div class="version">v1.0 Documentation</div>
+  </div>
+  <div class="nav-section">
+    <div class="nav-section-title">Overview</div>
+    <a href="index.html" class="nav-link">Home</a>
+    <a href="getting-started.html" class="nav-link">Getting Started</a>
+  </div>
+  <div class="nav-section">
+    <div class="nav-section-title">Trainer</div>
+    <a href="architecture.html" class="nav-link">Architecture</a>
+    <a href="backends.html" class="nav-link active">Backends</a>
+    <a href="recipes.html" class="nav-link">Algorithm Recipes</a>
+  </div>
+  <div class="nav-section">
+    <div class="nav-section-title">Rollout</div>
+    <a href="rollout.html" class="nav-link">Architecture</a>
+    <a href="rollout-scheduler.html" class="nav-link">Task Scheduler</a>
+    <a href="rollout-inference.html" class="nav-link">Inference Backend</a>
+  </div>
+  <div class="nav-section">
+    <div class="nav-section-title">Environment</div>
+    <a href="environment.html" class="nav-link">Architecture</a>
+    <a href="env-sandbox.html" class="nav-link">Sandbox Management</a>
+  </div>
+
+</nav>
+
+<div class="main-content">
+
+<h1>Training Backends</h1>
+<p class="page-subtitle">One <code>TrainBackend</code> interface, two implementations — Megatron-LM (TP/PP/DP/CP) and PyTorch FSDP v2 (HuggingFace-native) — plus the runtime infrastructure they share: Ray placement, weight sync, checkpointing, memory, and logging.</p>
+
+<div class="callout-grid">
+  <div class="callout"><h4>The contract</h4><p><code>TrainBackend</code> (base.py): seven abstract methods for setup, training, weight sync, and checkpointing. The loss comes from a <a href="recipes.html">specialization</a>, not the backend.</p></div>
+  <div class="callout"><h4>Two backends</h4><p><code>MegatronBackend</code> (TP/PP/DP/CP) is the default for scale; <code>FSDPBackend</code> (FSDP v2, HF-native, DP-only) suits smaller runs.</p></div>
+  <div class="callout"><h4>Shared runtime</h4><p>Ray placement, weight sync to SGLang, torch_dist / DCP checkpoints, 3-tier sleep/wake, and W&amp;B logging (§6).</p></div>
+</div>
+
+<!-- ── Section 1 ─────────────────────────────────────────── -->
+<h2><span class="num">1</span> The backend contract</h2>
+
+<p>The trainer selects a backend from <code>args.train_backend</code> (<span class="file-ref">ray/train_worker.py</span>) and drives it through one interface. Each step calls the specialization hooks <code>compute_advantages()</code> → <code>prepare_batch()</code> → <code>extract_model_output()</code> → <code>compute_loss()</code>.</p>
+
+<div class="diagram">
+<svg style="max-width:790px;display:block;margin:0 auto;" viewBox="0 0 960 566" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="bs-title bs-desc" font-family="system-ui, sans-serif">
+  <title id="bs-title">Backend stack</title>
+  <desc id="bs-desc">StacxTrainer selects a TrainBackend implementation; Megatron and FSDP columns show their internals; both sync weights out to SGLang.</desc>
+  <defs>
+    <marker id="bs-arr" viewBox="0 0 10 7" refX="9" refY="3.5" markerWidth="8" markerHeight="6" orient="auto"><path d="M0,0 L10,3.5 L0,7z" style="fill:var(--text-dim)"/></marker>
+  </defs>
+
+  <!-- Trainer -->
+  <rect x="280" y="16" width="400" height="54" rx="10" fill="rgba(87,96,106,0.05)" style="stroke:var(--text-dim)" stroke-width="1.3"/>
+  <text x="480" y="39" text-anchor="middle" style="fill:var(--text)" font-size="16" font-weight="700">StacxTrainer</text>
+  <text x="480" y="58" text-anchor="middle" style="fill:var(--text-dim)" font-size="12">owns the loop · selects backend via --train-backend</text>
+  <line x1="480" y1="70" x2="480" y2="94" style="stroke:var(--text-dim)" stroke-width="1.5" marker-end="url(#bs-arr)"/>
+  <text x="488" y="86" text-anchor="start" style="fill:var(--text-dim)" font-size="11" font-weight="600">TrainWorker.init()</text>
+
+  <!-- Interface -->
+  <rect x="120" y="96" width="720" height="80" rx="10" fill="rgba(87,96,106,0.05)" stroke="none"/>
+  <text x="480" y="118" text-anchor="middle" style="fill:var(--text)" font-size="16" font-weight="700">TrainBackend interface &#183; base.py</text>
+  <g font-size="11" font-weight="600">
+    <rect x="165" y="132" width="54" height="28" rx="6" fill="rgba(87,96,106,0.08)" style="stroke:var(--text-dim)" stroke-width="1" stroke-opacity="0.5"/><text x="192" y="150" text-anchor="middle" style="fill:var(--text)">init</text>
+    <rect x="237" y="132" width="76" height="28" rx="6" fill="rgba(87,96,106,0.08)" style="stroke:var(--text-dim)" stroke-width="1" stroke-opacity="0.5"/><text x="275" y="150" text-anchor="middle" style="fill:var(--text)">train()</text>
+    <rect x="331" y="132" width="168" height="28" rx="6" fill="rgba(87,96,106,0.08)" style="stroke:var(--text-dim)" stroke-width="1" stroke-opacity="0.5"/><text x="415" y="150" text-anchor="middle" style="fill:var(--text)">update_weights()</text>
+    <rect x="517" y="132" width="128" height="28" rx="6" fill="rgba(87,96,106,0.08)" style="stroke:var(--text-dim)" stroke-width="1" stroke-opacity="0.5"/><text x="581" y="150" text-anchor="middle" style="fill:var(--text)">save_model()</text>
+    <rect x="663" y="132" width="132" height="28" rx="6" fill="rgba(87,96,106,0.08)" style="stroke:var(--text-dim)" stroke-width="1" stroke-opacity="0.5"/><text x="729" y="150" text-anchor="middle" style="fill:var(--text)">sleep / wake_up</text>
+  </g>
+
+  <!-- branch arrows -->
+  <line x1="240" y1="176" x2="240" y2="206" style="stroke:var(--text-dim)" stroke-width="1.5" marker-end="url(#bs-arr)"/>
+  <text x="248" y="196" text-anchor="start" style="fill:var(--accent-blue)" font-size="11" font-weight="600">megatron</text>
+  <line x1="720" y1="176" x2="720" y2="206" style="stroke:var(--text-dim)" stroke-width="1.5" marker-end="url(#bs-arr)"/>
+  <text x="728" y="196" text-anchor="start" style="fill:var(--accent-green)" font-size="11" font-weight="600">fsdp</text>
+
+  <!-- Megatron column -->
+  <rect x="30" y="208" width="420" height="244" rx="10" fill="rgba(5,80,174,0.05)" stroke="none"/>
+  <text x="240" y="232" text-anchor="middle" style="fill:var(--accent-blue)" font-size="16" font-weight="700">MegatronBackend</text>
+  <text x="240" y="250" text-anchor="middle" style="fill:var(--text-dim)" font-size="12">backends/megatron.py</text>
+  <g font-size="12">
+    <rect x="46" y="262" width="388" height="30" rx="6" fill="rgba(5,80,174,0.05)" style="stroke:var(--accent-blue)" stroke-width="1" stroke-opacity="0.35"/><text x="240" y="282" text-anchor="middle" style="fill:var(--text)">TP &#183; PP &#183; DP &#183; CP  —  parallel_state</text>
+    <rect x="46" y="310" width="388" height="30" rx="6" fill="rgba(5,80,174,0.05)" style="stroke:var(--accent-blue)" stroke-width="1" stroke-opacity="0.35"/><text x="240" y="330" text-anchor="middle" style="fill:var(--text)">DistributedOptimizer &#183; offload_to_cpu()</text>
+    <rect x="46" y="358" width="388" height="30" rx="6" fill="rgba(5,80,174,0.05)" style="stroke:var(--accent-blue)" stroke-width="1" stroke-opacity="0.35"/><text x="240" y="378" text-anchor="middle" style="fill:var(--text)">torch_dist ckpt  —  load / save / ref-load</text>
+    <rect x="46" y="406" width="388" height="30" rx="6" fill="rgba(5,80,174,0.05)" style="stroke:var(--accent-blue)" stroke-width="1" stroke-opacity="0.35"/><text x="240" y="426" text-anchor="middle" style="fill:var(--text)">packed THD &#183; max_tokens_per_gpu</text>
+  </g>
+
+  <!-- FSDP column -->
+  <rect x="510" y="208" width="420" height="244" rx="10" fill="rgba(17,99,41,0.05)" stroke="none"/>
+  <text x="720" y="232" text-anchor="middle" style="fill:var(--accent-green)" font-size="16" font-weight="700">FSDPBackend</text>
+  <text x="720" y="250" text-anchor="middle" style="fill:var(--text-dim)" font-size="12">backends/fsdp.py</text>
+  <g font-size="12">
+    <rect x="526" y="262" width="388" height="30" rx="6" fill="rgba(17,99,41,0.05)" style="stroke:var(--accent-green)" stroke-width="1" stroke-opacity="0.35"/><text x="720" y="282" text-anchor="middle" style="fill:var(--text)">fully_shard &#183; 1-D device mesh (dp,)</text>
+    <rect x="526" y="310" width="388" height="30" rx="6" fill="rgba(17,99,41,0.05)" style="stroke:var(--accent-green)" stroke-width="1" stroke-opacity="0.35"/><text x="720" y="330" text-anchor="middle" style="fill:var(--text)">AdamW &#183; PyTorch DCP checkpoint</text>
+    <rect x="526" y="358" width="388" height="30" rx="6" fill="rgba(17,99,41,0.05)" style="stroke:var(--accent-green)" stroke-width="1" stroke-opacity="0.35"/><text x="720" y="378" text-anchor="middle" style="fill:var(--text)">HF AutoModelForCausalLM</text>
+    <rect x="526" y="406" width="388" height="30" rx="6" fill="rgba(17,99,41,0.05)" style="stroke:var(--accent-green)" stroke-width="1" stroke-opacity="0.35"/><text x="720" y="426" text-anchor="middle" style="fill:var(--text)">grad-accum: skip reduce-scatter</text>
+  </g>
+
+  <!-- weight-sync bus -->
+  <line x1="240" y1="452" x2="240" y2="478" style="stroke:var(--text-dim)" stroke-width="1.5"/>
+  <line x1="720" y1="452" x2="720" y2="478" style="stroke:var(--text-dim)" stroke-width="1.5"/>
+  <line x1="240" y1="478" x2="720" y2="478" style="stroke:var(--text-dim)" stroke-width="1.5"/>
+  <text x="480" y="471" text-anchor="middle" style="fill:var(--text-dim)" font-size="12" font-weight="600">update_weights()  →  NCCL broadcast / CPU shared-mem</text>
+  <line x1="480" y1="478" x2="480" y2="494" style="stroke:var(--text-dim)" stroke-width="1.5" marker-end="url(#bs-arr)"/>
+
+  <!-- SGLang -->
+  <rect x="310" y="496" width="340" height="52" rx="10" fill="rgba(12,90,109,0.06)" style="stroke:var(--accent-cyan)" stroke-width="1.5"/>
+  <text x="480" y="518" text-anchor="middle" style="fill:var(--accent-cyan)" font-size="15" font-weight="700">SGLang rollout engines</text>
+  <text x="480" y="536" text-anchor="middle" style="fill:var(--text-dim)" font-size="11">inference &#183; weight-synced each iteration</text>
+</svg>
+<p class="fig-cap">Backend stack: one interface, two implementations, weights synced to SGLang each iteration.</p>
+</div>
+
+<!-- ── Section 2 ─────────────────────────────────────────── -->
+<h2><span class="num">2</span> backends/base.py — <code>TrainBackend</code> interface</h2>
+
+<p>Seven abstract methods define the surface each backend implements; the rest of <code>base.py</code> is shared machinery.</p>
+
+<h3>Abstract surface</h3>
+<div class="table-scroll"><table>
+  <tr><th>Method</th><th>Contract</th></tr>
+  <tr><td><code>init(args, role, with_ref, with_opd_teacher, specialization_cls)</code></td><td>Full setup: distributed groups → model → optimizer → weight sync → checkpoint load → specialization. Returns the rollout id to resume from, or <code>None</code>.</td></tr>
+  <tr><td><code>_setup_optimizer()</code></td><td>Create the optimizer + LR scheduler (Megatron distributed optimizer, or PyTorch AdamW).</td></tr>
+  <tr><td><code>train(rollout_id, rollout_data, specialization_key)</code></td><td>One full iteration: preprocess → ref/teacher/old log probs → advantages → forward/backward/step. Returns a metrics dict.</td></tr>
+  <tr><td><code>update_weights()</code></td><td>Push updated weights to the rollout (SGLang) engines. No-op when no rollout manager is attached (<code>--debug-train-only</code>).</td></tr>
+  <tr><td><code>save_model(rollout_id, force_sync)</code></td><td>Write model + optimizer + LR-scheduler state in the backend's checkpoint format.</td></tr>
+  <tr><td><code>sleep(tags)</code> / <code>wake_up(tags)</code></td><td>Offload GPU state before inference / restore it before training (colocated GPU sharing).</td></tr>
+</table></div>
+
+<h3>Shared concretes</h3>
+<p><code>forward_only()</code> (no-grad log-probs), <code>maybe_compute_ref/teacher_log_probs()</code> (frozen model for FSDP, weight-tag switch for Megatron), <code>preprocess_rollout_data()</code> (DP shard + move to CUDA), and <code>backup/restore/switch_weights(tag)</code> via the <a href="#runtime-infrastructure"><code>WeightManager</code></a>.</p>
+
+<h3>Key attributes</h3>
+<div class="card blue">
+  <div class="table-scroll"><table>
+    <tr><th>Attribute</th><th>Description</th></tr>
+    <tr><td><code>model</code></td><td>The trainable model — a Megatron <code>list[DDP]</code> chunk list, or an FSDP-wrapped HF <code>AutoModelForCausalLM</code>.</td></tr>
+    <tr><td><code>ref_model</code></td><td>Separate frozen reference model. Populated only by FSDP; Megatron uses a weight tag instead (stays <code>None</code>).</td></tr>
+    <tr><td><code>optimizer</code> / <code>lr_scheduler</code></td><td>Megatron distributed optimizer + its scheduler, or PyTorch <code>AdamW</code> + <code>FSDPLRScheduler</code>.</td></tr>
+    <tr><td><code>specializations</code></td><td>Dict of <code>role&nbsp;name&nbsp;→&nbsp;ModelSpecialization</code>. No role-string dispatch: the backend just looks up the key.</td></tr>
+    <tr><td><code>weight_manager</code></td><td><code>WeightManager</code> for multi-tag backup/restore/switch (<code>actor</code>, <code>ref</code>, <code>teacher</code>, <code>old_actor</code>).</td></tr>
+    <tr><td><code>process_groups</code></td><td><code>ProcessGroupManager</code> — Megatron TP/PP/DP/CP groups, or the FSDP 1-D device mesh.</td></tr>
+    <tr><td><code>worker_sync</code></td><td><code>WorkerSync</code> for two-sided NCCL <strong>exchange syncs</strong> between worker groups (used by PPO's value↔policy).</td></tr>
+    <tr><td><code>dp/tp/pp/cp _size</code> &amp; <code>_rank</code></td><td>Parallel dimensions. FSDP populates only <code>dp_*</code>; the rest stay 1/0.</td></tr>
+  </table></div>
+</div>
+
+<div class="card orange">
+  <h4>Out of scope</h4>
+  <p>Advantage estimation, KL, clipping → <a href="recipes.html">specialization</a>. Rollout logic, task scheduling, sandbox → <a href="rollout.html">rollout</a>/<a href="environment.html">environment</a>.</p>
+</div>
+
+<!-- ── Section 3 ─────────────────────────────────────────── -->
+<h2><span class="num">3</span> Backends &mdash; <code>megatron.py</code> &amp; <code>fsdp.py</code></h2>
+
+<p><span class="file-ref">backends/megatron.py</span> &mdash; <code>MegatronBackend</code>, the default, built on slime + <code>rl_engine/utils/megatron.py</code>: TP/PP/DP/CP parallelism, a CPU-offloaded distributed optimizer, packed sequences, and <code>torch_dist</code> checkpoints. Diffusion models take an experimental <code>_setup_diffusion_model()</code> path (see <a href="recipes.html">Algorithm Recipes</a>). The flags it reads:</p>
+
+<pre><code><span class="ar">--tensor-model-parallel-size</span> 4  <span class="ar">--sequence-parallel</span>          <span class="cm"># TP; PP/CP stay 1 on a single node</span>
+<span class="ar">--optimizer</span> adam  <span class="ar">--optimizer-cpu-offload</span>  <span class="ar">--use-precision-aware-optimizer</span>
+<span class="ar">--use-dynamic-batch-size</span>  <span class="ar">--max-tokens-per-gpu</span> 32768        <span class="cm"># packed batches (4B; 8192 for 8B)</span>
+<span class="ar">--recompute-granularity</span> full                                <span class="cm"># activation recompute</span>
+<span class="ar">--hf-checkpoint</span> &lt;HF dir&gt;  <span class="ar">--load</span> &lt;torch_dist dir&gt;  <span class="ar">--save</span> &lt;ckpt root&gt;
+<span class="ar">--ref-load</span> / <span class="ar">--opd-teacher-load</span> &lt;torch_dist&gt;               <span class="cm"># KL reference / frozen teacher weights</span></code></pre>
+
+<p><span class="file-ref">backends/fsdp.py</span> &mdash; <code>FSDPBackend</code>, FSDP&nbsp;v2 on a 1-D data-parallel mesh, HF-native (<code>AutoModelForCausalLM</code> &rarr; <code>apply_fsdp2</code>), PyTorch-DCP checkpoints. No TP/PP; <code>with_opd_teacher</code> unsupported.</p>
+
+<pre><code><span class="ar">--train-backend</span> fsdp                                        <span class="cm"># select the backend (default: megatron)</span>
+<span class="ar">--hf-checkpoint</span> &lt;HF dir&gt;                                    <span class="cm"># the only required model path</span>
+<span class="ar">--grad-clip</span> 1.0  <span class="ar">--fp16</span>                                     <span class="cm"># bf16 default; optional fp16 / CPU offload</span></code></pre>
+
+<p>Both drive the same <code>spec.compute_loss()</code>; full flag set in the knobs below.</p>
+
+<!-- ── Section 4 ─────────────────────────────────────────── -->
+<h2><span class="num">4</span> Memory: Sleep / Wake</h2>
+
+<p>FSDP: CPU offload via <span class="file-ref">rl_engine/utils/memory.py</span>. Megatron — three tiers:</p>
+
+<div class="table-scroll"><table>
+  <tr><th></th><th>Tier 1 — TMS</th><th>Tier 2 — Megatron native <span class="tag tag-green">default</span></th><th>Tier 3 — PGs only</th></tr>
+  <tr><td><strong>Mechanism</strong></td><td><code>torch_memory_saver.pause()</code> + destroy PGs</td><td><code>optimizer.offload_to_cpu()</code> + <code>ddp_model.offload_grad_buffers()</code> + destroy PGs</td><td>Destroy NCCL process groups only</td></tr>
+  <tr><td><strong>Model weights</strong></td><td>Paused to CPU (allocator-level)</td><td>Stay on GPU</td><td>Stay on GPU</td></tr>
+  <tr><td><strong>Requires</strong></td><td><code>STACX_USE_TMS_OFFLOAD=1</code> + <code>LD_PRELOAD</code> + <code>NCCL_CUMEM_ENABLE=1</code></td><td>Megatron distributed optimizer with <code>offload_to_cpu</code></td><td>Nothing</td></tr>
+  <tr><td><strong>Selected when</strong></td><td>Opt-in only</td><td>Offload APIs present (the norm)</td><td>Fallback</td></tr>
+</table></div>
+
+<p>Tier 2 is the production default on A100 80&nbsp;GB.</p>
+
+<div class="card blue">
+  <p style="margin:0"><strong>Selection logic</strong> (<code>MegatronBackend.sleep()</code>):</p>
+<pre style="margin:8px 0 0 0"><code><span class="kw">if</span> self._tms_available:            <span class="cm"># Tier 1</span>
+    destroy_process_groups(); torch_memory_saver.pause()
+<span class="kw">elif</span> self._can_megatron_offload():  <span class="cm"># Tier 2 (default)</span>
+    ddp_model.offload_grad_buffers(); optimizer.offload_to_cpu(); destroy_process_groups()
+<span class="kw">else</span>:                               <span class="cm"># Tier 3</span>
+    destroy_process_groups()</code></pre>
+</div>
+
+<!-- ── Section 7 ─────────────────────────────────────────── -->
+<h2><span class="num">5</span> Backend knobs</h2>
+
+<p>Full <code>STACX_*</code> catalog: <a href="getting-started.html">Getting Started</a> / <span class="file-ref">scripts/train/swe/ENV_REFERENCE.md</span>.</p>
+
+<div class="table-scroll"><table>
+  <tr><th>Knob</th><th>Applies to</th><th>Effect</th></tr>
+  <tr><td><code>--train-backend</code></td><td>both</td><td><code>megatron</code> (default) or <code>fsdp</code>; read in <code>TrainWorker.init()</code>.</td></tr>
+  <tr><td><code>--tensor-model-parallel-size</code></td><td>Megatron</td><td>TP degree; SWE recipes use 4. Paired with <code>--sequence-parallel</code>.</td></tr>
+  <tr><td><code>--pipeline-model-parallel-size</code> / <code>--context-parallel-size</code></td><td>Megatron</td><td>PP / CP degrees (1 on single node).</td></tr>
+  <tr><td><code>MAX_TOKENS_PER_GPU</code> → <code>--max-tokens-per-gpu</code></td><td>Megatron</td><td>Per-GPU token budget for dynamic batching. 32768 (4B) / 8192 (8B); lower it for 8B OOM relief.</td></tr>
+  <tr><td><code>SGLANG_MEM_FRACTION</code> → <code>--sglang-mem-fraction-static</code></td><td>both</td><td>SGLang static KV-cache fraction (0.7 / 0.5); a higher fraction leaves less training headroom.</td></tr>
+  <tr><td><code>--recompute-granularity / -method / -num-layers</code></td><td>Megatron</td><td>Activation recompute (<code>full / uniform / 1</code>) — trades compute for memory on long trajectories.</td></tr>
+  <tr><td><code>STACX_USE_TMS_OFFLOAD</code></td><td>Megatron</td><td>Opt into Tier-1 TMS sleep. Requires <code>LD_PRELOAD</code> + <code>NCCL_CUMEM_ENABLE=1</code>; off by default.</td></tr>
+  <tr><td><code>ROTARY_BASE</code> → <code>MODEL_ARGS_ROTARY_BASE</code> → <code>--rotary-base</code></td><td>Megatron</td><td>RoPE base override; model script is the single emitter. Default 1e6; SWE recipes set 5e6.</td></tr>
+  <tr><td><code>--optimizer-cpu-offload</code> / <code>--use-precision-aware-optimizer</code></td><td>Megatron</td><td>Offload optimizer state to CPU; precision-aware master weights.</td></tr>
+  <tr><td><code>fsdp_cpu_offload</code></td><td>FSDP</td><td>Adds <code>CPUOffloadPolicy()</code> — params/grads/optimizer step run on CPU.</td></tr>
+  <tr><td><code>--fp16</code></td><td>FSDP</td><td>Switch <code>param_dtype</code> from bf16 to fp16 in the mixed-precision policy.</td></tr>
+  <tr><td><code>--ref-load</code> / <code>--opd-teacher-load</code></td><td>Megatron</td><td>Extra checkpoints loaded into <code>ref</code> / <code>teacher</code> weight tags.</td></tr>
+</table></div>
+
+<!-- ── Section 10 ────────────────────────────────────────── -->
+<h2 id="runtime-infrastructure"><span class="num">6</span> Runtime infrastructure</h2>
+
+<p>Model-agnostic plumbing shared by every recipe, in <span class="file-ref">rl_engine/trainer/infra/</span> and <span class="file-ref">rl_engine/train.py</span>.</p>
+
+<h3 id="topo">Single-node topology</h3>
+<p>Two Docker containers plus a host ROCK process share one 8-GPU node. Teacher and student never share GPUs; inside the student, the Megatron trainer and its SGLang engine do, via <code>--colocate</code>.</p>
+
+<div class="diagram" style="text-align:center">
+  <svg style="display:block;margin:0 auto;max-width:790px;height:auto;" viewBox="0 0 960 540" xmlns="http://www.w3.org/2000/svg" font-family="system-ui, sans-serif">
+    <defs>
+      <marker id="topo-arr" viewBox="0 0 10 7" refX="9" refY="3.5" markerWidth="8" markerHeight="6" orient="auto"><path d="M0,0 L10,3.5 L0,7z" style="fill:var(--text-dim)"/></marker>
+    </defs>
+    <text x="480" y="26" text-anchor="middle" style="fill:var(--text)" font-size="16" font-weight="700">Single node · 8 GPUs · Docker — teacher + student containers + host ROCK</text>
+    <!-- Teacher container -->
+    <rect x="36" y="54" width="560" height="132" rx="10" fill="rgba(5,80,174,0.05)" stroke="none"/>
+    <text x="52" y="77" style="fill:var(--accent-blue)" font-size="15" font-weight="700">Teacher container</text>
+    <text x="52" y="95" style="fill:var(--text-dim)" font-size="12">SGLang · Qwen3-Coder-30B-A3B · TP=4 · docker --rm</text>
+    <rect x="468" y="62" width="116" height="22" rx="6" fill="rgba(5,80,174,0.08)" style="stroke:var(--accent-blue)" stroke-width="1"/>
+    <text x="526" y="77" text-anchor="middle" style="fill:var(--accent-blue)" font-size="11" font-weight="600">127.0.0.1:30055</text>
+    <rect x="52" y="108" width="116" height="42" rx="6" fill="rgba(87,96,106,0.06)" stroke="rgba(87,96,106,0.4)" stroke-width="1"/><text x="110" y="134" text-anchor="middle" style="fill:var(--text-dim)" font-size="12" font-weight="600">GPU 0</text>
+    <rect x="186" y="108" width="116" height="42" rx="6" fill="rgba(87,96,106,0.06)" stroke="rgba(87,96,106,0.4)" stroke-width="1"/><text x="244" y="134" text-anchor="middle" style="fill:var(--text-dim)" font-size="12" font-weight="600">GPU 1</text>
+    <rect x="320" y="108" width="116" height="42" rx="6" fill="rgba(87,96,106,0.06)" stroke="rgba(87,96,106,0.4)" stroke-width="1"/><text x="378" y="134" text-anchor="middle" style="fill:var(--text-dim)" font-size="12" font-weight="600">GPU 2</text>
+    <rect x="454" y="108" width="116" height="42" rx="6" fill="rgba(87,96,106,0.06)" stroke="rgba(87,96,106,0.4)" stroke-width="1"/><text x="512" y="134" text-anchor="middle" style="fill:var(--text-dim)" font-size="12" font-weight="600">GPU 3</text>
+    <!-- ROCK box -->
+    <rect x="636" y="54" width="288" height="132" rx="10" fill="rgba(12,90,109,0.05)" stroke="none"/>
+    <text x="652" y="77" style="fill:var(--accent-cyan)" font-size="15" font-weight="700">ROCK admin</text>
+    <rect x="848" y="62" width="68" height="22" rx="6" fill="rgba(12,90,109,0.08)" style="stroke:var(--accent-cyan)" stroke-width="1"/>
+    <text x="882" y="77" text-anchor="middle" style="fill:var(--accent-cyan)" font-size="11" font-weight="600">:8080</text>
+    <text x="652" y="95" style="fill:var(--text-dim)" font-size="12">SWE-Bench sandbox orchestrator</text>
+    <rect x="652" y="108" width="256" height="42" rx="6" fill="rgba(12,90,109,0.06)" stroke="rgba(12,90,109,0.4)" stroke-width="1"/><text x="780" y="134" text-anchor="middle" style="fill:var(--accent-cyan)" font-size="12" font-weight="600">sandbox containers (CPU)</text>
+    <text x="652" y="172" style="fill:var(--text-dim)" font-size="11">host process · pulls per-instance images</text>
+    <!-- Student container -->
+    <rect x="36" y="236" width="888" height="190" rx="10" fill="rgba(17,99,41,0.05)" stroke="none"/>
+    <text x="52" y="260" style="fill:var(--accent-green)" font-size="15" font-weight="700">Student container</text>
+    <text x="52" y="278" style="fill:var(--text-dim)" font-size="12">Ray head · Megatron TP=4 trainer + colocated SGLang engine · docker -d · CUDA_VISIBLE_DEVICES=4,5,6,7</text>
+    <rect x="800" y="244" width="112" height="22" rx="6" fill="rgba(17,99,41,0.08)" style="stroke:var(--accent-green)" stroke-width="1"/>
+    <text x="856" y="259" text-anchor="middle" style="fill:var(--accent-green)" font-size="11" font-weight="600">Ray head :7796</text>
+    <rect x="52" y="292" width="414" height="40" rx="8" fill="rgba(87,96,106,0.06)" stroke="rgba(87,96,106,0.45)" stroke-width="1.2"/>
+    <text x="259" y="310" text-anchor="middle" style="fill:var(--text)" font-size="13" font-weight="700">Megatron TP=4 trainer</text>
+    <text x="259" y="326" text-anchor="middle" style="fill:var(--text-dim)" font-size="11">params + DistributedOptimizer (CPU-offloaded)</text>
+    <rect x="494" y="292" width="414" height="40" rx="8" fill="rgba(87,96,106,0.06)" stroke="rgba(87,96,106,0.45)" stroke-width="1.2"/>
+    <text x="701" y="310" text-anchor="middle" style="fill:var(--text)" font-size="13" font-weight="700">SGLang student engine</text>
+    <text x="701" y="326" text-anchor="middle" style="fill:var(--text-dim)" font-size="11">KV cache ≤ SGLANG_MEM_FRACTION = 0.7</text>
+    <text x="480" y="350" text-anchor="middle" style="fill:var(--text-dim)" font-size="11">both roles time-share GPUs 4–7 — 3-tier sleep / wake (§4)</text>
+    <rect x="53" y="360" width="200" height="42" rx="6" fill="rgba(87,96,106,0.06)" stroke="rgba(87,96,106,0.4)" stroke-width="1"/><text x="153" y="387" text-anchor="middle" style="fill:var(--text-dim)" font-size="12" font-weight="600">GPU 4</text>
+    <rect x="271" y="360" width="200" height="42" rx="6" fill="rgba(87,96,106,0.06)" stroke="rgba(87,96,106,0.4)" stroke-width="1"/><text x="371" y="387" text-anchor="middle" style="fill:var(--text-dim)" font-size="12" font-weight="600">GPU 5</text>
+    <rect x="489" y="360" width="200" height="42" rx="6" fill="rgba(87,96,106,0.06)" stroke="rgba(87,96,106,0.4)" stroke-width="1"/><text x="589" y="387" text-anchor="middle" style="fill:var(--text-dim)" font-size="12" font-weight="600">GPU 6</text>
+    <rect x="707" y="360" width="200" height="42" rx="6" fill="rgba(87,96,106,0.06)" stroke="rgba(87,96,106,0.4)" stroke-width="1"/><text x="807" y="387" text-anchor="middle" style="fill:var(--text-dim)" font-size="12" font-weight="600">GPU 7</text>
+    <!-- Host bind-mounts -->
+    <rect x="36" y="456" width="888" height="70" rx="10" fill="rgba(87,96,106,0.05)" stroke="none"/>
+    <text x="52" y="476" style="fill:var(--text-dim)" font-size="12" font-weight="600">Host bind-mounts (docker -v external/…)</text>
+    <rect x="52" y="484" width="154" height="32" rx="6" fill="rgba(87,96,106,0.06)" stroke="rgba(87,96,106,0.4)" stroke-width="1"/><text x="129" y="504" text-anchor="middle" style="fill:var(--text-dim)" font-size="11">models/ (ro)</text>
+    <rect x="226" y="484" width="154" height="32" rx="6" fill="rgba(87,96,106,0.06)" stroke="rgba(87,96,106,0.4)" stroke-width="1"/><text x="303" y="504" text-anchor="middle" style="fill:var(--text-dim)" font-size="11">ckpts/</text>
+    <rect x="400" y="484" width="154" height="32" rx="6" fill="rgba(87,96,106,0.06)" stroke="rgba(87,96,106,0.4)" stroke-width="1"/><text x="477" y="504" text-anchor="middle" style="fill:var(--text-dim)" font-size="11">results/</text>
+    <rect x="574" y="484" width="154" height="32" rx="6" fill="rgba(87,96,106,0.06)" stroke="rgba(87,96,106,0.4)" stroke-width="1"/><text x="651" y="504" text-anchor="middle" style="fill:var(--text-dim)" font-size="11">logs/</text>
+    <rect x="748" y="484" width="154" height="32" rx="6" fill="rgba(87,96,106,0.06)" stroke="rgba(87,96,106,0.4)" stroke-width="1"/><text x="825" y="504" text-anchor="middle" style="fill:var(--text-dim)" font-size="11">data/</text>
+    <!-- Arrows: teacher &lt;-&gt; student -->
+    <line x1="140" y1="236" x2="140" y2="190" style="stroke:var(--text-dim)" stroke-width="1.5" marker-end="url(#topo-arr)"/>
+    <line x1="200" y1="186" x2="200" y2="232" style="stroke:var(--text-dim)" stroke-width="1.5" marker-end="url(#topo-arr)"/>
+    <text x="214" y="207" style="fill:var(--text)" font-size="11" font-weight="600">HTTP :30055 — force-decode logprobs (K3) + β-mixed actions</text>
+    <!-- Arrows: student &lt;-&gt; ROCK -->
+    <line x1="664" y1="236" x2="664" y2="190" style="stroke:var(--text-dim)" stroke-width="1.5" marker-end="url(#topo-arr)"/>
+    <line x1="692" y1="186" x2="692" y2="232" style="stroke:var(--text-dim)" stroke-width="1.5" marker-end="url(#topo-arr)"/>
+    <text x="706" y="214" style="fill:var(--text)" font-size="11" font-weight="600">ROCK SDK — exec / stdout / patch</text>
+    <!-- Arrow: student -&gt; mounts -->
+    <line x1="480" y1="426" x2="480" y2="452" style="stroke:var(--text-dim)" stroke-width="1.5" marker-end="url(#topo-arr)"/>
+    <text x="496" y="446" style="fill:var(--text-dim)" font-size="11">docker -v: read-write ckpts/results/logs/data · read-only models</text>
+  </svg>
+  <p class="cap">Teacher (GPUs 0–3) and student (GPUs 4–7) containers plus host ROCK. The teacher is reused if already healthy.</p>
+</div>
+
+<div class="table-scroll"><table>
+  <thead><tr><th>Role</th><th>GPUs</th><th>Process</th><th>Where set</th></tr></thead>
+  <tbody>
+    <tr><td>Teacher</td><td>0,1,2,3</td><td>SGLang <code>Qwen3-Coder-30B</code> TP=4 → <code>:30055</code></td><td><code>CUDA_VISIBLE_DEVICES=0,1,2,3</code> (<span class="file-ref">dagger_4b.sh</span>)</td></tr>
+    <tr><td>Student</td><td>4,5,6,7</td><td>Ray head + Megatron TP=4 + colocated SGLang engine</td><td><code>CUDA_VISIBLE_DEVICES=4,5,6,7</code> (<span class="file-ref">dagger_4b.sh</span>)</td></tr>
+    <tr><td>ROCK + sandboxes</td><td>—</td><td>Sandbox orchestrator (CPU), pulls per-instance images</td><td>host process on <code>:8080</code>; workers pinned to GPUs 4–7 in the cluster-layout JSON</td></tr>
+  </tbody>
+</table></div>
+
+<h3 id="ray-placement">Ray placement &amp; runtime env</h3>
+<p class="subtle"><span class="file-ref">rl_engine/utils/ray.py</span> · <span class="file-ref">rl_engine/trainer/factory.py</span> · <span class="file-ref">dagger_4b.sh</span></p>
+<ul>
+  <li><code>create_placement_groups(args)</code> re-exports from <code>slime.ray.placement_group</code>; <code>build_gpu_allocations()</code> maps slime keys to trainer roles (<code>"policy"</code> → <code>pgs["actor"]</code>; value/reference/reward groups only for multi-role recipes).</li>
+  <li><code>--colocate</code> puts the actor placement group and the rollout SGLang engine on the same 4 GPUs.</li>
+</ul>
+<div class="card orange">
+  <h4>Ray socket path length limit</h4>
+  <p style="margin:0">Ray's plasma-store socket path must fit in 107 bytes. The launcher hashes <code>RUN_TAG</code> to a short suffix:</p>
+<pre style="margin:8px 0 0 0"><code>RAY_TMP_SUFFIX=$(echo "${RUN_TAG}" | md5sum | cut -c1-8)
+<span class="kw">export</span> RAY_TMP_DIR=/tmp/r_${RAY_TMP_SUFFIX}   <span class="cm"># e.g. /tmp/r_3f9c1a20</span></code></pre>
+</div>
+
+<h3 id="process-groups">Process groups</h3>
+<p class="subtle"><span class="file-ref">rl_engine/trainer/infra/process_groups.py</span></p>
+<p><code>ProcessGroupManager</code> is a backend-aware query wrapper over an already-initialized <code>torch.distributed</code>. Megatron's <code>_initialize_megatron()</code> builds independent TP/PP/CP/DP groups via <code>mpu.initialize_model_parallel()</code>; FSDP reports <code>tp=pp=cp=1</code>, <code>dp=world_size</code> over <code>group.WORLD</code>.</p>
+
+<h3 id="weight-sync-infra">Weight sync — sync primitive details</h3>
+<p class="subtle"><span class="file-ref">rl_engine/trainer/infra/inference_weight_sync.py</span></p>
+
+<div class="diagram" style="text-align:center">
+  <svg style="max-width:100%;height:auto;" viewBox="0 0 960 320" xmlns="http://www.w3.org/2000/svg" font-family="system-ui, sans-serif">
+    <defs>
+      <marker id="ws-arr" viewBox="0 0 10 7" refX="9" refY="3.5" markerWidth="8" markerHeight="6" orient="auto"><path d="M0,0 L10,3.5 L0,7z" style="fill:var(--text-dim)"/></marker>
+    </defs>
+    <text x="480" y="22" text-anchor="middle" style="fill:var(--text)" font-size="15" font-weight="700">Three weight-sync paths — trainer → inference server</text>
+    <!-- Lane 1: tensor -->
+    <rect x="20" y="40" width="920" height="76" rx="8" fill="rgba(149,56,0,0.05)" stroke="none"/>
+    <text x="34" y="59" style="fill:var(--accent-orange)" font-size="11" font-weight="700">TENSOR — colocated or TP&gt;1 · UpdateWeightFromTensor · SWE default · no cross-node broadcast</text>
+    <rect x="34" y="70" width="150" height="34" rx="6" fill="rgba(87,96,106,0.06)" stroke="rgba(87,96,106,0.45)" stroke-width="1"/><text x="109" y="91" text-anchor="middle" style="fill:var(--text)" font-size="12" font-weight="600">Megatron trainer</text>
+    <line x1="184" y1="87" x2="300" y2="87" style="stroke:var(--text-dim)" stroke-width="1.5" marker-end="url(#ws-arr)"/><text x="242" y="81" text-anchor="middle" style="fill:var(--text-dim)" font-size="11">backup(actor)</text>
+    <rect x="300" y="70" width="160" height="34" rx="6" fill="rgba(87,96,106,0.06)" stroke="rgba(87,96,106,0.45)" stroke-width="1"/><text x="380" y="91" text-anchor="middle" style="fill:var(--text)" font-size="12" font-weight="600">CPU weight backup</text>
+    <line x1="460" y1="87" x2="576" y2="87" style="stroke:var(--text-dim)" stroke-width="1.5" marker-end="url(#ws-arr)"/><text x="518" y="81" text-anchor="middle" style="fill:var(--text-dim)" font-size="11">tms.disable()</text>
+    <rect x="576" y="70" width="180" height="34" rx="6" fill="rgba(149,56,0,0.06)" style="stroke:var(--accent-orange)" stroke-width="1.2"/><text x="666" y="91" text-anchor="middle" style="fill:var(--accent-orange)" font-size="12" font-weight="600">SGLang student engine</text>
+    <text x="768" y="84" style="fill:var(--text-dim)" font-size="11">copy to GPU ·</text>
+    <text x="768" y="99" style="fill:var(--text-dim)" font-size="11">update in place</text>
+    <!-- Lane 2: distributed -->
+    <rect x="20" y="134" width="920" height="76" rx="8" fill="rgba(110,64,201,0.05)" stroke="none"/>
+    <text x="34" y="153" style="fill:var(--accent-purple)" font-size="11" font-weight="700">DISTRIBUTED — cross-GPU · UpdateWeightFromDistributed</text>
+    <rect x="34" y="164" width="180" height="34" rx="6" fill="rgba(87,96,106,0.06)" stroke="rgba(87,96,106,0.45)" stroke-width="1"/><text x="124" y="185" text-anchor="middle" style="fill:var(--text)" font-size="12" font-weight="600">Trainer (policy GPUs)</text>
+    <line x1="214" y1="181" x2="450" y2="181" style="stroke:var(--text-dim)" stroke-width="1.5" marker-end="url(#ws-arr)"/><text x="332" y="175" text-anchor="middle" style="fill:var(--text-dim)" font-size="11" font-weight="600">NCCL broadcast (per-param)</text>
+    <rect x="450" y="164" width="210" height="34" rx="6" fill="rgba(110,64,201,0.06)" style="stroke:var(--accent-purple)" stroke-width="1.2"/><text x="555" y="185" text-anchor="middle" style="fill:var(--accent-purple)" font-size="12" font-weight="600">Rollout engine (other GPUs)</text>
+    <text x="672" y="178" style="fill:var(--text-dim)" font-size="11">connect_rollout_engines() builds</text>
+    <text x="672" y="193" style="fill:var(--text-dim)" font-size="11">the NCCL group on new engines</text>
+    <!-- Lane 3: disk -->
+    <rect x="20" y="228" width="920" height="76" rx="8" fill="rgba(12,90,109,0.05)" stroke="none"/>
+    <text x="34" y="247" style="fill:var(--accent-cyan)" font-size="11" font-weight="700">DISK — diffusion · DiffusionWeightSyncViaDisk (see Diffusion Pipeline)</text>
+    <rect x="34" y="258" width="130" height="34" rx="6" fill="rgba(87,96,106,0.06)" stroke="rgba(87,96,106,0.45)" stroke-width="1"/><text x="99" y="279" text-anchor="middle" style="fill:var(--text)" font-size="12" font-weight="600">DP rank 0</text>
+    <line x1="164" y1="275" x2="290" y2="275" style="stroke:var(--text-dim)" stroke-width="1.5" marker-end="url(#ws-arr)"/><text x="227" y="269" text-anchor="middle" style="fill:var(--text-dim)" font-size="11">save .safetensors</text>
+    <rect x="290" y="258" width="150" height="34" rx="6" fill="rgba(87,96,106,0.06)" stroke="rgba(87,96,106,0.45)" stroke-width="1"/><text x="365" y="279" text-anchor="middle" style="fill:var(--text)" font-size="12" font-weight="600">transformer/ dir</text>
+    <line x1="440" y1="275" x2="556" y2="275" style="stroke:var(--text-dim)" stroke-width="1.5" marker-end="url(#ws-arr)"/><text x="498" y="269" text-anchor="middle" style="fill:var(--text-dim)" font-size="11">HTTP POST</text>
+    <rect x="556" y="258" width="220" height="34" rx="6" fill="rgba(12,90,109,0.06)" style="stroke:var(--accent-cyan)" stroke-width="1.2"/><text x="666" y="279" text-anchor="middle" style="fill:var(--accent-cyan)" font-size="12" font-weight="600">/update_weights_from_disk</text>
+    <text x="788" y="272" style="fill:var(--text-dim)" font-size="11">other ranks barrier ·</text>
+    <text x="788" y="287" style="fill:var(--text-dim)" font-size="11">flush_cache=false</text>
+  </svg>
+  <p class="cap">Three sync paths. The SWE recipe uses the tensor lane: <code>use_tensor_path = colocate or tp_size &gt; 1</code>.</p>
+</div>
+
+<div class="wsync-grid">
+  <div class="card blue">
+    <h4><code>WeightManager</code> — multi-tag backup</h4>
+    <p><span class="file-ref">infra/weight_manager.py</span>. Snapshots named weight sets (<code>"actor"</code>, <code>"ref"</code>, <code>"teacher"</code>, <code>"old_actor"</code>) and <code>switch()</code>es between them on one GPU set. GRPO restores a frozen <code>"ref"</code> from <code>--ref-load</code> as its in-Megatron KL anchor; the DAgger/OPD teacher is a separate SGLang server, not a tag.</p>
+  </div>
+  <div class="card purple">
+    <h4><code>WorkerSync</code> — inject vs. exchange</h4>
+    <p><span class="file-ref">infra/worker_data_sync.py</span>. Key-driven tensor exchange between worker pools — <strong>inject</strong> via the Ray object store (<code>dpo_distributed</code>, <code>online_reward</code>), <strong>exchange</strong> via direct NCCL (PPO actor↔critic). Single-role SWE recipes declare none.</p>
+  </div>
+  <div class="card cyan">
+    <h4><code>distributed_masked_whiten()</code></h4>
+    <p><span class="file-ref">infra/distributed.py</span>. Whitens advantages with global DP-group statistics via an all-reduce of masked sum / sum-of-squares / count (Bessel-corrected), avoiding an OOM-prone gather. Used by GRPO.</p>
+  </div>
+</div>
+
+<h3 id="checkpointing">Checkpointing &amp; auto-resume</h3>
+<p class="subtle"><span class="file-ref">rl_engine/train.py</span> · <span class="file-ref">backends/megatron.py</span> · <span class="file-ref">dagger_4b.sh</span></p>
+<p>Re-running the same launch command resumes with the same weights, optimizer state, and W&amp;B run.</p>
+<ul>
+  <li><code>save_model()</code> writes a <code>torch_dist</code> checkpoint into <code>iter_{N:07d}/</code> sharded across TP ranks — ~53 GB per 4B checkpoint (bf16 + fp32 Adam state), pruned to the newest <code>--save-max-to-keep</code> dirs.</li>
+  <li>Each rollout is pickled to <code>rollout_ckpts/rollout_{N}.pt</code> so a resumed job skips regeneration.</li>
+</ul>
+
+<p><strong><code>resume_state.json</code></strong> (written atomically after every save and on graceful exit; read by the launcher on relaunch):</p>
+<div class="table-scroll"><table>
+  <thead><tr><th>Field</th><th>Example</th><th>Role on relaunch</th></tr></thead>
+  <tbody>
+    <tr><td><code>next_rollout_id</code></td><td><code>2</code></td><td>→ <code>--start-rollout-id</code>; completed rollouts skipped</td></tr>
+    <tr><td><code>checkpoint_path</code></td><td><code>…/{RUN_TAG}</code></td><td>= <code>--save</code>; resume repoints <code>--load</code> here</td></tr>
+    <tr><td><code>rollout_ckpt_dir</code></td><td><code>…/rollout_ckpts</code></td><td>where <code>rollout_{N}.pt</code> live</td></tr>
+    <tr><td><code>wandb_run_id</code></td><td><code>3f9c1a…</code></td><td>→ <code>--wandb-resume-id</code>, reopens the same run</td></tr>
+    <tr><td><code>exit_reason</code></td><td><code>"wall_time"</code></td><td><code>periodic_save</code> / <code>wall_time</code> / <code>completed</code></td></tr>
+    <tr><td><code>resume_count</code></td><td><code>1</code></td><td>incremented each relaunch; logged to W&amp;B</td></tr>
+  </tbody>
+</table></div>
+
+<p>Eval is gated behind <code>2 × wall_time_reserve</code> so a run is never killed mid-eval. Defaults: <code>WALL_TIME_LIMIT</code> 7 d, <code>WALL_TIME_RESERVE</code> 10 min (SWE scripts set 1 h).</p>
+
+<div class="diagram" style="text-align:center">
+  <svg style="max-width:100%;height:auto;" viewBox="0 0 960 460" xmlns="http://www.w3.org/2000/svg" font-family="system-ui, sans-serif">
+    <defs>
+      <marker id="res-arr" viewBox="0 0 10 7" refX="9" refY="3.5" markerWidth="8" markerHeight="6" orient="auto"><path d="M0,0 L10,3.5 L0,7z" style="fill:var(--text-dim)"/></marker>
+    </defs>
+    <text x="480" y="26" text-anchor="middle" style="fill:var(--text)" font-size="16" font-weight="700">Auto-resume across a wall-time boundary</text>
+    <text x="480" y="46" text-anchor="middle" style="fill:var(--text-dim)" font-size="11">wall-time checks — ① pre-rollout · ② mid-rollout (between task batches) · ③ post-training</text>
+    <!-- Job 1 -->
+    <text x="40" y="106" style="fill:var(--text)" font-size="12" font-weight="700">Job 1</text>
+    <rect x="80" y="76" width="184" height="54" rx="8" fill="rgba(17,99,41,0.06)" style="stroke:var(--accent-green)" stroke-width="1.3"/><text x="172" y="99" text-anchor="middle" style="fill:var(--accent-green)" font-size="12.5" font-weight="700">Rollout 0</text><text x="172" y="117" text-anchor="middle" style="fill:var(--text-dim)" font-size="11">train → save iter_* → eval</text>
+    <rect x="282" y="76" width="184" height="54" rx="8" fill="rgba(17,99,41,0.06)" style="stroke:var(--accent-green)" stroke-width="1.3"/><text x="374" y="99" text-anchor="middle" style="fill:var(--accent-green)" font-size="12.5" font-weight="700">Rollout 1</text><text x="374" y="117" text-anchor="middle" style="fill:var(--text-dim)" font-size="11">save iter_* → eval</text>
+    <rect x="484" y="76" width="140" height="54" rx="8" fill="rgba(149,56,0,0.06)" style="stroke:var(--accent-orange)" stroke-width="1.3" stroke-dasharray="5 3"/><text x="554" y="99" text-anchor="middle" style="fill:var(--accent-orange)" font-size="12.5" font-weight="700">Rollout 2</text><text x="554" y="117" text-anchor="middle" style="fill:var(--text-dim)" font-size="11">in-flight — aborted</text>
+    <rect x="652" y="64" width="90" height="78" rx="6" fill="rgba(149,56,0,0.05)" style="stroke:var(--accent-orange)" stroke-width="1" stroke-dasharray="4 3"/><text x="697" y="99" text-anchor="middle" style="fill:var(--accent-orange)" font-size="11" font-weight="600">RESERVE</text><text x="697" y="114" text-anchor="middle" style="fill:var(--text-dim)" font-size="11">3600 s</text>
+    <line x1="760" y1="58" x2="760" y2="142" style="stroke:var(--accent-orange)" stroke-width="1.5" stroke-dasharray="5 3"/><text x="760" y="50" text-anchor="middle" style="fill:var(--accent-orange)" font-size="11" font-weight="600">WALL_TIME_LIMIT</text>
+    <circle cx="638" cy="103" r="10" fill="rgba(149,56,0,0.10)" style="stroke:var(--accent-orange)" stroke-width="1.3"/><text x="638" y="107" text-anchor="middle" style="fill:var(--accent-orange)" font-size="11" font-weight="700">2</text>
+    <text x="80" y="170" style="fill:var(--text-dim)" font-size="11">② check trips between task batches → abort, keep partial rollout_2.pt</text>
+    <line x1="554" y1="130" x2="554" y2="184" style="stroke:var(--text-dim)" stroke-width="1.5" marker-end="url(#res-arr)"/>
+    <text x="566" y="158" style="fill:var(--text-dim)" font-size="11">write resume_state.json + flush W&amp;B</text>
+    <rect x="320" y="186" width="370" height="110" rx="10" fill="rgba(5,80,174,0.05)" style="stroke:var(--accent-blue)" stroke-width="1.5"/>
+    <text x="336" y="208" style="fill:var(--accent-blue)" font-size="13" font-weight="700" font-family="'SF Mono','Fira Code',monospace">resume_state.json</text>
+    <text x="336" y="228" style="fill:var(--text)" font-size="11" font-family="'SF Mono','Fira Code',monospace">next_rollout_id: 2 · exit_reason: "wall_time"</text>
+    <text x="336" y="244" style="fill:var(--text)" font-size="11" font-family="'SF Mono','Fira Code',monospace">checkpoint_path: …/${RUN_TAG}</text>
+    <text x="336" y="260" style="fill:var(--text)" font-size="11" font-family="'SF Mono','Fira Code',monospace">wandb_run_id: 3f9c… · resume_count: n+1</text>
+    <text x="336" y="276" style="fill:var(--text)" font-size="11" font-family="'SF Mono','Fira Code',monospace">completed: false · num_rollout: 10</text>
+    <line x1="505" y1="296" x2="505" y2="344" style="stroke:var(--text-dim)" stroke-width="1.5" marker-end="url(#res-arr)"/>
+    <text x="517" y="316" style="fill:var(--text-dim)" font-size="11">relaunch (same command) → --start-rollout-id 2</text>
+    <text x="517" y="332" style="fill:var(--text-dim)" font-size="11">--load = save_dir (latest iter_*) · --wandb-resume-id</text>
+    <!-- Job 2 -->
+    <text x="40" y="378" style="fill:var(--text)" font-size="12" font-weight="700">Job 2</text>
+    <rect x="80" y="348" width="184" height="54" rx="8" fill="rgba(87,96,106,0.06)" stroke="rgba(87,96,106,0.5)" stroke-width="1.2" stroke-dasharray="5 3"/><text x="172" y="371" text-anchor="middle" style="fill:var(--text-dim)" font-size="12" font-weight="700">Rollout 0</text><text x="172" y="389" text-anchor="middle" style="fill:var(--text-dim)" font-size="11">skipped (already saved)</text>
+    <rect x="282" y="348" width="184" height="54" rx="8" fill="rgba(87,96,106,0.06)" stroke="rgba(87,96,106,0.5)" stroke-width="1.2" stroke-dasharray="5 3"/><text x="374" y="371" text-anchor="middle" style="fill:var(--text-dim)" font-size="12" font-weight="700">Rollout 1</text><text x="374" y="389" text-anchor="middle" style="fill:var(--text-dim)" font-size="11">skipped</text>
+    <rect x="484" y="348" width="184" height="54" rx="8" fill="rgba(17,99,41,0.06)" style="stroke:var(--accent-green)" stroke-width="1.3"/><text x="576" y="371" text-anchor="middle" style="fill:var(--accent-green)" font-size="12.5" font-weight="700">Rollout 2</text><text x="576" y="389" text-anchor="middle" style="fill:var(--text-dim)" font-size="11">regenerated from scratch</text>
+    <rect x="686" y="348" width="184" height="54" rx="8" fill="rgba(17,99,41,0.04)" style="stroke:var(--accent-green)" stroke-width="1.2" stroke-dasharray="5 3"/><text x="778" y="371" text-anchor="middle" style="fill:var(--accent-green)" font-size="12.5" font-weight="700">Rollout 3 → …</text><text x="778" y="389" text-anchor="middle" style="fill:var(--text-dim)" font-size="11">continues to num_rollout</text>
+    <text x="480" y="426" text-anchor="middle" style="fill:var(--text-dim)" font-size="11">in-flight rollout is not resumed — it restarts; completed rollouts 0–1 are preserved</text>
+    <text x="474" y="448" text-anchor="middle" style="fill:var(--text-dim)" font-size="11">↑ resume boundary: next_rollout_id = 2</text>
+  </svg>
+  <p class="cap">Relaunch reads <code>resume_state.json</code>, skips completed rollouts, reopens the W&amp;B run. In-flight rollouts restart from scratch.</p>
+</div>
+
+<h3 id="memory-infra">Memory management additions</h3>
+<p>Beyond sleep/wake (§4), two more mechanisms manage the colocated engine's memory:</p>
+<div class="feature-grid">
+  <div class="feature-item">
+    <h4>Rollout offload</h4>
+    <p>With <code>--offload-rollout</code>, the driver wraps rollout-engine memory via <code>rollout_manager.offload()</code> / <code>onload_weights()</code> / <code>onload_kv()</code>.</p>
+  </div>
+  <div class="feature-item">
+    <h4>Platform awareness</h4>
+    <p><code>PlatformCapabilities</code> (<span class="file-ref">infra/platform_detect.py</span>) sets <code>memory_offload_effective = False</code> on unified-memory GPUs (GH200, GB200), where CPU offload doesn't free device memory.</p>
+  </div>
+</div>
+
+<h3 id="logging-infra">Logging &amp; monitoring</h3>
+<p class="subtle"><span class="file-ref">infra/logging.py</span> · <span class="file-ref">infra/profiler.py</span> · <span class="file-ref">train.py</span></p>
+<p><code>init_tracking(args)</code> initializes W&amp;B; <code>--wandb-resume-id</code> reopens the same run on resume. Ray workers can't reach W&amp;B, so the driver logs from the main process (eval goes to a secondary run).</p>
+<div class="table-scroll"><table>
+  <thead><tr><th>Key</th><th>Meaning</th><th>Source</th></tr></thead>
+  <tbody>
+    <tr><td><code>dagger/beta</code></td><td>β at this rollout (teacher/student execution mix)</td><td><span class="file-ref">train.py</span></td></tr>
+    <tr><td><code>train/ce_mean</code></td><td>CE loss on teacher-executed action tokens</td><td rowspan="3"><span class="file-ref">mixed_loss_dagger.py</span></td></tr>
+    <tr><td><code>train/k3_mean</code></td><td>K3 reverse-KL on student-executed action tokens</td></tr>
+    <tr><td><code>train/teacher_action_frac</code></td><td>fraction of action tokens the teacher executed</td></tr>
+    <tr><td><code>train/global_step</code></td><td><code>rollout_id × passes + pass_idx</code> — per-pass x-axis</td><td><span class="file-ref">train.py</span></td></tr>
+    <tr><td><code>resume/count</code>, <code>resume/mode_*</code></td><td>relaunch counter + fresh/rollout/training mode</td><td><span class="file-ref">train.py</span></td></tr>
+    <tr><td><code>perf/train_time</code>, <code>perf/pass_time</code></td><td>per-rollout and per-pass wall time</td><td><span class="file-ref">train.py</span></td></tr>
+  </tbody>
+</table></div>
+
+<!-- ── Section 11 ────────────────────────────────────────── -->
+<h2 id="infra-knobs"><span class="num">7</span> Infrastructure knobs &amp; source map</h2>
+
+<p>Infra knobs only — algorithm knobs (β/κ, K3, teacher sampling) live on <a href="recipes.html">Algorithm Recipes</a>; full catalog in <span class="file-ref">scripts/train/swe/ENV_REFERENCE.md</span>.</p>
+
+<div class="table-scroll"><table>
+  <thead><tr><th>Env / flag</th><th>Default</th><th>Effect</th></tr></thead>
+  <tbody>
+    <tr><td><code>WALL_TIME_LIMIT</code> → <code>--wall-time-limit</code></td><td><code>604800</code></td><td>Wall-clock budget (s); graceful save + exit before it.</td></tr>
+    <tr><td><code>WALL_TIME_RESERVE</code> → <code>--wall-time-reserve</code></td><td><code>600</code></td><td>Head-room reserved for the final checkpoint save. SWE scripts set <code>3600</code>.</td></tr>
+    <tr><td><code>SAVE_INTERVAL</code> → <code>--save-interval</code></td><td><code>1</code></td><td>Save a checkpoint every N rollouts.</td></tr>
+    <tr><td><code>SAVE_MAX_TO_KEEP</code> → <code>--save-max-to-keep</code></td><td><code>NUM_ITERS</code> (GRPO: <code>3</code>)</td><td>Retain only the newest K <code>iter_*</code> dirs (~53 GB each).</td></tr>
+    <tr><td><code>EVAL_INTERVAL</code> → <code>--eval-interval</code></td><td><code>1</code></td><td>Eval cadence; skipped if within <code>2×reserve</code> of the limit.</td></tr>
+    <tr><td><code>START_ROLLOUT_ID</code> → <code>--start-rollout-id</code></td><td>from <code>resume_state.json</code></td><td>First rollout to run; earlier ones are skipped on resume.</td></tr>
+    <tr><td><code>RAY_TMP_DIR</code></td><td><code>/tmp/r_&lt;8hex&gt;</code></td><td>Short hashed temp dir to stay under Ray's 107-byte socket limit.</td></tr>
+    <tr><td><code>TEACHER_PORT</code> / <code>ROCK_PORT</code></td><td><code>30055</code> / <code>8080</code></td><td>Teacher SGLang and ROCK admin service ports.</td></tr>
+  </tbody>
+</table></div>
+
+<h3 id="source-map">Source map</h3>
+<div class="table-scroll"><table>
+  <thead><tr><th>File</th><th>Provides</th></tr></thead>
+  <tbody>
+    <tr><td><span class="file-ref">rl_engine/train.py</span></td><td>Driver loop, wall-time checks, <code>resume_state.json</code>, multi-pass reshuffle, checkpoint cleanup.</td></tr>
+    <tr><td><span class="file-ref">rl_engine/utils/ray.py</span></td><td>Re-exports <code>create_placement_groups</code> and <code>TrainRayActor</code> from slime.</td></tr>
+    <tr><td><span class="file-ref">rl_engine/trainer/factory.py</span></td><td><code>infer_algorithm</code>, <code>build_gpu_allocations</code>, <code>create_trainer</code>.</td></tr>
+    <tr><td><span class="file-ref">infra/process_groups.py</span></td><td><code>ProcessGroupManager</code> — Megatron MPU vs. FSDP WORLD.</td></tr>
+    <tr><td><span class="file-ref">infra/inference_weight_sync.py</span></td><td><code>create_weight_updater</code>, <code>DiffusionWeightSyncViaDisk</code>.</td></tr>
+    <tr><td><span class="file-ref">infra/weight_manager.py</span></td><td><code>WeightManager</code> — multi-tag backup / restore / switch.</td></tr>
+    <tr><td><span class="file-ref">infra/worker_data_sync.py</span></td><td><code>WorkerSync</code> — key-driven inject/exchange NCCL groups.</td></tr>
+    <tr><td><span class="file-ref">infra/distributed.py</span></td><td><code>distributed_masked_whiten</code> — global advantage whitening.</td></tr>
+    <tr><td><span class="file-ref">infra/optimizer.py</span></td><td><code>create_optimizer</code>, <code>create_lr_scheduler</code>, <code>clip_grad_norm</code>.</td></tr>
+    <tr><td><span class="file-ref">infra/profiler.py</span> · <span class="file-ref">infra/logging.py</span></td><td><code>TrainingProfiler</code>, timers; W&amp;B / metric helpers.</td></tr>
+    <tr><td><span class="file-ref">infra/platform_detect.py</span></td><td><code>PlatformCapabilities</code> — unified-memory / TE detection.</td></tr>
+    <tr><td><span class="file-ref">backends/megatron.py</span></td><td><code>save_model</code>, <code>update_weights</code>, 3-tier <code>sleep</code>/<code>wake_up</code>.</td></tr>
+  </tbody>
+</table></div>
+
+</div><!-- end .main-content -->
+
+<button class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark mode">Dark</button>
+<script>
+(function() {
+  var toggle = document.getElementById('themeToggle');
+  var saved = localStorage.getItem('stacx-theme');
+  if (saved === 'dark') {
+    document.documentElement.setAttribute('data-theme', 'dark');
+    toggle.textContent = 'Light';
+  }
+  toggle.addEventListener('click', function() {
+    var current = document.documentElement.getAttribute('data-theme');
+    if (current === 'dark') {
+      document.documentElement.removeAttribute('data-theme');
+      toggle.textContent = 'Dark';
+      localStorage.setItem('stacx-theme', 'light');
+    } else {
+      document.documentElement.setAttribute('data-theme', 'dark');
+      toggle.textContent = 'Light';
+      localStorage.setItem('stacx-theme', 'dark');
+    }
+  });
+})();
+</script>
+<script>
+(function(){
+  var nav=document.getElementById('docsNav'),btn=document.querySelector('.nav-toggle');
+  if(!nav||!btn)return;
+  btn.addEventListener('click',function(e){e.stopPropagation();var open=nav.getAttribute('data-open')==='true';nav.setAttribute('data-open',String(!open));btn.setAttribute('aria-expanded',String(!open));});
+  document.addEventListener('click',function(e){if(nav.getAttribute('data-open')==='true'&&!nav.contains(e.target))nav.setAttribute('data-open','false');});
+})();
+</script>
+</body>
+</html>

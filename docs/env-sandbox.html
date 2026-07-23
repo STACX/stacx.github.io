@@ -1,0 +1,1224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sandbox Management — STACX Documentation</title>
+<style>
+/* STACX Documentation — Shared Stylesheet
+   Dark theme */
+
+:root {
+  --bg: #ffffff;
+  --surface: #f6f8fa;
+  --surface2: #eaeef2;
+  --border: #d1d9e0;
+  --text: #1f2328;
+  --text-dim: #57606a;
+  --accent-blue: #0550ae;
+  --accent-green: #116329;
+  --accent-orange: #953800;
+  --accent-purple: #6e40c9;
+  --accent-red: #cf222e;
+  --accent-cyan: #0c5a6d;
+  --nav-width: 260px;
+}
+
+[data-theme="dark"] {
+  --bg: #0d1117;
+  --surface: #161b22;
+  --surface2: #1c2128;
+  --border: #30363d;
+  --text: #e6edf3;
+  --text-dim: #8b949e;
+  --accent-blue: #58a6ff;
+  --accent-green: #3fb950;
+  --accent-orange: #d29922;
+  --accent-purple: #bc8cff;
+  --accent-red: #f85149;
+  --accent-cyan: #56d4dd;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', system-ui, sans-serif;
+  line-height: 1.6;
+}
+
+/* ── Navigation Sidebar ────────────────────────────────── */
+
+.nav-sidebar {
+  position: fixed;
+  top: 0; left: 0;
+  width: var(--nav-width);
+  height: 100vh;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  padding: 24px 0;
+  overflow-y: auto;
+  z-index: 100;
+}
+
+.nav-logo {
+  padding: 0 20px;
+  margin-bottom: 24px;
+}
+
+.nav-logo h2 {
+  font-size: 18px;
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.nav-logo .version {
+  font-size: 11px;
+  color: var(--text-dim);
+  margin-top: 2px;
+}
+
+.nav-section {
+  padding: 0 12px;
+  margin-bottom: 8px;
+}
+
+.nav-section-title {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--text-dim);
+  padding: 8px 8px 4px 8px;
+}
+
+.nav-link {
+  display: block;
+  padding: 6px 12px;
+  border-radius: 6px;
+  color: var(--text-dim);
+  text-decoration: none;
+  font-size: 13px;
+  transition: all 0.15s;
+}
+
+.nav-link:hover {
+  background: var(--surface2);
+  color: var(--text);
+}
+
+.nav-link.active {
+  background: rgba(56, 139, 253, 0.12);
+  color: var(--accent-blue);
+  font-weight: 500;
+}
+
+.nav-link .placeholder-tag {
+  font-size: 9px;
+  padding: 1px 5px;
+  border-radius: 3px;
+  background: rgba(139, 148, 158, 0.15);
+  color: var(--text-dim);
+  margin-left: 6px;
+  vertical-align: middle;
+}
+
+/* ── Main Content ──────────────────────────────────────── */
+
+.main-content {
+  margin-left: var(--nav-width);
+  padding: 48px 48px 80px 48px;
+  max-width: 960px;
+}
+
+h1 {
+  font-size: 32px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.page-subtitle {
+  color: var(--text-dim);
+  font-size: 15px;
+  margin-bottom: 40px;
+}
+
+h2 {
+  font-size: 22px;
+  font-weight: 600;
+  margin: 48px 0 16px 0;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+h2 .num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--accent-blue);
+  color: var(--bg);
+  font-size: 14px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+h3 {
+  font-size: 17px;
+  font-weight: 600;
+  margin: 28px 0 10px 0;
+  color: var(--accent-blue);
+}
+
+h4 {
+  font-size: 14px;
+  font-weight: 600;
+  margin: 16px 0 6px 0;
+  color: var(--accent-green);
+}
+
+p { margin-bottom: 12px; font-size: 14px; }
+
+ul, ol {
+  margin: 8px 0 16px 24px;
+  font-size: 14px;
+}
+
+li { margin-bottom: 4px; }
+
+/* ── Cards ─────────────────────────────────────────────── */
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 20px 24px;
+  margin-bottom: 16px;
+}
+
+.card.blue   { border-left: 3px solid var(--accent-blue); }
+.card.green  { border-left: 3px solid var(--accent-green); }
+.card.orange { border-left: 3px solid var(--accent-orange); }
+.card.purple { border-left: 3px solid var(--accent-purple); }
+.card.red    { border-left: 3px solid var(--accent-red); }
+.card.cyan   { border-left: 3px solid var(--accent-cyan); }
+
+.card h4 { margin-top: 0; }
+.card p:last-child { margin-bottom: 0; }
+
+/* ── Callout Grid ──────────────────────────────────────── */
+
+.callout-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px;
+  margin: 16px 0 24px 0;
+}
+
+.callout {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.callout h4 {
+  font-size: 14px;
+  font-weight: 600;
+  margin: 0 0 4px 0;
+}
+
+.callout p {
+  font-size: 13px;
+  color: var(--text-dim);
+  margin: 0;
+}
+
+/* ── Code ──────────────────────────────────────────────── */
+
+code {
+  font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+  font-size: 12px;
+  background: rgba(110, 118, 129, 0.15);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+pre {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px 20px;
+  overflow-x: auto;
+  font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+  font-size: 12px;
+  line-height: 1.6;
+  margin: 10px 0 16px 0;
+  color: var(--text);
+}
+
+pre code {
+  background: none;
+  padding: 0;
+  font-size: inherit;
+}
+
+.code-ref {
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  font-size: 12px;
+  color: var(--accent-orange);
+  background: rgba(210, 153, 34, 0.1);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.file-ref {
+  color: var(--text-dim);
+  font-size: 12px;
+  font-style: italic;
+}
+
+/* syntax coloring in pre blocks */
+.kw { color: var(--accent-purple); }
+.fn { color: var(--accent-blue); }
+.cm { color: var(--text-dim); }
+.st { color: var(--accent-green); }
+.ar { color: var(--accent-orange); font-weight: 600; }
+
+/* ── Tables ────────────────────────────────────────────── */
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 12px 0 24px 0;
+  font-size: 13px;
+}
+
+th {
+  text-align: left;
+  padding: 10px 12px;
+  border-bottom: 2px solid var(--border);
+  color: var(--accent-blue);
+  font-weight: 600;
+}
+
+td {
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+tr:hover td {
+  background: rgba(56, 139, 253, 0.04);
+}
+
+/* ── Flow Diagrams ─────────────────────────────────────── */
+
+.diagram {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 24px;
+  margin: 16px 0;
+  overflow-x: auto;
+}
+
+.diagram pre {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  color: var(--text-dim);
+}
+
+/* ── Tags / Badges ─────────────────────────────────────── */
+
+.tag {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.tag-blue   { background: rgba(56, 139, 253, 0.15); color: var(--accent-blue); }
+.tag-green  { background: rgba(63, 185, 80, 0.15); color: var(--accent-green); }
+.tag-orange { background: rgba(210, 153, 34, 0.15); color: var(--accent-orange); }
+.tag-purple { background: rgba(188, 140, 255, 0.15); color: var(--accent-purple); }
+.tag-red    { background: rgba(248, 81, 73, 0.15); color: var(--accent-red); }
+
+/* ── Feature Grid ──────────────────────────────────────── */
+
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+  margin: 16px 0 24px 0;
+}
+
+.feature-item {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.feature-item h4 {
+  margin: 0 0 4px 0;
+  font-size: 13px;
+}
+
+.feature-item p {
+  font-size: 12px;
+  color: var(--text-dim);
+  margin: 0;
+}
+
+/* ── SVG Diagram ───────────────────────────────────────── */
+
+.svg-diagram {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 24px;
+  margin: 16px 0 24px 0;
+  overflow-x: auto;
+  text-align: center;
+}
+
+.svg-diagram svg {
+  max-width: 100%;
+  height: auto;
+}
+
+/* ── Responsive ────────────────────────────────────────── */
+
+@media (max-width: 900px) {
+  .nav-sidebar { display: none; }
+  .main-content { margin-left: 0; padding: 24px; }
+}
+
+.theme-toggle {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  z-index: 200;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 6px 12px;
+  color: var(--text);
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+.theme-toggle:hover {
+  background: var(--surface2);
+  border-color: var(--accent-blue);
+}
+/* shared: readable content links in both themes */
+.main-content a, .main-content a code { color: var(--accent-blue); }
+.main-content a:hover { color: var(--accent-cyan); }
+
+/* page-local */
+.diagram svg { max-width: 100%; height: auto; display: block; margin: 0 auto; }
+.diagram .fig-cap { font-size: 12px; color: var(--text-dim); text-align: center; margin: 12px auto 0; max-width: 820px; line-height: 1.5; }
+.diagram svg text { font-family: system-ui, sans-serif; }
+.rest-table td code { white-space: nowrap; }
+
+/* ── Refinement layer: typography, response, materials ── */
+
+html { scroll-behavior: smooth; scroll-padding-top: 24px; }
+
+body {
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  font-optical-sizing: auto;
+}
+
+::selection { background: rgba(56, 139, 253, 0.22); }
+
+/* Type — size-specific tracking and leading */
+h1 {
+  background: none;
+  -webkit-text-fill-color: var(--text);
+  color: var(--text);
+  letter-spacing: -0.022em;
+  line-height: 1.15;
+  text-wrap: balance;
+}
+h2 { letter-spacing: -0.015em; text-wrap: balance; }
+h3 { letter-spacing: -0.008em; }
+p { font-size: 14.5px; line-height: 1.65; }
+ul, ol { font-size: 14.5px; }
+li { line-height: 1.6; }
+.page-subtitle { font-size: 16px; text-wrap: pretty; }
+
+/* Quieter chrome — tint instead of fill, neutral table headers */
+h2 .num {
+  background: rgba(56, 139, 253, 0.13);
+  color: var(--accent-blue);
+  font-weight: 650;
+}
+th {
+  color: var(--text-dim);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+table { font-variant-numeric: tabular-nums; }
+
+/* Gentle depth on resting surfaces */
+.card, .diagram, .comparison-col { box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04); }
+
+/* Response — feedback on press, not just hover */
+.nav-link, .theme-toggle, .hero-card, .view-toggle-btn {
+  transition: background 0.15s ease-out, color 0.15s ease-out,
+              border-color 0.15s ease-out, transform 0.15s ease-out;
+}
+.nav-link:active, .view-toggle-btn:active { transform: scale(0.98); transition-duration: 0.05s; }
+.theme-toggle:active { transform: scale(0.96); transition-duration: 0.05s; }
+.hero-card:active { transform: translateY(0) scale(0.99); transition-duration: 0.05s; }
+.main-content a:active { opacity: 0.65; }
+
+:focus-visible { outline: 2px solid var(--accent-blue); outline-offset: 2px; border-radius: 4px; }
+
+.nav-sidebar { scrollbar-width: thin; }
+
+/* Floating chrome reads as material — content scrolls beneath it */
+.theme-toggle {
+  background: color-mix(in srgb, var(--surface) 72%, transparent);
+  backdrop-filter: blur(12px) saturate(180%);
+  -webkit-backdrop-filter: blur(12px) saturate(180%);
+  box-shadow: 0 1px 3px rgba(16, 24, 40, 0.07);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { transition-duration: 0.01ms !important; animation: none !important; }
+}
+@media (prefers-reduced-transparency: reduce) {
+  .theme-toggle {
+    background: var(--surface);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+}
+
+/* ── Refinement layer v2: beauty pass ── */
+
+/* Sidebar — calmer rhythm, tactile links */
+.nav-sidebar { padding: 20px 0 28px; }
+.nav-sidebar::-webkit-scrollbar { width: 8px; }
+.nav-sidebar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+.nav-logo { padding: 4px 20px 0; margin-bottom: 20px; }
+.nav-section { margin-bottom: 14px; }
+.nav-section-title { padding: 10px 10px 6px; }
+.nav-link { padding: 6px 10px; border-radius: 7px; }
+.nav-link.active { font-weight: 600; }
+
+/* Section rules — the divider fades out instead of cutting across */
+h2 { border-bottom: none; padding-bottom: 10px; position: relative; margin-top: 52px; }
+h2::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 1px;
+  background: linear-gradient(90deg, var(--border) 55%, transparent);
+}
+
+/* Surfaces — rounder, softer */
+.card, .diagram, .comparison-col { border-radius: 12px; }
+pre, .callout { border-radius: 10px; }
+
+/* Tables — enclosed, rounded, quiet */
+table {
+  border-collapse: separate; border-spacing: 0;
+  border: 1px solid var(--border); border-radius: 10px; overflow: hidden;
+}
+th { background: var(--surface); border-bottom: 1px solid var(--border); padding: 10px 14px; }
+td { padding: 9px 14px; }
+tr:last-child td { border-bottom: none; }
+th:first-child { border-top-left-radius: 9px; }
+th:last-child { border-top-right-radius: 9px; }
+tr:last-child td:first-child { border-bottom-left-radius: 9px; }
+tr:last-child td:last-child { border-bottom-right-radius: 9px; }
+
+/* Floating toggle as a pill */
+.theme-toggle { border-radius: 999px; padding: 7px 14px; font-weight: 600; }
+
+/* Landing hero — faint atmospheric wash, icon chips, deeper card lift */
+.hero { position: relative; }
+.hero::before {
+  content: ""; position: absolute; inset: -48px -80px 0; z-index: -1; pointer-events: none;
+  background:
+    radial-gradient(55% 45% at 50% 0%, rgba(56, 139, 253, 0.07), transparent 70%),
+    radial-gradient(35% 35% at 82% 12%, rgba(188, 140, 255, 0.05), transparent 70%);
+}
+.hero h1 { font-size: 54px; letter-spacing: -0.03em; }
+.hero .tagline { font-size: 19px; text-wrap: pretty; }
+.hero-card {
+  border-radius: 14px; padding: 26px 24px;
+  box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04);
+}
+.hero-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 28px rgba(16, 24, 40, 0.08);
+}
+.hero-card .icon {
+  width: 46px; height: 46px; display: inline-grid; place-items: center;
+  background: var(--surface2); border-radius: 12px;
+  font-size: 22px; margin-bottom: 14px;
+}
+
+/* ── Refinement v3: professional pass (external design review) ── */
+
+html { color-scheme: light; }
+[data-theme="dark"] { color-scheme: dark; }
+[data-theme="dark"] .diagram svg rect[fill="rgba(5,80,174,0.06)"] { fill: rgba(88,166,255,0.08); }
+[data-theme="dark"] .diagram svg rect[fill="rgba(12,90,109,0.06)"] { fill: rgba(86,212,221,0.08); }
+[data-theme="dark"] .diagram svg rect[fill="rgba(207,34,46,0.06)"] { fill: rgba(248,81,73,0.08); }
+[data-theme="dark"] .diagram svg rect[fill="rgba(110,64,201,0.06)"] { fill: rgba(188,140,255,0.08); }
+[data-theme="dark"] .diagram svg rect[fill="rgba(87,96,106,0.06)"] { fill: rgba(139,148,158,0.10); }
+
+/* Type scale — larger, less compressed */
+body { font-size: 15.5px; }
+p, ul, ol { font-size: inherit; }
+h1 { font-size: 36px; line-height: 1.12; }
+h2 { font-size: 23px; margin: 56px 0 20px; }
+h3 { font-size: 18px; margin: 32px 0 12px; }
+h4 { font-size: 15px; }
+.page-subtitle { font-size: 17px; line-height: 1.55; max-width: 70ch; margin-bottom: 48px; }
+
+/* One accent — headings are neutral ink */
+h3, h4 { color: var(--text); }
+
+/* Code — relative inline sizing, comfortable blocks */
+code { font-size: 0.875em; padding: 0.12em 0.35em; border-radius: 4px; }
+pre { font-size: 13.5px; line-height: 1.55; padding: 18px 20px; tab-size: 2; }
+pre code { font-size: inherit; padding: 0; }
+
+/* Tables scroll instead of squeezing */
+.table-scroll { overflow-x: auto; margin: 12px 0 24px; border: 1px solid var(--border); border-radius: 10px; }
+.table-scroll table { min-width: 640px; margin: 0; border: 0; }
+td { vertical-align: top; line-height: 1.55; }
+
+/* Diagrams — legible labels, editorial captions */
+.diagram svg, .arch-diagram svg { display: block; width: 100%; height: auto; }
+.diagram svg text[font-size="9"], .diagram svg text[font-size="10"],
+.arch-diagram svg text[font-size="9"], .arch-diagram svg text[font-size="10"] { font-size: 11px; }
+.fig-caption { font-style: normal; text-align: left; font-size: 12.5px; margin: 10px 0 12px; max-width: none; }
+
+/* Landing hero actions + icon chips */
+.hero-actions { display: flex; justify-content: center; gap: 10px; margin: 26px 0 8px; }
+.main-content a.button-primary, .main-content a.button-secondary {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 9px 16px; border-radius: 8px; font-size: 14px; font-weight: 600; text-decoration: none;
+  transition: background 0.15s ease-out, border-color 0.15s ease-out,
+              filter 0.15s ease-out, transform 0.15s ease-out;
+}
+.main-content a.button-primary { background: var(--accent-blue); color: #fff; }
+.main-content a.button-primary:hover { filter: brightness(1.1); color: #fff; }
+.main-content a.button-secondary { border: 1px solid var(--border); background: var(--surface); color: var(--text); }
+.main-content a.button-secondary:hover { border-color: var(--accent-blue); color: var(--text); }
+.main-content a.button-primary:active, .main-content a.button-secondary:active { transform: scale(0.97); }
+.hero-card .icon svg { width: 22px; height: 22px; color: var(--accent-blue); }
+
+/* Mobile navigation — header + slide-in sidebar */
+.mobile-header { display: none; }
+@media (max-width: 900px) {
+  .mobile-header {
+    display: flex; position: sticky; top: 0; z-index: 220; height: 52px;
+    align-items: center; justify-content: space-between; padding: 0 16px;
+    background: var(--bg);
+    background: color-mix(in srgb, var(--bg) 88%, transparent);
+    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+  .mobile-header .mh-brand { font-weight: 700; font-size: 16px; color: var(--text); text-decoration: none; }
+  .nav-toggle {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+    padding: 6px 14px; font: inherit; font-size: 13.5px; font-weight: 600;
+    color: var(--text); cursor: pointer;
+  }
+  .nav-sidebar {
+    display: block; z-index: 240; transform: translateX(-100%);
+    transition: transform 200ms cubic-bezier(0.23, 1, 0.32, 1);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.18);
+  }
+  .nav-sidebar[data-open="true"] { transform: none; }
+  .mobile-header ~ .theme-toggle { top: 62px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .nav-sidebar { transition: none; }
+}
+
+/* ── Coding font + chromeless figures ── */
+code, pre, .code-ref {
+  font-family: ui-monospace, "SF Mono", Menlo, "JetBrains Mono", "Fira Code", Consolas, monospace;
+}
+.diagram, .arch-diagram { background: none; border: none; box-shadow: none; padding: 12px 0; }
+
+/* ── Lighter surfaces for code blocks and callouts ── */
+pre, .callout {
+  background: var(--surface);
+  background: color-mix(in srgb, var(--surface) 55%, var(--bg));
+}
+</style>
+<script>try{if(localStorage.getItem('stacx-theme')==='dark')document.documentElement.setAttribute('data-theme','dark');}catch(e){}</script>
+</head>
+<body>
+<header class="mobile-header"><a class="mh-brand" href="index.html">STACX</a><button class="nav-toggle" type="button" aria-controls="docsNav" aria-expanded="false">Menu</button></header>
+
+<nav class="nav-sidebar" id="docsNav">
+  <div class="nav-logo">
+    <h2>STACX</h2>
+    <div class="version">v1.0 Documentation</div>
+  </div>
+  <div class="nav-section">
+    <div class="nav-section-title">Overview</div>
+    <a href="index.html" class="nav-link">Home</a>
+    <a href="getting-started.html" class="nav-link">Getting Started</a>
+  </div>
+  <div class="nav-section">
+    <div class="nav-section-title">Trainer</div>
+    <a href="architecture.html" class="nav-link">Architecture</a>
+    <a href="backends.html" class="nav-link">Backends</a>
+    <a href="recipes.html" class="nav-link">Algorithm Recipes</a>
+  </div>
+  <div class="nav-section">
+    <div class="nav-section-title">Rollout</div>
+    <a href="rollout.html" class="nav-link">Architecture</a>
+    <a href="rollout-scheduler.html" class="nav-link">Task Scheduler</a>
+    <a href="rollout-inference.html" class="nav-link">Inference Backend</a>
+  </div>
+  <div class="nav-section">
+    <div class="nav-section-title">Environment</div>
+    <a href="environment.html" class="nav-link">Architecture</a>
+    <a href="env-sandbox.html" class="nav-link active">Sandbox Management</a>
+  </div>
+</nav>
+
+<div class="main-content">
+
+<h1>Sandbox Management</h1>
+<p class="page-subtitle">The lifecycle of a ROCK sandbox &mdash; from a per-instance SWE-Bench Docker image to a live pexpect bash session and back &mdash; as driven by the in-house SWE agent.</p>
+
+<p>Beneath the <a href="environment.html">Environment Engine</a> overview, this page traces one ROCK sandbox end to end &mdash; created, executed against, torn down &mdash; and the knobs and failure modes that matter. Its consumer is the in-house SWE agent (<span class="file-ref">rl_engine/examples/swe_agent/</span>); three parts do the work:</p>
+
+<div class="callout-grid">
+  <div class="callout">
+    <h4>Control plane &mdash; rock admin</h4>
+    <p>A FastAPI server (<span class="file-ref">rock/admin/main.py</span>) on <code>127.0.0.1:8080</code> that takes sandbox REST calls and dispatches each to a dedicated Ray actor.</p>
+  </div>
+  <div class="callout">
+    <h4>Data plane &mdash; rocklet</h4>
+    <p>A second FastAPI server <em>inside</em> each container (<span class="file-ref">rock/rocklet/server.py</span>, port <code>8000</code>), wrapping a real <code>/bin/bash</code> via pexpect &mdash; where commands actually execute.</p>
+  </div>
+  <div class="callout">
+    <h4>Consumer &mdash; SWE agent</h4>
+    <p><code>RockSandbox</code> (<span class="file-ref">rl_engine/rollout/sandbox/rock.py</span>), a thin async client: one sandbox per trajectory, a bash / editor call per turn.</p>
+  </div>
+</div>
+
+<p>Every action crosses <strong>two HTTP hops</strong>: agent &rarr; admin on <code>:8080</code>, then the admin's Ray actor &rarr; the container's rocklet on <code>:8000</code>. Which node a sandbox lands on is decided upstream by the <a href="rollout-scheduler.html">Task Scheduler</a>'s <code>PlacementPool</code>, not by ROCK (see &sect;8).</p>
+
+<div class="card cyan">
+  <h4>Scope: the CPU SWE-Bench lane</h4>
+  <p>Sandboxes in the training recipes are <strong>CPU-only</strong> SWE-Bench containers: a checked-out repo at <code>/testbed</code> plus a conda <code>testbed</code> env. The student and teacher LLMs run on separate GPU servers, never inside the sandbox. ROCK's runtime <em>can</em> host GPU or interactive-gym containers, but the training recipes never exercise those paths.</p>
+</div>
+
+<!-- ════════════════════════════════════════════════════════ -->
+<h2><span class="num">1</span> The moving parts</h2>
+
+<p>A sandbox is one Docker/Podman container plus the machinery that manages it &mdash; four processes across the two planes:</p>
+
+<div class="table-scroll"><table>
+  <tr><th>Component</th><th>Where it runs</th><th>Source</th><th>Role</th></tr>
+  <tr>
+    <td><code>SandboxManager</code> / <code>GemManager</code></td>
+    <td>admin process (host)</td>
+    <td><span class="file-ref">rock/sandbox/sandbox_manager.py</span></td>
+    <td>Routes each REST call to the sandbox's Ray actor; tracks image + expiry in Redis; runs the reaper.</td>
+  </tr>
+  <tr>
+    <td><code>SandboxActor</code></td>
+    <td>Ray actor (host)</td>
+    <td><span class="file-ref">rock/sandbox/sandbox_actor.py</span></td>
+    <td>One actor per sandbox. Owns a <code>DockerDeployment</code> and shells out to <code>docker run</code>.</td>
+  </tr>
+  <tr>
+    <td><code>DockerDeployment</code></td>
+    <td>inside the actor</td>
+    <td><span class="file-ref">rock/deployments/docker.py</span></td>
+    <td>Image pull / tar-cache load, <code>docker run</code> with the resource flags, port mapping, auto-clear timer.</td>
+  </tr>
+  <tr>
+    <td><code>rocklet</code> + <code>LocalSandboxRuntime</code></td>
+    <td>inside the container</td>
+    <td><span class="file-ref">rock/rocklet/{server,local_sandbox}.py</span></td>
+    <td>FastAPI server on <code>:8000</code> holding named <code>BashSession</code> objects (pexpect). Executes commands, reads/writes files.</td>
+  </tr>
+</table></div>
+
+<p>In <code>--env local</code> mode there is no Redis, so the expiry reaper is disabled and each container self-terminates on its own auto-clear timer instead. (Endpoints and admin flags are in &sect;10.)</p>
+
+<!-- ════════════════════════════════════════════════════════ -->
+<h2><span class="num">2</span> Lifecycle state machine</h2>
+
+<p>A sandbox moves through a fixed set of phases. Only <strong>start</strong> is expensive, dominated by the image step &mdash; a multi-minute first pull, then a ~10&ndash;25&nbsp;s warm start. The timing chips below show every other phase is sub-second.</p>
+
+<div class="diagram">
+<svg viewBox="0 0 960 540" xmlns="http://www.w3.org/2000/svg" font-family="system-ui, sans-serif">
+  <defs>
+    <marker id="lc1-arw" viewBox="0 0 10 7" refX="9" refY="3.5" markerWidth="8" markerHeight="6" orient="auto"><path d="M0,0 L10,3.5 L0,7z" style="fill:var(--text-dim)"/></marker>
+    <marker id="lc1-arw-red" viewBox="0 0 10 7" refX="9" refY="3.5" markerWidth="8" markerHeight="6" orient="auto"><path d="M0,0 L10,3.5 L0,7z" style="fill:var(--accent-red)"/></marker>
+  </defs>
+  <path d="M280,252 L280,500 L880,500 L880,200" fill="none" style="stroke:var(--accent-red)" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#lc1-arw-red)"/>
+
+  <!-- legend -->
+  <g font-size="11">
+    <rect x="15" y="14" width="14" height="14" rx="3" fill="rgba(5,80,174,0.06)" style="stroke:var(--accent-blue)" stroke-width="1.2"/>
+    <text x="35" y="25" style="fill:var(--text-dim)">control plane (admin + Ray)</text>
+    <rect x="235" y="14" width="14" height="14" rx="3" fill="rgba(12,90,109,0.06)" style="stroke:var(--accent-cyan)" stroke-width="1.2"/>
+    <text x="255" y="25" style="fill:var(--text-dim)">data plane (in container)</text>
+    <rect x="450" y="14" width="14" height="14" rx="3" fill="rgba(207,34,46,0.06)" style="stroke:var(--accent-red)" stroke-width="1.2"/>
+    <text x="470" y="25" style="fill:var(--text-dim)">terminal / abnormal exit</text>
+  </g>
+
+  <!-- self-loop over EXECUTING (box4, center x=680) -->
+  <path d="M710,120 L710,98 L650,98 L650,120" fill="none" style="stroke:var(--text-dim)" stroke-width="1.5" marker-end="url(#lc1-arw)"/>
+  <text x="680" y="92" text-anchor="middle" font-size="11" font-weight="600" style="fill:var(--text-dim)">per turn: run_in_session</text>
+
+  <!-- STATE BOXES: y=120 h=80, centers y=160 -->
+  <!-- 1 CREATE -->
+  <rect x="15" y="120" width="130" height="80" rx="10" fill="rgba(5,80,174,0.06)" style="stroke:var(--accent-blue)" stroke-width="1.5"/>
+  <text x="80" y="146" text-anchor="middle" font-size="15" font-weight="700" style="fill:var(--accent-blue)">CREATE</text>
+  <text x="80" y="166" text-anchor="middle" font-size="11" style="fill:var(--text-dim)">admin picks node,</text>
+  <text x="80" y="181" text-anchor="middle" font-size="11" style="fill:var(--text-dim)">spawns Ray actor</text>
+
+  <!-- 2 STARTING -->
+  <rect x="215" y="120" width="130" height="80" rx="10" fill="rgba(5,80,174,0.06)" style="stroke:var(--accent-blue)" stroke-width="1.5"/>
+  <text x="280" y="146" text-anchor="middle" font-size="15" font-weight="700" style="fill:var(--accent-blue)">STARTING</text>
+  <text x="280" y="166" text-anchor="middle" font-size="11" style="fill:var(--text-dim)">image, docker run</text>
+  <text x="280" y="181" text-anchor="middle" font-size="11" style="fill:var(--text-dim)">rocklet boots</text>
+
+  <!-- 3 READY -->
+  <rect x="415" y="120" width="130" height="80" rx="10" fill="rgba(12,90,109,0.06)" style="stroke:var(--accent-cyan)" stroke-width="1.5"/>
+  <text x="480" y="146" text-anchor="middle" font-size="15" font-weight="700" style="fill:var(--accent-cyan)">READY</text>
+  <text x="480" y="166" text-anchor="middle" font-size="11" style="fill:var(--text-dim)">is_alive=true,</text>
+  <text x="480" y="181" text-anchor="middle" font-size="11" style="fill:var(--text-dim)">session created</text>
+
+  <!-- 4 EXECUTING -->
+  <rect x="615" y="120" width="130" height="80" rx="10" fill="rgba(12,90,109,0.06)" style="stroke:var(--accent-cyan)" stroke-width="1.5"/>
+  <text x="680" y="146" text-anchor="middle" font-size="15" font-weight="700" style="fill:var(--accent-cyan)">EXECUTING</text>
+  <text x="680" y="166" text-anchor="middle" font-size="11" style="fill:var(--text-dim)">bash + editor,</text>
+  <text x="680" y="181" text-anchor="middle" font-size="11" style="fill:var(--text-dim)">state persists</text>
+
+  <!-- 5 STOPPED -->
+  <rect x="815" y="120" width="130" height="80" rx="10" fill="rgba(207,34,46,0.06)" style="stroke:var(--accent-red)" stroke-width="1.5"/>
+  <text x="880" y="146" text-anchor="middle" font-size="15" font-weight="700" style="fill:var(--accent-red)">STOPPED</text>
+  <text x="880" y="166" text-anchor="middle" font-size="11" style="fill:var(--text-dim)">docker kill,</text>
+  <text x="880" y="181" text-anchor="middle" font-size="11" style="fill:var(--text-dim)">actor killed</text>
+
+  <!-- forward arrows on center line y=160 -->
+  <line x1="145" y1="160" x2="215" y2="160" style="stroke:var(--text-dim)" stroke-width="1.5" marker-end="url(#lc1-arw)"/>
+  <text x="180" y="152" text-anchor="middle" font-size="11" font-weight="600" style="fill:var(--text-dim)">start</text>
+  <line x1="345" y1="160" x2="415" y2="160" style="stroke:var(--text-dim)" stroke-width="1.5" marker-end="url(#lc1-arw)"/>
+  <text x="380" y="152" text-anchor="middle" font-size="11" font-weight="600" style="fill:var(--text-dim)">wait alive</text>
+  <line x1="545" y1="160" x2="615" y2="160" style="stroke:var(--text-dim)" stroke-width="1.5" marker-end="url(#lc1-arw)"/>
+  <text x="580" y="152" text-anchor="middle" font-size="11" font-weight="600" style="fill:var(--text-dim)">1st action</text>
+  <line x1="745" y1="160" x2="815" y2="160" style="stroke:var(--text-dim)" stroke-width="1.5" marker-end="url(#lc1-arw)"/>
+  <text x="780" y="152" text-anchor="middle" font-size="11" font-weight="600" style="fill:var(--text-dim)">stop()</text>
+
+  <!-- timing chips row y=214 -->
+  <g font-size="11" font-weight="600">
+    <rect x="15" y="214" width="130" height="38" rx="6" style="fill:var(--surface)"/>
+    <text x="80" y="237" text-anchor="middle" style="fill:var(--text-dim)">&lt; 1 s</text>
+    <rect x="215" y="214" width="130" height="38" rx="6" style="fill:var(--surface)"/>
+    <text x="280" y="230" text-anchor="middle" style="fill:var(--text-dim)">pull: minutes</text>
+    <text x="280" y="245" text-anchor="middle" style="fill:var(--text-dim)">warm: 10&ndash;25 s</text>
+    <rect x="415" y="214" width="130" height="38" rx="6" style="fill:var(--surface)"/>
+    <text x="480" y="237" text-anchor="middle" style="fill:var(--text-dim)">&lt; 1 s</text>
+    <rect x="615" y="214" width="130" height="38" rx="6" style="fill:var(--surface)"/>
+    <text x="680" y="237" text-anchor="middle" style="fill:var(--text-dim)">per turn &le; 120 s</text>
+    <rect x="815" y="214" width="130" height="38" rx="6" style="fill:var(--surface)"/>
+    <text x="880" y="237" text-anchor="middle" style="fill:var(--text-dim)">~ 1 s</text>
+  </g>
+
+  <!-- abort / auto-clear bottom lane: from STARTING bottom around to STOPPED bottom -->
+  <text x="560" y="524" text-anchor="middle" font-size="11" font-weight="600" style="fill:var(--accent-red)">startup timeout · node dead · auto-clear lease expiry &rarr; teardown (termination "aborted")</text>
+
+  <!-- annotation band -->
+  <rect x="15" y="340" width="930" height="130" rx="10" style="fill:var(--surface)" stroke="none"/>
+  <text x="30" y="364" font-size="12" font-weight="700" style="fill:var(--text)">What "start" actually does (rock/deployments/docker.py &middot; DockerDeployment.start)</text>
+  <text x="30" y="386" font-size="11.5" style="fill:var(--text-dim)">1. resolve image name &rarr; if pull policy allows, load from DOCKER_IMAGE_CACHE_DIR tar, else docker pull from the registry</text>
+  <text x="30" y="406" font-size="11.5" style="fill:var(--text-dim)">2. map host ports (rocklet :8000, server :8080, ssh :22) &rarr; docker run --privileged --cpus --memory, command = rocklet</text>
+  <text x="30" y="426" font-size="11.5" style="fill:var(--text-dim)">3. RemoteSandboxRuntime polls until is_alive (bounded by startup_timeout); manager writes {image, expire_time} to Redis</text>
+  <text x="30" y="446" font-size="11.5" style="fill:var(--text-dim)">On stop(): docker kill &rarr; ray.kill(actor) &rarr; ports released &rarr; Redis cleared. The image survives unless removed (&sect;6).</text>
+</svg>
+<p class="fig-cap">Sandbox lifecycle. Boxes are colored by plane; the dashed red lane collapses every abnormal exit (startup timeout, dead node, expired lease) onto teardown. Timing chips give each phase's wall-clock cost.</p>
+</div>
+
+<h3>Phase notes</h3>
+<div class="callout-grid">
+  <div class="callout">
+    <h4>Start &mdash; the costly phase</h4>
+    <p><code>SandboxManager.start_async</code> builds a <code>DockerDeploymentConfig</code> from the REST body, mints the container name (the <code>sandbox_id</code>), and creates a named Ray actor in the <code>xrl-sandbox</code> namespace. A <code>time.sleep(0..5)</code> jitter then keeps a burst of concurrent starts from stampeding the daemon.</p>
+  </div>
+  <div class="callout">
+    <h4>Run, then tear down</h4>
+    <p>Once <code>is_alive</code> flips true the client opens a <code>BashSession</code> and runs commands <strong>sequentially</strong>, the shell keeping state across turns. Explicit <code>RockSandbox.stop()</code> (<span class="file-ref">swe_agent.py:239</span>) is the happy path; the auto-clear lease is the backstop against a leaked container.</p>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════ -->
+<h2><span class="num">3</span> SandboxConfig &amp; the start call</h2>
+
+<p><code>SandboxConfig</code> (<span class="file-ref">rock/sdk/sandbox/config.py</span>) is small and deliberately CPU-oriented: <strong>no</strong> GPU, volume, or network-mode fields. Bind mounts go through the raw <code>docker_args</code> escape hatch on the admin-side <code>DockerDeploymentConfig</code> instead.</p>
+
+<div class="table-scroll"><table class="rest-table">
+  <tr><th>Field</th><th>Default</th><th>Meaning</th></tr>
+  <tr><td><code>image</code></td><td><code>"python:3.11"</code></td><td>Container image tag. The SWE lane overrides this per instance (&sect;6).</td></tr>
+  <tr><td><code>memory</code></td><td><code>"8g"</code></td><td>Hard memory limit &rarr; <code>--memory</code> and <code>--memory-swap</code> (swap pinned to the same value, so no overflow).</td></tr>
+  <tr><td><code>cpus</code></td><td><code>2</code></td><td>CPU quota &rarr; <code>--cpus</code>. The SWE lane uses <code>4</code>.</td></tr>
+  <tr><td><code>auto_clear_seconds</code></td><td><code>14400</code></td><td>Idle lease (4&nbsp;h). Refreshed on every API call; a container idle past it is reaped.</td></tr>
+  <tr><td><code>startup_timeout</code></td><td><code>ROCK_SANDBOX_STARTUP_TIMEOUT_SECONDS</code> (180)</td><td>Ceiling on the create&rarr;alive poll loop. The SWE client passes <code>300</code> (see <code>STACX_SANDBOX_STARTUP_TIMEOUT</code>).</td></tr>
+  <tr><td><code>route_key</code></td><td><code>None</code> &rarr; random UUID</td><td>Sticky routing header so repeated calls reach the same sandbox.</td></tr>
+  <tr><td><code>cluster</code></td><td><code>"zb"</code></td><td>Cluster selector sent as the <code>X-Cluster</code> header.</td></tr>
+  <tr><td><code>user_id</code> / <code>experiment_id</code></td><td><code>None</code></td><td>Optional tags surfaced as <code>X-User-Id</code> / <code>X-Experiment-Id</code> for bookkeeping.</td></tr>
+</table></div>
+
+<p><code>SandboxGroupConfig</code> adds <code>size</code> (2), <code>start_concurrency</code> (2), and <code>start_retry_times</code> (3) for starting a fleet with bounded concurrency and per-sandbox retry.</p>
+
+<h3>A worked example (the ROCK smoke test)</h3>
+<p>The getting-started health check exercises the full SDK path &mdash; start, session, command, stop:</p>
+
+<pre><code><span class="kw">import</span> asyncio, time
+<span class="kw">from</span> rock.actions <span class="kw">import</span> CreateBashSessionRequest
+<span class="kw">from</span> rock.sdk.sandbox.client <span class="kw">import</span> Sandbox
+<span class="kw">from</span> rock.sdk.sandbox.config <span class="kw">import</span> SandboxConfig
+
+<span class="kw">async def</span> <span class="fn">main</span>():
+    cfg = <span class="fn">SandboxConfig</span>(
+        image=<span class="st">"swebench/sweb.eval.x86_64.django_1776_django-10097:latest"</span>,
+        memory=<span class="st">"4g"</span>, cpus=<span class="ar">1.0</span>,
+    )
+    sb = <span class="fn">Sandbox</span>(cfg)
+    <span class="kw">await</span> sb.<span class="fn">start</span>()                                  <span class="cm"># POST /start_async, then poll is_alive</span>
+    <span class="kw">await</span> sb.<span class="fn">create_session</span>(<span class="fn">CreateBashSessionRequest</span>(session=<span class="st">"bash-1"</span>))
+    r = <span class="kw">await</span> sb.<span class="fn">arun</span>(cmd=<span class="st">"cat /etc/os-release | head -3"</span>, session=<span class="st">"bash-1"</span>)
+    <span class="fn">print</span>(r.output)                                <span class="cm"># BashObservation.output</span>
+    <span class="kw">await</span> sb.<span class="fn">stop</span>()
+
+asyncio.<span class="fn">run</span>(<span class="fn">main</span>())</code></pre>
+
+<p><code>start()</code> calls <code>/start_async</code>, then blocks polling <code>get_status().is_alive</code>. The SWE agent instead calls the synchronous <code>/start</code> (via <code>RockSandbox.start</code>) with its own retries; both reach the same <code>SandboxManager</code>.</p>
+
+<!-- ════════════════════════════════════════════════════════ -->
+<h2><span class="num">4</span> Sessions &amp; the action model</h2>
+
+<p>Two execution modes. A <strong>session</strong> is a long-lived <code>/bin/bash</code> REPL whose state (cwd, exported vars, jobs) survives across calls &mdash; what agents use; <code>execute</code> is a stateless one-shot <code>subprocess.run</code>. One sandbox can hold <strong>many named sessions</strong> at once (<code>LocalSandboxRuntime._sessions</code>).</p>
+
+<h3>Request &amp; response types</h3>
+<p>Wire schema (<span class="file-ref">rock/actions/sandbox/{request,response}.py</span>):</p>
+<div class="table-scroll"><table>
+  <tr><th>Type</th><th>Key fields</th><th>Purpose</th></tr>
+  <tr><td><code>CreateBashSessionRequest</code></td><td><code>session</code>, <code>startup_source[]</code>, <code>env_enable</code>, <code>env</code></td><td>Open a named REPL; optionally source files and inherit / inject env.</td></tr>
+  <tr><td><code>BashAction</code></td><td><code>command</code>, <code>session</code>, <code>timeout</code>, <code>check</code></td><td>Run one command. <code>check</code> &isin; <code>silent</code> / <code>raise</code> / <code>ignore</code> controls exit-code handling.</td></tr>
+  <tr><td><code>Command</code></td><td><code>command: str | list[str]</code></td><td>Stateless <code>execute</code> payload (no session).</td></tr>
+  <tr><td><code>ReadFileRequest</code> / <code>WriteFileRequest</code></td><td><code>path</code>, <code>content</code>, <code>encoding</code></td><td>Structured file I/O without going through the shell.</td></tr>
+  <tr><td><code>BashObservation</code></td><td><code>output</code>, <code>exit_code</code>, <code>failure_reason</code></td><td>The result of a session command (aliased <code>Observation</code>).</td></tr>
+  <tr><td><code>SandboxStatusResponse</code></td><td><code>is_alive</code>, <code>host_ip</code>, <code>port_mapping</code>, <code>image</code></td><td>Health + placement metadata returned by <code>get_status</code>.</td></tr>
+</table></div>
+
+<p>Three call styles sit over these types: <code>run_in_session</code> (blocking, one command), <code>arun</code> (adds a <code>nohup</code> background mode &mdash; submit, poll <code>kill -0 &lt;pid&gt;</code>, return output), and <code>execute</code> (stateless). Output is fully buffered into one response (no streaming channel); the per-command <code>timeout</code> bounds its runtime.</p>
+
+<h3>Inside the container: how a command really runs</h3>
+<p><code>BashSession</code> (<span class="file-ref">rock/rocklet/local_sandbox.py</span>) is a pexpect wrapper around <code>/bin/bash</code>. A few correctness tricks explain its quirks:</p>
+<ul>
+  <li><strong>Prompt &amp; exit codes.</strong> A unique PS1 marker (<code>SHELLPS1PREFIX</code>) and an inline <code>echo EXITCODESTART$?EXITCODEEND</code> let pexpect detect completion and read the status &mdash; so the SWE client strips that marker and <code>(testbed)</code> noise from output. A <code>bash -n</code> check runs first, so malformed commands fail fast.</li>
+  <li><strong>Heredocs &amp; pagers.</strong> Heredocs desync prompt detection, so <code>cat &lt;&lt;EOF</code> is auto-rewritten to a <code>base64 -d</code> pipe; <code>GIT_PAGER</code>/<code>PAGER</code> are pinned to <code>cat</code> so no pager stalls a turn. For multi-line content, prefer <code>write_file</code> or the editor tool.</li>
+</ul>
+
+<div class="card orange">
+  <h4>Isolation boundary</h4>
+  <p>The container is the security boundary. The SWE lane runs each one <code>--privileged</code> (SWE-Bench images need it for their build tooling); commands run as the image's default user, with host access limited to the read-only entrypoint bind mount (&sect;5) and an optional log mount. ROCK configures no network isolation for this lane &mdash; reproducibility comes from the pinned per-instance image.</p>
+</div>
+
+<!-- ════════════════════════════════════════════════════════ -->
+<h2><span class="num">5</span> How the SWE agent drives a sandbox</h2>
+
+<p>The agent handler (<span class="file-ref">rl_engine/examples/swe_agent/agents/swe_agent.py</span> and its DAgger subclass) drives one trajectory end to end:</p>
+
+<ol>
+  <li><strong>Placement.</strong> <code>node_ip = context.placement["node_ip"]</code>, chosen by the <a href="rollout-scheduler.html">Task Scheduler</a>; the handler addresses <code>http://{node_ip}:8080</code>.</li>
+  <li><strong>Start.</strong> <code>RockSandbox.start(image, cpus=4, memory="16g", docker_args=[…])</code>, image from <code>get_swe_bench_image(instance_id)</code>, up to 10 retries.</li>
+  <li><strong>Repo setup.</strong> The SWE-Bench repo is already at <code>/testbed</code>, so <code>setup_repo_in_sandbox</code> just <code>git checkout</code>s the base commit; <code>init_session</code> activates the conda <code>testbed</code> env and <code>cd</code>s in.</li>
+  <li><strong>Turns.</strong> Each action becomes an <code>execute_swe_tool</code> call: <code>execute_bash</code> &rarr; <code>run_in_session</code>; <code>str_replace_editor</code> &rarr; the in-container entrypoint.</li>
+  <li><strong>Teardown.</strong> The handler stops the sandbox and, unless <code>STACX_KEEP_IMAGES=1</code>, removes the per-instance image (&sect;6).</li>
+</ol>
+
+<div class="diagram">
+<svg viewBox="0 0 960 430" xmlns="http://www.w3.org/2000/svg" font-family="system-ui, sans-serif">
+  <defs>
+    <marker id="tc2-arw" viewBox="0 0 10 7" refX="9" refY="3.5" markerWidth="8" markerHeight="6" orient="auto"><path d="M0,0 L10,3.5 L0,7z" style="fill:var(--text-dim)"/></marker>
+    <marker id="tc2-arw-blue" viewBox="0 0 10 7" refX="9" refY="3.5" markerWidth="8" markerHeight="6" orient="auto"><path d="M0,0 L10,3.5 L0,7z" style="fill:var(--accent-blue)"/></marker>
+  </defs>
+
+  <!-- legend -->
+  <g font-size="11">
+    <rect x="70" y="12" width="14" height="14" rx="3" fill="rgba(5,80,174,0.06)" style="stroke:var(--accent-blue)" stroke-width="1.2"/>
+    <text x="90" y="23" style="fill:var(--text-dim)">client</text>
+    <rect x="180" y="12" width="14" height="14" rx="3" fill="rgba(87,96,106,0.05)" style="stroke:var(--accent-cyan)" stroke-width="1.2"/>
+    <text x="200" y="23" style="fill:var(--text-dim)">control plane :8080</text>
+    <rect x="390" y="12" width="14" height="14" rx="3" fill="rgba(12,90,109,0.06)" style="stroke:var(--accent-cyan)" stroke-width="1.2"/>
+    <text x="410" y="23" style="fill:var(--text-dim)">data plane :8000 (container)</text>
+    <rect x="660" y="12" width="14" height="14" rx="3" fill="rgba(110,64,201,0.06)" style="stroke:var(--accent-purple)" stroke-width="1.2"/>
+    <text x="680" y="23" style="fill:var(--text-dim)">scheduler token</text>
+  </g>
+
+  <!-- token bracket (left) -->
+  <path d="M52,120 L40,120 L40,300 L52,300" fill="none" style="stroke:var(--accent-purple)" stroke-width="1.5"/>
+  <text x="30" y="214" text-anchor="middle" font-size="11" font-weight="700" transform="rotate(-90 30 214)" style="fill:var(--accent-purple)">PlacementToken (node_ip)</text>
+
+  <!-- 5 boxes: y=120 h=100, centers y=170 ; widths 150, gaps 34 -->
+  <!-- 1 Agent -->
+  <rect x="58" y="120" width="150" height="100" rx="10" fill="rgba(5,80,174,0.06)" style="stroke:var(--accent-blue)" stroke-width="1.5"/>
+  <text x="133" y="150" text-anchor="middle" font-size="14" font-weight="700" style="fill:var(--accent-blue)">Agent turn</text>
+  <text x="133" y="172" text-anchor="middle" font-size="11" style="fill:var(--text-dim)">dagger_agent.py</text>
+  <text x="133" y="190" text-anchor="middle" font-size="11" style="fill:var(--text-dim)">tool: execute_bash</text>
+
+  <!-- 2 RockSandbox -->
+  <rect x="242" y="120" width="150" height="100" rx="10" fill="rgba(5,80,174,0.06)" style="stroke:var(--accent-blue)" stroke-width="1.5"/>
+  <text x="317" y="150" text-anchor="middle" font-size="14" font-weight="700" style="fill:var(--accent-blue)">RockSandbox</text>
+  <text x="317" y="172" text-anchor="middle" font-size="11" style="fill:var(--text-dim)">sandbox/rock.py</text>
+  <text x="317" y="190" text-anchor="middle" font-size="11" style="fill:var(--text-dim)">execute_in_session()</text>
+
+  <!-- 3 admin -->
+  <rect x="426" y="120" width="150" height="100" rx="10" fill="rgba(87,96,106,0.05)" style="stroke:var(--accent-cyan)" stroke-width="1.5"/>
+  <text x="501" y="150" text-anchor="middle" font-size="14" font-weight="700" style="fill:var(--accent-cyan)">rock admin</text>
+  <text x="501" y="172" text-anchor="middle" font-size="11" style="fill:var(--text-dim)">SandboxManager</text>
+  <text x="501" y="190" text-anchor="middle" font-size="11" style="fill:var(--text-dim)">:8080 &middot; Ray lookup</text>
+
+  <!-- 4 actor/container -->
+  <rect x="610" y="120" width="150" height="100" rx="10" fill="rgba(12,90,109,0.06)" style="stroke:var(--accent-cyan)" stroke-width="1.5"/>
+  <text x="685" y="150" text-anchor="middle" font-size="14" font-weight="700" style="fill:var(--accent-cyan)">SandboxActor</text>
+  <text x="685" y="172" text-anchor="middle" font-size="11" style="fill:var(--text-dim)">RemoteSandboxRuntime</text>
+  <text x="685" y="190" text-anchor="middle" font-size="11" style="fill:var(--text-dim)">rocklet :8000</text>
+
+  <!-- 5 bash -->
+  <rect x="794" y="120" width="150" height="100" rx="10" fill="rgba(12,90,109,0.06)" style="stroke:var(--accent-cyan)" stroke-width="1.5"/>
+  <text x="869" y="150" text-anchor="middle" font-size="14" font-weight="700" style="fill:var(--accent-cyan)">BashSession</text>
+  <text x="869" y="172" text-anchor="middle" font-size="11" style="fill:var(--text-dim)">pexpect /bin/bash</text>
+  <text x="869" y="190" text-anchor="middle" font-size="11" style="fill:var(--text-dim)">PS1 sentinel + $?</text>
+
+  <!-- forward request arrows y=170 -->
+  <line x1="208" y1="170" x2="242" y2="170" style="stroke:var(--text-dim)" stroke-width="1.5" marker-end="url(#tc2-arw)"/>
+  <line x1="392" y1="170" x2="426" y2="170" style="stroke:var(--text-dim)" stroke-width="1.5" marker-end="url(#tc2-arw)"/>
+  <line x1="576" y1="170" x2="610" y2="170" style="stroke:var(--text-dim)" stroke-width="1.5" marker-end="url(#tc2-arw)"/>
+  <line x1="760" y1="170" x2="794" y2="170" style="stroke:var(--text-dim)" stroke-width="1.5" marker-end="url(#tc2-arw)"/>
+
+  <!-- REST path banner -->
+  <rect x="170" y="238" width="674" height="24" rx="6" fill="rgba(12,90,109,0.06)" style="stroke:var(--accent-cyan)" stroke-width="1"/>
+  <text x="507" y="254" text-anchor="middle" font-size="11" font-weight="600" style="fill:var(--accent-cyan)">POST /apis/envs/sandbox/v1/run_in_session &nbsp; { sandbox_id, session, command, check:"silent" }</text>
+
+  <!-- return lane y=300 right->left -->
+  <line x1="869" y1="220" x2="869" y2="300" style="stroke:var(--accent-blue)" stroke-width="1.5" stroke-dasharray="6 4"/>
+  <line x1="869" y1="300" x2="133" y2="300" style="stroke:var(--accent-blue)" stroke-width="1.5" stroke-dasharray="6 4"/>
+  <line x1="133" y1="300" x2="133" y2="220" style="stroke:var(--accent-blue)" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#tc2-arw-blue)"/>
+  <text x="507" y="292" text-anchor="middle" font-size="11" font-weight="600" style="fill:var(--accent-blue)">Observation { output, exit_code } &mdash; cleaned of PS1 / prompt noise, appended as the next turn</text>
+
+  <!-- token lifecycle band -->
+  <rect x="58" y="330" width="886" height="80" rx="10" fill="rgba(110,64,201,0.06)" stroke="none"/>
+  <text x="74" y="352" font-size="12" font-weight="700" style="fill:var(--accent-purple)">Resource token lifecycle (owned by the Task Scheduler, not ROCK)</text>
+  <text x="74" y="373" font-size="11.5" style="fill:var(--text-dim)">acquire ONE PlacementToken at trajectory start &rarr; carries node_ip &rarr; the same sandbox is reused for every turn above</text>
+  <text x="74" y="393" font-size="11.5" style="fill:var(--text-dim)">release in a finally block after run + eval complete &mdash; the token gates node capacity; the per-turn calls do not re-acquire.</text>
+</svg>
+<p class="fig-cap">One tool-call round trip: client &rarr; admin (:8080) &rarr; in-container rocklet (:8000) &rarr; pexpect, and the observation bubbles back. The scheduler's placement token (purple) is acquired once per trajectory and held across all turns &mdash; see the <a href="rollout-scheduler.html">Task Scheduler</a>.</p>
+</div>
+
+<h3>The editor tool &amp; the bind-mounted entrypoint</h3>
+<p>Bash runs through <code>run_in_session</code>, but structured edits (<code>view</code> / <code>create</code> / <code>str_replace</code> / <code>insert</code>) go to a small in-container script (<span class="file-ref">rl_engine/examples/swe_agent/environment/execute_sandbox.py</span>), bind-mounted read-only from <code>SWE_ENTRYPOINT_LOCAL</code> to <code>/home/swe_execute_sandbox.py</code>. It targets Python 3.5+ (no f-strings), since some SWE-Bench images ship an old interpreter.</p>
+
+<!-- ════════════════════════════════════════════════════════ -->
+<h2><span class="num">6</span> Image management</h2>
+
+<p>Each SWE-Bench instance has its own pre-built image (2&ndash;8&nbsp;GB), named from the instance id (<span class="file-ref">swe_sandbox.py:get_swe_bench_image</span>):</p>
+
+<pre><code><span class="cm"># django__django-16911  ->  swebench/sweb.eval.x86_64.django_1776_django-16911:latest</span>
+image = <span class="st">f"{namespace}/sweb.eval.x86_64.{instance_id.lower().replace('__','_1776_')}:latest"</span></code></pre>
+
+<p>A run touches hundreds of unique instances, so image handling dominates first-run cost and disk. Three mechanisms manage it:</p>
+
+<div class="feature-grid">
+  <div class="feature-item">
+    <h4>Registry pull + cache</h4>
+    <p>First hit pulls from Docker Hub (minutes); later hits use the local Docker cache (~10&ndash;25&nbsp;s). Pull policy defaults to <code>missing</code> (<code>never</code> / <code>always</code> also valid).</p>
+  </div>
+  <div class="feature-item">
+    <h4>Tar cache</h4>
+    <p>With <code>DOCKER_IMAGE_CACHE_DIR</code> set, <code>_pull_image</code> <code>docker load</code>s a pre-saved <code>&lt;image&gt;.tar</code> before falling back to a registry pull &mdash; useful on air-gapped or rate-limited nodes.</p>
+  </div>
+  <div class="feature-item">
+    <h4>Cleanup</h4>
+    <p>Unless <code>STACX_KEEP_IMAGES=1</code>, the handler calls <code>remove_docker_image</code> after each trajectory (POST <code>/remove_image</code> &rarr; <code>docker rmi --force</code>, 3 retries), keeping disk bounded.</p>
+  </div>
+</div>
+
+<div class="card blue">
+  <h4>Docker Hub authentication is mandatory</h4>
+  <p>Anonymous pulls are rate-limited (~100 / 6&nbsp;h per IP) and one run pulls far more. Run <code>docker login</code> first &mdash; ROCK inherits the daemon login, so one login covers the base image and every sandbox pull. See getting-started &sect;2/&sect;3e.</p>
+</div>
+
+<p><strong>Warmup</strong> (<span class="file-ref">rock/sandbox/service/warmup_service.py</span>) <em>pre-pulls</em> a configured image list onto every alive Ray worker node at admin start (one <code>WarmupActor</code> per node); it does not keep a pool of running containers. The SWE recipes configure no warmup images, so this path is dormant &mdash; cold starts are amortized by the Docker cache and the optional tar cache instead.</p>
+
+<!-- ════════════════════════════════════════════════════════ -->
+<h2><span class="num">7</span> GEM environments</h2>
+
+<p><code>GemManager</code> (<span class="file-ref">rock/sandbox/gem_manager.py</span>) &mdash; the <code>SandboxManager</code> subclass the admin actually instantiates &mdash; adds <code>env_make</code> / <code>env_step</code> / <code>env_reset</code> / <code>env_close</code> to host a Gymnasium-style environment inside a sandbox (via <code>gem.make(env_id)</code> in <code>LocalSandboxRuntime</code>), one container per env.</p>
+
+<div class="card purple">
+  <h4>Ephemeral, not pooled</h4>
+  <p>SWE-lane sandboxes live and die with one trajectory. The only cross-trajectory reuse is the per-node Docker <em>image</em> cache, plus the sticky <code>route_key</code> that keeps a live sandbox's calls on the same instance.</p>
+</div>
+
+<!-- ════════════════════════════════════════════════════════ -->
+<h2><span class="num">8</span> Resource accounting: scheduler vs. runtime</h2>
+
+<p>Two layers account for resources:</p>
+
+<div class="callout-grid">
+  <div class="callout">
+    <h4>Scheduler &mdash; admission</h4>
+    <p>The rollout <code>PlacementPool</code> (<span class="file-ref">rl_engine/rollout/scheduler/resource.py</span>) hands out one token per running sample, each carrying a <code>node_ip</code> &mdash; deciding <em>how many</em> sandboxes run concurrently and <em>where</em>. See <a href="rollout-scheduler.html">Task Scheduler</a>.</p>
+  </div>
+  <div class="callout">
+    <h4>Runtime &mdash; enforcement</h4>
+    <p>ROCK enforces per-container limits at <code>docker run</code> time via <code>--cpus</code> and <code>--memory</code>/<code>--memory-swap</code>. It tracks no cluster-wide capacity, trusting the scheduler not to oversubscribe a node.</p>
+  </div>
+</div>
+
+<p>The DAgger evaluator budgets a node at <code>cpu=96, memory_gb=320, gpu=0</code> and gives each sandbox <code>4</code> CPU / <code>16</code>&nbsp;GB &mdash; ~20 concurrent containers per node (<span class="file-ref">evaluator_config_dagger.py</span>). Per-actor start concurrency is capped by <code>STACX_DAGGER_ENV_CONCURRENCY</code> (default <code>4</code>, lowered from 12) to stay under the daemon's start throughput.</p>
+
+<!-- ════════════════════════════════════════════════════════ -->
+<h2><span class="num">9</span> Failure modes &amp; ops</h2>
+
+<div class="table-scroll"><table>
+  <tr><th>Symptom</th><th>Cause &amp; handling</th></tr>
+  <tr>
+    <td>Startup &gt; 60&nbsp;s</td>
+    <td>Almost always a cold image pull. Raise <code>STACX_SANDBOX_STARTUP_TIMEOUT</code> (default 300&nbsp;s) on slow networks; pre-seed with a tar cache.</td>
+  </tr>
+  <tr>
+    <td>Bursty <code>ray.get timed out</code> / reward=0 spikes</td>
+    <td>Too many concurrent <code>docker</code>/<code>podman</code> starts. The client tracks per-node failures and fast-fails a node after 5 consecutive errors, re-probing after 5&nbsp;min. Lower <code>STACX_DAGGER_ENV_CONCURRENCY</code>.</td>
+  </tr>
+  <tr>
+    <td>Sandbox reaped mid-turn</td>
+    <td>The auto-clear lease is refreshed per API call but <em>not</em> during an in-flight command or a long LLM-generation gap. A gap longer than the lease can expire a container; keep the lease (240&nbsp;min) well above the longest expected stall.</td>
+  </tr>
+  <tr>
+    <td>Disk fills on env nodes</td>
+    <td>Leaked per-instance images. Confirm <code>STACX_KEEP_IMAGES=0</code>; watch for <code>LEAKED IMAGE</code> log lines when <code>remove_image</code> exhausts its retries.</td>
+  </tr>
+  <tr>
+    <td>Overlay layers accumulate (tmpfs graphroot)</td>
+    <td><code>--prune-env-between-steps</code> runs <code>podman system prune -af</code> on all env nodes between rollout and training (<span class="file-ref">rollout_manager.py:prune_env_nodes</span>, <span class="file-ref">env_engine/cleanup_server.py</span>).</td>
+  </tr>
+  <tr>
+    <td>Command hangs the session</td>
+    <td>Interactive prompts or heredocs desync pexpect. Pagers are disabled and heredocs auto-rewritten; still, prefer non-interactive flags and <code>write_file</code> for multi-line content.</td>
+  </tr>
+  <tr>
+    <td>Root-owned <code>external/</code> dirs after a crash</td>
+    <td>Docker created a bind-mount target as root. Pre-create output roots with your own user; to recover, run a short-lived container that <code>chmod</code>s the affected directories. See getting-started &sect;8.</td>
+  </tr>
+</table></div>
+
+<p>When infrastructure fails a turn &mdash; generation aborted, or the sandbox unreachable &mdash; the trajectory ends with <code>_termination_reason = "aborted"</code>, distinct from a clean <code>finish</code> and from budget/loop/context-overflow exits. The finish-only filter (<code>STACX_FINISH_ONLY_FILTER</code>) then drops everything that is not <code>finish</code>, so it never reaches the trainer.</p>
+
+<!-- ════════════════════════════════════════════════════════ -->
+<h2><span class="num">10</span> Knob &amp; endpoint reference</h2>
+
+<h3>Sandbox REST API <span class="file-ref">(prefix /apis/envs/sandbox/v1, rock/admin/entrypoints/sandbox_api.py)</span></h3>
+<div class="table-scroll"><table class="rest-table">
+  <tr><th>Endpoint</th><th>Purpose</th></tr>
+  <tr><td><code>POST /start</code> · <code>/start_async</code></td><td>Create a sandbox (sync waits for alive; async returns the id immediately).</td></tr>
+  <tr><td><code>GET /get_status</code> · <code>/is_alive</code></td><td>Health, ports, image, host.</td></tr>
+  <tr><td><code>POST /create_session</code> · <code>/close_session</code></td><td>Open / close a named bash REPL.</td></tr>
+  <tr><td><code>POST /run_in_session</code></td><td>Run a command in a session (stateful).</td></tr>
+  <tr><td><code>POST /execute</code></td><td>Run a command with no session (stateless subprocess).</td></tr>
+  <tr><td><code>POST /read_file</code> · <code>/write_file</code> · <code>/upload</code></td><td>Structured file I/O and multipart upload.</td></tr>
+  <tr><td><code>POST /stop</code></td><td>Kill the container and its Ray actor.</td></tr>
+  <tr><td><code>POST /remove_image</code></td><td><code>docker rmi --force</code> on the host to reclaim disk.</td></tr>
+  <tr><td><code>POST /commit</code></td><td>Commit the running container to a new image tag.</td></tr>
+</table></div>
+<p>The GEM env API lives separately under <code>/apis/v1/envs/gem/{make,step,reset,close,list}</code>.</p>
+
+<h3>Environment variables that touch sandboxes</h3>
+<div class="table-scroll"><table>
+  <tr><th>Variable</th><th>Default</th><th>Read by</th><th>Effect</th></tr>
+  <tr><td><code>STACX_SANDBOX_STARTUP_TIMEOUT</code></td><td><code>300</code></td><td><span class="file-ref">swe_sandbox.py</span></td><td>Start&rarr;alive ceiling passed to <code>/start</code>.</td></tr>
+  <tr><td><code>STACX_KEEP_IMAGES</code></td><td><code>0</code></td><td><span class="file-ref">swe_agent.py</span></td><td><code>1</code> skips post-trajectory image removal.</td></tr>
+  <tr><td><code>STACX_DAGGER_ENV_CONCURRENCY</code></td><td><code>4</code></td><td><span class="file-ref">evaluator_config_dagger.py</span></td><td>Concurrent sandbox starts per env actor.</td></tr>
+  <tr><td><code>SWE_ENTRYPOINT_LOCAL</code></td><td>(required)</td><td><span class="file-ref">swe_sandbox.py</span></td><td>Host path of the editor entrypoint, bind-mounted read-only.</td></tr>
+  <tr><td><code>DOCKER_IMAGE_CACHE_DIR</code></td><td>unset</td><td><span class="file-ref">deployments/docker.py</span></td><td>Directory of <code>&lt;image&gt;.tar</code> files for <code>docker load</code> before pulling.</td></tr>
+  <tr><td colspan="4">SDK-side <code>ROCK_*</code> defaults &mdash; startup timeout (<code>180</code>&nbsp;s), auto-clear lease (<code>360</code>&nbsp;min), rocklet provisioning (<code>ROCK_WORKER_ENV_TYPE</code>, <code>local</code>/<code>docker</code>/<code>uv</code>/<code>pip</code>), and the optional <code>ROCK_LOGGING_PATH</code> log mount &mdash; live in <span class="file-ref">rock/env_vars.py</span>.</td></tr>
+</table></div>
+
+<h3>Admin launch flags <span class="file-ref">(rock/admin/main.py)</span></h3>
+<div class="table-scroll"><table>
+  <tr><th>Flag</th><th>Default</th><th>Effect</th></tr>
+  <tr><td><code>--port</code></td><td><code>8080</code></td><td>Admin REST port (the getting-started guide's <code>ROCK_PORT</code>).</td></tr>
+  <tr><td><code>--role</code></td><td><code>admin</code></td><td><code>admin</code> serves the full API; <code>proxy</code> serves the routing-only proxy service.</td></tr>
+  <tr><td><code>--env</code></td><td><code>local</code></td><td><code>local</code> disables Redis (no expiry reaper; containers self-clear).</td></tr>
+</table></div>
+
+<p>See also <a href="environment.html">Environment Engine</a> (surrounding architecture), <a href="rollout-scheduler.html">Task Scheduler</a> (how sandboxes are scheduled onto nodes), and <a href="rollout.html">Rollout Architecture</a> (the consuming agent loop).</p>
+
+</div><!-- .main-content -->
+
+<button class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark mode">Dark</button>
+<script>
+(function() {
+  var toggle = document.getElementById('themeToggle');
+  var saved = localStorage.getItem('stacx-theme');
+  if (saved === 'dark') {
+    document.documentElement.setAttribute('data-theme', 'dark');
+    toggle.textContent = 'Light';
+  }
+  toggle.addEventListener('click', function() {
+    var current = document.documentElement.getAttribute('data-theme');
+    if (current === 'dark') {
+      document.documentElement.removeAttribute('data-theme');
+      toggle.textContent = 'Dark';
+      localStorage.setItem('stacx-theme', 'light');
+    } else {
+      document.documentElement.setAttribute('data-theme', 'dark');
+      toggle.textContent = 'Light';
+      localStorage.setItem('stacx-theme', 'dark');
+    }
+  });
+})();
+</script>
+<script>
+(function(){
+  var nav=document.getElementById('docsNav'),btn=document.querySelector('.nav-toggle');
+  if(!nav||!btn)return;
+  btn.addEventListener('click',function(e){e.stopPropagation();var open=nav.getAttribute('data-open')==='true';nav.setAttribute('data-open',String(!open));btn.setAttribute('aria-expanded',String(!open));});
+  document.addEventListener('click',function(e){if(nav.getAttribute('data-open')==='true'&&!nav.contains(e.target))nav.setAttribute('data-open','false');});
+})();
+</script>
+</body>
+</html>

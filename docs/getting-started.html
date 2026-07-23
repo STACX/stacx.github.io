@@ -1,0 +1,1080 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Getting Started — STACX Documentation</title>
+  <style>
+/* STACX Documentation — Shared Stylesheet
+   Dark theme */
+
+:root {
+  --bg: #ffffff;
+  --surface: #f6f8fa;
+  --surface2: #eaeef2;
+  --border: #d1d9e0;
+  --text: #1f2328;
+  --text-dim: #57606a;
+  --accent-blue: #0550ae;
+  --accent-green: #116329;
+  --accent-orange: #953800;
+  --accent-purple: #6e40c9;
+  --accent-red: #cf222e;
+  --accent-cyan: #0c5a6d;
+  --nav-width: 260px;
+}
+
+[data-theme="dark"] {
+  --bg: #0d1117;
+  --surface: #161b22;
+  --surface2: #1c2128;
+  --border: #30363d;
+  --text: #e6edf3;
+  --text-dim: #8b949e;
+  --accent-blue: #58a6ff;
+  --accent-green: #3fb950;
+  --accent-orange: #d29922;
+  --accent-purple: #bc8cff;
+  --accent-red: #f85149;
+  --accent-cyan: #56d4dd;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', system-ui, sans-serif;
+  line-height: 1.6;
+}
+
+/* ── Navigation Sidebar ────────────────────────────────── */
+
+.nav-sidebar {
+  position: fixed;
+  top: 0; left: 0;
+  width: var(--nav-width);
+  height: 100vh;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  padding: 24px 0;
+  overflow-y: auto;
+  z-index: 100;
+}
+
+.nav-logo {
+  padding: 0 20px;
+  margin-bottom: 24px;
+}
+
+.nav-logo h2 {
+  font-size: 18px;
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.nav-logo .version {
+  font-size: 11px;
+  color: var(--text-dim);
+  margin-top: 2px;
+}
+
+.nav-section {
+  padding: 0 12px;
+  margin-bottom: 8px;
+}
+
+.nav-section-title {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--text-dim);
+  padding: 8px 8px 4px 8px;
+}
+
+.nav-link {
+  display: block;
+  padding: 6px 12px;
+  border-radius: 6px;
+  color: var(--text-dim);
+  text-decoration: none;
+  font-size: 13px;
+  transition: all 0.15s;
+}
+
+.nav-link:hover {
+  background: var(--surface2);
+  color: var(--text);
+}
+
+.nav-link.active {
+  background: rgba(56, 139, 253, 0.12);
+  color: var(--accent-blue);
+  font-weight: 500;
+}
+
+.nav-link .placeholder-tag {
+  font-size: 9px;
+  padding: 1px 5px;
+  border-radius: 3px;
+  background: rgba(139, 148, 158, 0.15);
+  color: var(--text-dim);
+  margin-left: 6px;
+  vertical-align: middle;
+}
+
+/* ── Main Content ──────────────────────────────────────── */
+
+.main-content {
+  margin-left: var(--nav-width);
+  padding: 48px 48px 80px 48px;
+  max-width: 960px;
+}
+
+h1 {
+  font-size: 32px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.page-subtitle {
+  color: var(--text-dim);
+  font-size: 15px;
+  margin-bottom: 40px;
+}
+
+h2 {
+  font-size: 22px;
+  font-weight: 600;
+  margin: 48px 0 16px 0;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+h2 .num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--accent-blue);
+  color: var(--bg);
+  font-size: 14px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+h3 {
+  font-size: 17px;
+  font-weight: 600;
+  margin: 28px 0 10px 0;
+  color: var(--accent-blue);
+}
+
+h4 {
+  font-size: 14px;
+  font-weight: 600;
+  margin: 16px 0 6px 0;
+  color: var(--accent-green);
+}
+
+p { margin-bottom: 12px; font-size: 14px; }
+
+ul, ol {
+  margin: 8px 0 16px 24px;
+  font-size: 14px;
+}
+
+li { margin-bottom: 4px; }
+
+/* ── Cards ─────────────────────────────────────────────── */
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 20px 24px;
+  margin-bottom: 16px;
+}
+
+.card.blue   { border-left: 3px solid var(--accent-blue); }
+.card.green  { border-left: 3px solid var(--accent-green); }
+.card.orange { border-left: 3px solid var(--accent-orange); }
+.card.purple { border-left: 3px solid var(--accent-purple); }
+.card.red    { border-left: 3px solid var(--accent-red); }
+.card.cyan   { border-left: 3px solid var(--accent-cyan); }
+
+.card h4 { margin-top: 0; }
+.card p:last-child { margin-bottom: 0; }
+
+/* ── Callout Grid ──────────────────────────────────────── */
+
+.callout-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px;
+  margin: 16px 0 24px 0;
+}
+
+.callout {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.callout h4 {
+  font-size: 14px;
+  font-weight: 600;
+  margin: 0 0 4px 0;
+}
+
+.callout p {
+  font-size: 13px;
+  color: var(--text-dim);
+  margin: 0;
+}
+
+/* ── Code ──────────────────────────────────────────────── */
+
+code {
+  font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+  font-size: 12px;
+  background: rgba(110, 118, 129, 0.15);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+pre {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px 20px;
+  overflow-x: auto;
+  font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+  font-size: 12px;
+  line-height: 1.6;
+  margin: 10px 0 16px 0;
+  color: var(--text);
+}
+
+pre code {
+  background: none;
+  padding: 0;
+  font-size: inherit;
+}
+
+.code-ref {
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  font-size: 12px;
+  color: var(--accent-orange);
+  background: rgba(210, 153, 34, 0.1);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.file-ref {
+  color: var(--text-dim);
+  font-size: 12px;
+  font-style: italic;
+}
+
+/* syntax coloring in pre blocks */
+.kw { color: var(--accent-purple); }
+.fn { color: var(--accent-blue); }
+.cm { color: var(--text-dim); }
+.st { color: var(--accent-green); }
+.ar { color: var(--accent-orange); font-weight: 600; }
+
+/* ── Tables ────────────────────────────────────────────── */
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 12px 0 24px 0;
+  font-size: 13px;
+}
+
+th {
+  text-align: left;
+  padding: 10px 12px;
+  border-bottom: 2px solid var(--border);
+  color: var(--accent-blue);
+  font-weight: 600;
+}
+
+td {
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+tr:hover td {
+  background: rgba(56, 139, 253, 0.04);
+}
+
+/* ── Flow Diagrams ─────────────────────────────────────── */
+
+.diagram {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 24px;
+  margin: 16px 0;
+  overflow-x: auto;
+}
+
+.diagram pre {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  color: var(--text-dim);
+}
+
+/* ── Tags / Badges ─────────────────────────────────────── */
+
+.tag {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.tag-blue   { background: rgba(56, 139, 253, 0.15); color: var(--accent-blue); }
+.tag-green  { background: rgba(63, 185, 80, 0.15); color: var(--accent-green); }
+.tag-orange { background: rgba(210, 153, 34, 0.15); color: var(--accent-orange); }
+.tag-purple { background: rgba(188, 140, 255, 0.15); color: var(--accent-purple); }
+.tag-red    { background: rgba(248, 81, 73, 0.15); color: var(--accent-red); }
+
+/* ── Placeholder Banner ────────────────────────────────── */
+
+.placeholder-banner {
+  background: var(--surface2);
+  border: 1px dashed var(--border);
+  border-radius: 10px;
+  padding: 48px 32px;
+  text-align: center;
+  margin: 32px 0;
+}
+
+.placeholder-banner h3 {
+  color: var(--text-dim);
+  margin-bottom: 8px;
+}
+
+.placeholder-banner p {
+  color: var(--text-dim);
+  font-size: 14px;
+}
+
+/* ── Comparison Grid ───────────────────────────────────── */
+
+.comparison-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin: 16px 0;
+}
+
+.comparison-col {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+  overflow-x: auto;
+}
+
+.comparison-col h3 {
+  font-size: 16px;
+  text-align: center;
+  margin-top: 0;
+}
+
+/* ── Feature Grid ──────────────────────────────────────── */
+
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+  margin: 16px 0 24px 0;
+}
+
+.feature-item {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.feature-item h4 {
+  margin: 0 0 4px 0;
+  font-size: 13px;
+}
+
+.feature-item p {
+  font-size: 12px;
+  color: var(--text-dim);
+  margin: 0;
+}
+
+/* ── Responsive ────────────────────────────────────────── */
+
+@media (max-width: 900px) {
+  .nav-sidebar { display: none; }
+  .main-content { margin-left: 0; padding: 24px; }
+  .comparison-grid { grid-template-columns: 1fr; }
+}
+
+    .dir-tree { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 20px 24px; margin: 16px 0; font-family: 'SF Mono','Fira Code',monospace; font-size: 13px; }
+    .dir-children { margin-left: 20px; padding-left: 12px; border-left: 1px solid var(--border); }
+    .dir-entry { padding: 2px 0; }
+    .dir-name { color: var(--accent-blue); font-weight: 500; }
+    .file-name { color: var(--accent-green); }
+    .dir-desc { color: var(--text-dim); font-size: 12px; margin-left: 8px; }
+
+.theme-toggle {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  z-index: 200;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 6px 12px;
+  color: var(--text);
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+.theme-toggle:hover {
+  background: var(--surface2);
+  border-color: var(--accent-blue);
+}
+
+/* page-local: getting-started */
+.lead { font-size: 15px; color: var(--text-dim); margin-bottom: 18px; }
+a.card-link { text-decoration: none; color: inherit; display: block; transition: border-color 0.15s, background 0.15s; }
+a.card-link:hover { border-color: var(--accent-blue); background: var(--surface2); }
+a.card-link h4 { color: var(--accent-blue); }
+.fig-cap { text-align: center; font-size: 12px; color: var(--text-dim); font-style: italic; margin: 14px auto 0; max-width: 760px; }
+.note { border-left: 3px solid var(--accent-orange); background: var(--surface2); border-radius: 6px; padding: 12px 16px; margin: 14px 0; font-size: 13px; }
+.note strong { color: var(--accent-orange); }
+  /* shared: readable content links in both themes */
+.main-content a, .main-content a code { color: var(--accent-blue); }
+.main-content a:hover { color: var(--accent-cyan); }
+
+/* ── Refinement layer: typography, response, materials ── */
+
+html { scroll-behavior: smooth; scroll-padding-top: 24px; }
+
+body {
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  font-optical-sizing: auto;
+}
+
+::selection { background: rgba(56, 139, 253, 0.22); }
+
+/* Type — size-specific tracking and leading */
+h1 {
+  background: none;
+  -webkit-text-fill-color: var(--text);
+  color: var(--text);
+  letter-spacing: -0.022em;
+  line-height: 1.15;
+  text-wrap: balance;
+}
+h2 { letter-spacing: -0.015em; text-wrap: balance; }
+h3 { letter-spacing: -0.008em; }
+p { font-size: 14.5px; line-height: 1.65; }
+ul, ol { font-size: 14.5px; }
+li { line-height: 1.6; }
+.page-subtitle { font-size: 16px; text-wrap: pretty; }
+
+/* Quieter chrome — tint instead of fill, neutral table headers */
+h2 .num {
+  background: rgba(56, 139, 253, 0.13);
+  color: var(--accent-blue);
+  font-weight: 650;
+}
+th {
+  color: var(--text-dim);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+table { font-variant-numeric: tabular-nums; }
+
+/* Gentle depth on resting surfaces */
+.card, .diagram, .comparison-col { box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04); }
+
+/* Response — feedback on press, not just hover */
+.nav-link, .theme-toggle, .hero-card, .view-toggle-btn {
+  transition: background 0.15s ease-out, color 0.15s ease-out,
+              border-color 0.15s ease-out, transform 0.15s ease-out;
+}
+.nav-link:active, .view-toggle-btn:active { transform: scale(0.98); transition-duration: 0.05s; }
+.theme-toggle:active { transform: scale(0.96); transition-duration: 0.05s; }
+.hero-card:active { transform: translateY(0) scale(0.99); transition-duration: 0.05s; }
+.main-content a:active { opacity: 0.65; }
+
+:focus-visible { outline: 2px solid var(--accent-blue); outline-offset: 2px; border-radius: 4px; }
+
+.nav-sidebar { scrollbar-width: thin; }
+
+/* Floating chrome reads as material — content scrolls beneath it */
+.theme-toggle {
+  background: color-mix(in srgb, var(--surface) 72%, transparent);
+  backdrop-filter: blur(12px) saturate(180%);
+  -webkit-backdrop-filter: blur(12px) saturate(180%);
+  box-shadow: 0 1px 3px rgba(16, 24, 40, 0.07);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { transition-duration: 0.01ms !important; animation: none !important; }
+}
+@media (prefers-reduced-transparency: reduce) {
+  .theme-toggle {
+    background: var(--surface);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+}
+
+/* ── Refinement layer v2: beauty pass ── */
+
+/* Sidebar — calmer rhythm, tactile links */
+.nav-sidebar { padding: 20px 0 28px; }
+.nav-sidebar::-webkit-scrollbar { width: 8px; }
+.nav-sidebar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+.nav-logo { padding: 4px 20px 0; margin-bottom: 20px; }
+.nav-section { margin-bottom: 14px; }
+.nav-section-title { padding: 10px 10px 6px; }
+.nav-link { padding: 6px 10px; border-radius: 7px; }
+.nav-link.active { font-weight: 600; }
+
+/* Section rules — the divider fades out instead of cutting across */
+h2 { border-bottom: none; padding-bottom: 10px; position: relative; margin-top: 52px; }
+h2::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 1px;
+  background: linear-gradient(90deg, var(--border) 55%, transparent);
+}
+
+/* Surfaces — rounder, softer */
+.card, .diagram, .comparison-col { border-radius: 12px; }
+pre, .callout { border-radius: 10px; }
+
+/* Tables — enclosed, rounded, quiet */
+table {
+  border-collapse: separate; border-spacing: 0;
+  border: 1px solid var(--border); border-radius: 10px; overflow: hidden;
+}
+th { background: var(--surface); border-bottom: 1px solid var(--border); padding: 10px 14px; }
+td { padding: 9px 14px; }
+tr:last-child td { border-bottom: none; }
+th:first-child { border-top-left-radius: 9px; }
+th:last-child { border-top-right-radius: 9px; }
+tr:last-child td:first-child { border-bottom-left-radius: 9px; }
+tr:last-child td:last-child { border-bottom-right-radius: 9px; }
+
+/* Floating toggle as a pill */
+.theme-toggle { border-radius: 999px; padding: 7px 14px; font-weight: 600; }
+
+/* Landing hero — faint atmospheric wash, icon chips, deeper card lift */
+.hero { position: relative; }
+.hero::before {
+  content: ""; position: absolute; inset: -48px -80px 0; z-index: -1; pointer-events: none;
+  background:
+    radial-gradient(55% 45% at 50% 0%, rgba(56, 139, 253, 0.07), transparent 70%),
+    radial-gradient(35% 35% at 82% 12%, rgba(188, 140, 255, 0.05), transparent 70%);
+}
+.hero h1 { font-size: 54px; letter-spacing: -0.03em; }
+.hero .tagline { font-size: 19px; text-wrap: pretty; }
+.hero-card {
+  border-radius: 14px; padding: 26px 24px;
+  box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04);
+}
+.hero-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 28px rgba(16, 24, 40, 0.08);
+}
+.hero-card .icon {
+  width: 46px; height: 46px; display: inline-grid; place-items: center;
+  background: var(--surface2); border-radius: 12px;
+  font-size: 22px; margin-bottom: 14px;
+}
+
+/* ── Refinement v3: professional pass (external design review) ── */
+
+html { color-scheme: light; }
+[data-theme="dark"] { color-scheme: dark; }
+
+/* Type scale — larger, less compressed */
+body { font-size: 15.5px; }
+p, ul, ol { font-size: inherit; }
+h1 { font-size: 36px; line-height: 1.12; }
+h2 { font-size: 23px; margin: 56px 0 20px; }
+h3 { font-size: 18px; margin: 32px 0 12px; }
+h4 { font-size: 15px; }
+.page-subtitle { font-size: 17px; line-height: 1.55; max-width: 70ch; margin-bottom: 48px; }
+
+/* One accent — headings are neutral ink */
+h3, h4 { color: var(--text); }
+
+/* Code — relative inline sizing, comfortable blocks */
+code { font-size: 0.875em; padding: 0.12em 0.35em; border-radius: 4px; }
+pre { font-size: 13.5px; line-height: 1.55; padding: 18px 20px; tab-size: 2; }
+pre code { font-size: inherit; padding: 0; }
+
+/* Tables scroll instead of squeezing */
+.table-scroll { overflow-x: auto; margin: 12px 0 24px; border: 1px solid var(--border); border-radius: 10px; }
+.table-scroll table { min-width: 640px; margin: 0; border: 0; }
+td { vertical-align: top; line-height: 1.55; }
+
+/* Diagrams — legible labels, editorial captions */
+.diagram svg, .arch-diagram svg { display: block; width: 100%; height: auto; }
+.diagram svg text[font-size="9"], .diagram svg text[font-size="10"],
+.arch-diagram svg text[font-size="9"], .arch-diagram svg text[font-size="10"] { font-size: 11px; }
+.fig-caption { font-style: normal; text-align: left; font-size: 12.5px; margin: 10px 0 12px; max-width: none; }
+
+/* Landing hero actions + icon chips */
+.hero-actions { display: flex; justify-content: center; gap: 10px; margin: 26px 0 8px; }
+.main-content a.button-primary, .main-content a.button-secondary {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 9px 16px; border-radius: 8px; font-size: 14px; font-weight: 600; text-decoration: none;
+  transition: background 0.15s ease-out, border-color 0.15s ease-out,
+              filter 0.15s ease-out, transform 0.15s ease-out;
+}
+.main-content a.button-primary { background: var(--accent-blue); color: #fff; }
+.main-content a.button-primary:hover { filter: brightness(1.1); color: #fff; }
+.main-content a.button-secondary { border: 1px solid var(--border); background: var(--surface); color: var(--text); }
+.main-content a.button-secondary:hover { border-color: var(--accent-blue); color: var(--text); }
+.main-content a.button-primary:active, .main-content a.button-secondary:active { transform: scale(0.97); }
+.hero-card .icon svg { width: 22px; height: 22px; color: var(--accent-blue); }
+
+/* Mobile navigation — header + slide-in sidebar */
+.mobile-header { display: none; }
+@media (max-width: 900px) {
+  .mobile-header {
+    display: flex; position: sticky; top: 0; z-index: 220; height: 52px;
+    align-items: center; justify-content: space-between; padding: 0 16px;
+    background: var(--bg);
+    background: color-mix(in srgb, var(--bg) 88%, transparent);
+    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+  .mobile-header .mh-brand { font-weight: 700; font-size: 16px; color: var(--text); text-decoration: none; }
+  .nav-toggle {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+    padding: 6px 14px; font: inherit; font-size: 13.5px; font-weight: 600;
+    color: var(--text); cursor: pointer;
+  }
+  .nav-sidebar {
+    display: block; z-index: 240; transform: translateX(-100%);
+    transition: transform 200ms cubic-bezier(0.23, 1, 0.32, 1);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.18);
+  }
+  .nav-sidebar[data-open="true"] { transform: none; }
+  .mobile-header ~ .theme-toggle { top: 62px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .nav-sidebar { transition: none; }
+}
+
+/* ── Coding font + chromeless figures ── */
+code, pre, .code-ref {
+  font-family: ui-monospace, "SF Mono", Menlo, "JetBrains Mono", "Fira Code", Consolas, monospace;
+}
+.diagram, .arch-diagram { background: none; border: none; box-shadow: none; padding: 12px 0; }
+
+/* ── Lighter surfaces for code blocks and callouts ── */
+pre, .callout {
+  background: var(--surface);
+  background: color-mix(in srgb, var(--surface) 55%, var(--bg));
+}
+</style>
+<script>try{if(localStorage.getItem('stacx-theme')==='dark')document.documentElement.setAttribute('data-theme','dark');}catch(e){}</script>
+</head>
+<body>
+<header class="mobile-header"><a class="mh-brand" href="index.html">STACX</a><button class="nav-toggle" type="button" aria-controls="docsNav" aria-expanded="false">Menu</button></header>
+  <div class="layout">
+    <nav class="nav-sidebar" id="docsNav">
+      <div class="nav-logo">
+        <h2>STACX</h2>
+        <div class="version">v1.0 Documentation</div>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Overview</div>
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="getting-started.html" class="nav-link active">Getting Started</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Trainer</div>
+        <a href="architecture.html" class="nav-link">Architecture</a>
+        <a href="backends.html" class="nav-link">Backends</a>
+        <a href="recipes.html" class="nav-link">Algorithm Recipes</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Rollout</div>
+        <a href="rollout.html" class="nav-link">Architecture</a>
+        <a href="rollout-scheduler.html" class="nav-link">Task Scheduler</a>
+        <a href="rollout-inference.html" class="nav-link">Inference Backend</a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Environment</div>
+        <a href="environment.html" class="nav-link">Architecture</a>
+        <a href="env-sandbox.html" class="nav-link">Sandbox Management</a>
+      </div>
+
+    </nav>
+
+    <div class="main-content">
+      <div class="page-header">
+        <h1>Getting Started</h1>
+        <p class="page-subtitle">Set up the sandbox engine, pull the train/eval runtime image, run your first benchmark evaluation, and launch your first SWE training run — end to end on a single node.</p>
+      </div>
+
+      <p class="lead">STACX has three engines, but you set up <strong>two components</strong>: the <strong>sandbox engine</strong> (a ROCK-based service that owns Docker task containers and exposes the <code>rock</code> admin CLI) and the <strong>train/eval runtime</strong> (a pinned Docker image the train and eval drivers run in — there is no RL-engine install on the host). Every run — eval or training — follows the same path:</p>
+
+      <pre><code><span class="cm"># the STACX loop, from dataset to gradient update</span>
+dataset config <span class="ar">→</span> rollout scheduler <span class="ar">→</span> agent + sandbox <span class="ar">→</span> verifier reward <span class="ar">→</span> trainer</code></pre>
+
+      <p>The deep dives live under <a href="architecture.html">Architecture</a>, <a href="recipes.html">Algorithm Recipes</a>, and the <a href="rollout.html">Rollout</a> / <a href="environment.html">Environment</a> sections — see <a href="#next">Where to go next</a>.</p>
+
+      <!-- Section 1: Prerequisites -->
+      <section class="content-section" id="prereqs">
+        <h2><span class="num">1</span> Prerequisites</h2>
+        <p>STACX targets a Linux host with Docker and CUDA-capable GPUs. A single 8-GPU node (A100 / GH200 class) runs the full teacher + student + sandbox stack; smaller setups are fine for evaluation and CPU-only dev installs.</p>
+
+        <div class="table-scroll"><table>
+          <thead>
+            <tr><th>Requirement</th><th>Detail</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Linux + Docker</strong></td>
+              <td>Docker with the NVIDIA container runtime for GPU workloads — <code>docker run --gpus all … nvidia-smi</code> must work. The sandbox engine also supports Podman.</td>
+            </tr>
+            <tr>
+              <td><strong>uv</strong></td>
+              <td>The <a href="https://docs.astral.sh/uv/">uv</a> package manager: <code>curl -LsSf https://astral.sh/uv/install.sh | sh</code>. Required for the sandbox-engine venv.</td>
+            </tr>
+            <tr>
+              <td><strong>GPUs</strong></td>
+              <td>CUDA-capable GPUs for model serving and training. The DAgger recipes assume 8 GPUs on one node — teacher on 0–3, student on 4–7.</td>
+            </tr>
+            <tr>
+              <td><strong>Disk</strong></td>
+              <td>~60 GB under <span class="file-ref">external/</span> for models + data, plus room for per-task Docker images, logs, and checkpoints.</td>
+            </tr>
+            <tr>
+              <td><strong>Local disk, not NFS</strong></td>
+              <td>Clone onto local/scratch disk, not an NFS-mounted home — containers run as root and write under <span class="file-ref">external/</span>, and NFS root-squash turns those writes into <code>PermissionError</code>. The docker wrappers probe this and fail fast.</td>
+            </tr>
+            <tr>
+              <td><strong>Docker Hub login</strong></td>
+              <td>Authenticated pulls (see below) — anonymous pull limits interrupt task-image builds and the on-demand sandbox pulls during training.</td>
+            </tr>
+            <tr>
+              <td><strong>W&amp;B key</strong></td>
+              <td><code>export WANDB_KEY=&lt;your-key&gt;</code> when W&amp;B logging is enabled. The training scripts require it; there is no default. This exact name — the scripts do not read <code>WANDB_API_KEY</code>.</td>
+            </tr>
+          </tbody>
+        </table></div>
+
+        <div class="note">
+          Log in to Docker Hub before training — anonymous pull limits will interrupt a run (create a token at <a href="https://hub.docker.com/settings/security">hub.docker.com/settings/security</a>; ROCK inherits the daemon login).
+        </div>
+<pre><code>echo &lt;your-docker-hub-token&gt; | docker login -u &lt;your-docker-hub-user&gt; --password-stdin</code></pre>
+      </section>
+
+      <!-- Section 2: Sandbox engine -->
+      <section class="content-section" id="install-sandbox">
+        <h2><span class="num">2</span> Install the sandbox engine</h2>
+        <p>Clone the repo, then set up the sandbox engine (ROCK). It runs in its own small <code>uv</code> environment and must be started before any eval or training that executes verifiers. In a separate terminal:</p>
+<pre><code><span class="cm"># clone</span>
+git clone &lt;this-repo&gt; <span class="ar">&amp;&amp;</span> cd stacx
+
+<span class="cm"># sandbox engine — its own env, its own terminal</span>
+cd env_engine
+uv venv --python 3.11 --python-preference only-managed
+uv sync --all-extras
+source .venv/bin/activate
+
+rock admin start                   <span class="cm"># listens on http://127.0.0.1:8080</span></code></pre>
+        <p>Verify that Docker and the admin server are both reachable:</p>
+<pre><code>docker --version
+curl http://127.0.0.1:8080/        <span class="cm"># admin server root; 200 = up</span></code></pre>
+        <p>The admin server is the single entry point for sandbox lifecycle (<code>/apis/envs/sandbox/v1/…</code>): a Ray-based resource scheduler tracks GPUs/CPUs and starts, reuses, and tears down per-task Docker (or Podman) containers. Full detail lives in <span class="file-ref">env_engine/README.md</span> and <span class="file-ref">env_engine/README_ROCK.md</span>, plus the <a href="env-sandbox.html">Sandbox Management</a> page.</p>
+
+        <h3>Smoke-test a sandbox</h3>
+        <p>Before committing to a long run, confirm ROCK can start, exec into, and stop a real SWE-Bench container. Save this as <code>test_rock.py</code> and run it inside the ROCK venv:</p>
+<pre><code><span class="kw">import</span> asyncio, time
+<span class="kw">from</span> rock.actions <span class="kw">import</span> CreateBashSessionRequest
+<span class="kw">from</span> rock.sdk.sandbox.client <span class="kw">import</span> Sandbox
+<span class="kw">from</span> rock.sdk.sandbox.config <span class="kw">import</span> SandboxConfig
+
+<span class="kw">async def</span> <span class="fn">main</span>():
+    t0 = time.time()
+    cfg = SandboxConfig(
+        image=<span class="st">"swebench/sweb.eval.x86_64.django_1776_django-10097:latest"</span>,
+        memory=<span class="st">"4g"</span>, cpus=1.0)
+    sb = Sandbox(cfg)
+    <span class="kw">await</span> sb.start();                          print(f<span class="st">"[{time.time()-t0:.1f}s] started"</span>)
+    <span class="kw">await</span> sb.create_session(CreateBashSessionRequest(session=<span class="st">"bash-1"</span>))
+    r = <span class="kw">await</span> sb.arun(cmd=<span class="st">"cat /etc/os-release | head -1"</span>, session=<span class="st">"bash-1"</span>)
+    print(f<span class="st">"[{time.time()-t0:.1f}s] exec OK:"</span>, r.output.strip())
+    <span class="kw">await</span> sb.stop();                           print(f<span class="st">"[{time.time()-t0:.1f}s] stopped"</span>)
+
+asyncio.run(main())</code></pre>
+        <div class="note">
+          Cold image pulls take minutes; cached starts take seconds.
+        </div>
+      </section>
+
+      <!-- Section 3: Train/eval runtime -->
+      <section class="content-section" id="install-runtime">
+        <h2><span class="num">3</span> Pull the train/eval runtime</h2>
+        <p>There is nothing to install for the RL engine itself — train and eval drivers run inside a pinned Docker image, entered through the thin wrappers <code>shared/docker_run_train.sh</code> / <code>shared/docker_run_eval.sh</code> (the repo is mounted into the container). Pull it once:</p>
+<pre><code>docker pull lichangh20/slime-rl:stable</code></pre>
+        <div class="note">
+          <strong>Development setup (optional).</strong> For host-side development and CPU tests only — not needed to train or eval: <code>bash scripts/setup_env.sh</code> (add <code>--cpu</code> for a CPU-only install), then <code>source activate_stacx.sh</code>.
+        </div>
+      </section>
+
+      <!-- Section 4: First eval -->
+      <section class="content-section" id="first-eval">
+        <h2><span class="num">4</span> Run your first evaluation</h2>
+        <p>Evaluating an installed-scaffold agent is four commands: download the Harbor task tree, convert it into a <code>tasks.jsonl</code>, build the per-task Docker images, then run the shared eval script. The eval driver connects to a running SGLang server rather than launching one — two one-time pieces of setup come first.</p>
+
+        <h3>One-time: SGLang serving env</h3>
+        <p>Installed-agent eval talks to an external SGLang server, run from a small pinned <code>uv</code> env at the repo root (an SGLang new enough for Qwen3.5 — the training image's is too old). Only installed-agent eval uses this env: training in both lanes and in-house agent eval serve SGLang in-process inside the runtime image.</p>
+<pre><code>uv venv .venv-sglang --python 3.11
+source .venv-sglang/bin/activate
+uv pip install --prerelease=allow <span class="st">"sglang[all]==0.5.10rc0"</span></code></pre>
+
+        <h3>One-time: site profile</h3>
+        <p>Once per server, set the host IP and the sandbox GPU budget (<code>gpus</code>, minus the serving GPUs) in the site profile — it is the single source of truth for serving GPUs, TP size, and address, so the server and the eval agree by construction:</p>
+<pre><code>sed -i <span class="st">"s/REPLACE_WITH_SERVER_IP/$(hostname -I | awk '{print $1}')/"</span> \
+  rl_engine/examples/shared/profiles/cluster_layout_default.json</code></pre>
+        <p class="file-ref">Detail: rl_engine/examples/shared/profiles/README.md.</p>
+
+        <h3>Serve the model</h3>
+<pre><code><span class="cm"># blocks in the foreground; run it in its own terminal</span>
+source .venv-sglang/bin/activate
+bash rl_engine/examples/shared/serve_sglang.sh
+
+curl http://&lt;node-ip&gt;:9001/v1/models    <span class="cm"># 200 = ready</span></code></pre>
+        <p><code>serve_sglang.sh</code> reads the site profile, so the serving GPUs, TP size, and address match the eval automatically. Defaults: <code>MODEL=Qwen/Qwen3.5-35B-A3B-FP8</code>, <code>PORT=9001</code>; per-run knobs (<code>MODEL</code>, <code>PORT</code>, <code>SGLANG_SERVE_GPUS</code>, <code>SGLANG_TP_SIZE</code>) are in the script header. Wait for <em>"The server is fired up and ready to roll!"</em>.</p>
+
+        <h3>Download tasks, build images, run</h3>
+        <p>With the sandbox engine running (<a href="#install-sandbox">§2</a>) and the server up — SWE-bench Verified, Django-100 subset. Harbor task trees stage in the repo-local, gitignored <span class="file-ref">external/harbor-datasets/</span>, downloaded straight from the public Harbor registry — no Harbor install needed:</p>
+<pre><code><span class="cm"># 1. download the Harbor task tree (Django-100 subset; without</span>
+<span class="cm">#    --task-names-file the FULL ~500-task verified set downloads and</span>
+<span class="cm">#    step 3 then builds ~500 images)</span>
+python rl_engine/examples/shared/download_tasks.py swebench-verified@1.0 \
+  -o external/harbor-datasets/swebench-verified_1.0 \
+  --task-names-file rl_engine/examples/swebench/config/django100_task_names.yaml
+
+<span class="cm"># 2. Harbor task dirs → tasks.jsonl</span>
+python rl_engine/examples/shared/prepare_jsonl.py \
+  --tasks-dir external/harbor-datasets/swebench-verified_1.0 \
+  --task-names-yaml rl_engine/examples/swebench/config/django100_task_names.yaml \
+  --output rl_engine/examples/swebench/config/tasks_django100.jsonl \
+  --registry swebench
+
+<span class="cm"># 3. build the per-task images</span>
+bash rl_engine/examples/shared/build_images.sh \
+  rl_engine/examples/swebench/config/tasks_django100.jsonl
+
+<span class="cm"># 4. run eval (OpenHands scaffold; SCAFFOLD=terminus2 for Terminus-2)</span>
+BENCH=swebench SCAFFOLD=openhands SGLANG_ROUTER_PORT=9001 \
+  bash rl_engine/examples/shared/docker_run_eval.sh</code></pre>
+        <p>Outputs land under <span class="file-ref">external/results/eval/</span>: the per-task results JSONL (reward, termination reason, verifier data), its <code>.summary.json</code>, the driver <code>.log</code>, and per-task sandbox logs under <span class="file-ref">container_logs/&lt;run&gt;/</span>. The wrapper detaches and prints a <code>tail -f</code> command to follow the run. Other benchmarks swap <code>BENCH=&lt;name&gt;</code> (<code>terminal_bench</code>, <code>algotune</code>, <code>kernel_bench</code>, <code>seta</code>, <code>skyrl</code>); each example's README is the self-contained walkthrough.</p>
+      </section>
+
+      <!-- Section 5: First training run -->
+      <section class="content-section" id="first-train">
+        <h2><span class="num">5</span> Launch your first training run</h2>
+        <p>The launch scripts under <span class="file-ref">scripts/train/swe/</span> encode the model, data, Docker, Ray, SGLang, sandbox-engine, checkpoint, and W&amp;B settings for each recipe — start from one of these rather than calling <code>rl_engine.train</code> directly. We use the <strong>DAgger</strong> recipe (mixed-loss DAgger-OPD, 4B student) as the first run. It co-locates the whole stack on one node:</p>
+
+        <div class="diagram" style="text-align:center">
+<svg viewBox="0 0 960 404" style="max-width:100%;height:auto;" role="img" aria-label="Single-node 8-GPU training layout: teacher and student co-located with the ROCK sandbox orchestrator and host external bind-mounts.">
+  <defs>
+    <marker id="gs-arr" viewBox="0 0 10 7" refX="9" refY="3.5" markerWidth="8" markerHeight="6" orient="auto"><path d="M0,0 L10,3.5 L0,7z" style="fill:var(--text-dim)"/></marker>
+  </defs>
+  <g font-family="system-ui, sans-serif">
+    <text x="480" y="26" text-anchor="middle" style="fill:var(--accent-blue)" font-size="17" font-weight="700">Single-node 8-GPU training layout</text>
+    <text x="480" y="46" text-anchor="middle" style="fill:var(--text-dim)" font-size="12.5">teacher, student, and the sandbox orchestrator co-located on one Docker host (dagger / aggrevate)</text>
+
+    <rect x="24" y="64" width="612" height="204" rx="12" fill="rgba(87,96,106,0.06)" stroke="none"/>
+    <text x="40" y="85" text-anchor="start" style="fill:var(--text-dim)" font-size="12" font-weight="700" letter-spacing="0.5">1 NODE · 8 GPUs · DOCKER + NVIDIA RUNTIME</text>
+
+    <rect x="44" y="96" width="238" height="156" rx="10" fill="rgba(5,80,174,0.06)" stroke="none"/>
+    <text x="163" y="122" text-anchor="middle" style="fill:var(--accent-blue)" font-size="15" font-weight="700">Teacher</text>
+    <text x="163" y="141" text-anchor="middle" style="fill:var(--text)" font-size="12">Qwen3-Coder-30B · SGLang</text>
+    <text x="163" y="158" text-anchor="middle" style="fill:var(--text-dim)" font-size="11">TP=4 · 127.0.0.1:30055</text>
+    <rect x="60" y="180" width="206" height="44" rx="6" fill="rgba(87,96,106,0.08)" style="stroke:var(--border)" stroke-width="1"/>
+    <text x="163" y="207" text-anchor="middle" style="fill:var(--text-dim)" font-size="11" font-weight="600">GPUs 0 · 1 · 2 · 3</text>
+
+    <rect x="378" y="96" width="238" height="156" rx="10" fill="rgba(17,99,41,0.06)" stroke="none"/>
+    <text x="497" y="122" text-anchor="middle" style="fill:var(--accent-green)" font-size="15" font-weight="700">Student</text>
+    <text x="497" y="141" text-anchor="middle" style="fill:var(--text)" font-size="12">Qwen3-4B / 8B · Megatron</text>
+    <text x="497" y="158" text-anchor="middle" style="fill:var(--text-dim)" font-size="11">TP=4 · Ray head + rollout SGLang</text>
+    <rect x="394" y="180" width="206" height="44" rx="6" fill="rgba(87,96,106,0.08)" style="stroke:var(--border)" stroke-width="1"/>
+    <text x="497" y="207" text-anchor="middle" style="fill:var(--text-dim)" font-size="11" font-weight="600">GPUs 4 · 5 · 6 · 7</text>
+
+    <line x1="376" y1="150" x2="286" y2="150" style="stroke:var(--text-dim)" stroke-width="1.5" marker-end="url(#gs-arr)"/>
+    <text x="330" y="142" text-anchor="middle" style="fill:var(--text-dim)" font-size="11" font-weight="700">action req</text>
+    <line x1="286" y1="196" x2="374" y2="196" style="stroke:var(--text-dim)" stroke-width="1.5" marker-end="url(#gs-arr)"/>
+    <text x="330" y="212" text-anchor="middle" style="fill:var(--text-dim)" font-size="11" font-weight="700">logprobs</text>
+
+    <rect x="708" y="96" width="244" height="88" rx="10" fill="rgba(149,56,0,0.06)" style="stroke:var(--accent-orange)" stroke-width="1.5"/>
+    <text x="830" y="126" text-anchor="middle" style="fill:var(--accent-orange)" font-size="15" font-weight="700">rock admin</text>
+    <text x="830" y="147" text-anchor="middle" style="fill:var(--text)" font-size="12">127.0.0.1:8080</text>
+    <text x="830" y="165" text-anchor="middle" style="fill:var(--text-dim)" font-size="11">sandbox lifecycle · Ray scheduler</text>
+
+    <rect x="708" y="202" width="244" height="182" rx="10" fill="rgba(149,56,0,0.06)" stroke="none"/>
+    <text x="830" y="226" text-anchor="middle" style="fill:var(--accent-orange)" font-size="14" font-weight="700">SWE-Bench sandboxes</text>
+    <text x="830" y="243" text-anchor="middle" style="fill:var(--text-dim)" font-size="11">per-instance Docker containers</text>
+    <rect x="724" y="258" width="212" height="26" rx="6" fill="rgba(149,56,0,0.05)" style="stroke:var(--border)" stroke-width="1"/>
+    <text x="830" y="275" text-anchor="middle" style="fill:var(--text-dim)" font-size="11">sweb.eval…django-10097</text>
+    <rect x="724" y="302" width="212" height="26" rx="6" fill="rgba(149,56,0,0.05)" style="stroke:var(--border)" stroke-width="1"/>
+    <text x="830" y="319" text-anchor="middle" style="fill:var(--text-dim)" font-size="11">sweb.eval…astropy-12907</text>
+    <rect x="724" y="346" width="212" height="26" rx="6" fill="rgba(149,56,0,0.05)" style="stroke:var(--border)" stroke-width="1"/>
+    <text x="830" y="363" text-anchor="middle" style="fill:var(--text-dim)" font-size="11">+ pulled once, reused after</text>
+
+    <line x1="616" y1="120" x2="706" y2="120" style="stroke:var(--text-dim)" stroke-width="1.5" marker-end="url(#gs-arr)"/>
+    <text x="666" y="99" text-anchor="middle" style="fill:var(--text-dim)" font-size="11" font-weight="700">sandbox</text>
+    <text x="666" y="112" text-anchor="middle" style="fill:var(--text-dim)" font-size="11" font-weight="700">API</text>
+    <line x1="830" y1="184" x2="830" y2="200" style="stroke:var(--text-dim)" stroke-width="1.5" marker-end="url(#gs-arr)"/>
+    <text x="842" y="196" text-anchor="start" style="fill:var(--text-dim)" font-size="11" font-weight="700">spawn</text>
+    <line x1="706" y1="232" x2="618" y2="232" style="stroke:var(--text-dim)" stroke-width="1.5" marker-end="url(#gs-arr)"/>
+    <text x="661" y="248" text-anchor="middle" style="fill:var(--text-dim)" font-size="11" font-weight="700">result</text>
+
+    <rect x="24" y="300" width="612" height="78" rx="10" fill="rgba(87,96,106,0.05)" stroke="none"/>
+    <text x="40" y="322" text-anchor="start" style="fill:var(--text)" font-size="12" font-weight="700">host external/</text>
+    <text x="40" y="339" text-anchor="start" style="fill:var(--text-dim)" font-size="11">bind-mounted into the student container</text>
+    <rect x="40" y="346" width="76" height="24" rx="6" fill="rgba(87,96,106,0.08)" style="stroke:var(--border)" stroke-width="1"/>
+    <text x="78" y="362" text-anchor="middle" style="fill:var(--text-dim)" font-size="11">models/</text>
+    <rect x="134" y="346" width="76" height="24" rx="6" fill="rgba(87,96,106,0.08)" style="stroke:var(--border)" stroke-width="1"/>
+    <text x="172" y="362" text-anchor="middle" style="fill:var(--text-dim)" font-size="11">data/swe/</text>
+    <rect x="228" y="346" width="76" height="24" rx="6" fill="rgba(87,96,106,0.08)" style="stroke:var(--border)" stroke-width="1"/>
+    <text x="266" y="362" text-anchor="middle" style="fill:var(--text-dim)" font-size="11">ckpts/</text>
+    <rect x="322" y="346" width="76" height="24" rx="6" fill="rgba(87,96,106,0.08)" style="stroke:var(--border)" stroke-width="1"/>
+    <text x="360" y="362" text-anchor="middle" style="fill:var(--text-dim)" font-size="11">logs/</text>
+    <rect x="416" y="346" width="76" height="24" rx="6" fill="rgba(87,96,106,0.08)" style="stroke:var(--border)" stroke-width="1"/>
+    <text x="454" y="362" text-anchor="middle" style="fill:var(--text-dim)" font-size="11">results/</text>
+
+    <line x1="560" y1="298" x2="560" y2="272" style="stroke:var(--text-dim)" stroke-width="1.5" marker-end="url(#gs-arr)"/>
+    <text x="570" y="289" text-anchor="start" style="fill:var(--text-dim)" font-size="11" font-weight="700">bind-mount</text>
+  </g>
+</svg>
+          <div class="fig-cap">The student calls the teacher's SGLang for K3 logprobs and β-mixture actions, drives per-instance SWE-Bench sandboxes through the ROCK admin, and reads/writes checkpoints and data over <code>external/</code> bind-mounts.</div>
+        </div>
+
+        <h3>Stage <span class="file-ref">external/</span></h3>
+        <p><span class="file-ref">external/</span> is <code>.gitignore</code>d — you stage models, data, and output roots locally (~60 GB). For the 4B DAgger run you need the SFT-iter0 student (both the HF dir and the <code>_torch_dist</code> dir), the 30B teacher, and the four data JSONLs — all public, no HuggingFace login needed (<code>uvx</code> runs the HF CLI with no host env to install):</p>
+<pre><code><span class="cm"># pre-create the bind-mount roots as yourself (see the note below)</span>
+mkdir -p external/{models,data,results,ckpts,logs}
+
+<span class="cm"># 4B student (SFT-iter0): HF dir (tokenizer/chat template) + torch_dist (slime --load)</span>
+uvx --from <span class="st">'huggingface_hub[cli]'</span> hf download lichangh20/qwen3-4b-instruct-sft-swegym-iter0 \
+    --local-dir external/models/qwen3-4b-instruct-sft-iter0
+uvx --from <span class="st">'huggingface_hub[cli]'</span> hf download lichangh20/qwen3-4b-instruct-sft-swegym-iter0-distcp \
+    --local-dir external/models/qwen3-4b-instruct-sft-iter0_torch_dist
+
+<span class="cm"># teacher (Qwen3-Coder-30B) + the 4 SWE data jsonls</span>
+uvx --from <span class="st">'huggingface_hub[cli]'</span> hf download Qwen/Qwen3-Coder-30B-A3B-Instruct \
+    --local-dir external/models/qwen3-coder-30b-a3b-instruct
+uvx --from <span class="st">'huggingface_hub[cli]'</span> hf download lichangh20/stacx-swe-online-dagger-data \
+    --repo-type dataset --local-dir external/data/swe</code></pre>
+
+        <div class="note">
+          <strong>Pre-create the output roots first.</strong> The student container bind-mounts host dirs for checkpoints, eval results, data, and models. If a mount's host dir is missing, <strong>Docker creates it as <code>root:root</code></strong> — hence the <code>mkdir -p</code> above, run as yourself before launching.
+        </div>
+
+        <h3>Launch</h3>
+        <p>With ROCK running (<a href="#install-sandbox">§2</a>) and the runtime image pulled (<a href="#install-runtime">§3</a>), one command drives the whole run. This lane is self-contained — teacher and student SGLang are served in-process on the node's own GPUs, so the external server and site profile from <a href="#first-eval">§4</a> are not used. <code>WANDB_KEY</code> is the only required env var (this exact name — the scripts do not read <code>WANDB_API_KEY</code>):</p>
+<pre><code>export WANDB_KEY=&lt;your-wandb-key&gt;
+
+bash scripts/train/swe/online_dagger/dagger_4b.sh        <span class="cm"># dagger, 4B</span>
+<span class="cm"># aggrevate_4b.sh · dagger_8b.sh · aggrevate_8b.sh — same pattern</span></code></pre>
+
+        <p>End to end, with no manual steps in between, the script:</p>
+        <ol>
+          <li>Health-checks ROCK at <code>127.0.0.1:8080</code> (aborts if it is down).</li>
+          <li>Launches the teacher SGLang (Qwen3-Coder-30B, TP=4) on <strong>GPUs 0–3</strong> at <code>127.0.0.1:30055</code> and waits for ready (~3–5 min warmup; it reuses an already-healthy teacher).</li>
+          <li>Launches the student training container on <strong>GPUs 4–7</strong>.</li>
+          <li>Runs <strong>5 rollouts × 512 tasks</strong> (≈1 epoch); per iter: rollout → finish-only filter → teacher force-decode (K3 logprobs) → 3 train passes → SGLang weight sync → eval on 3 datasets → save checkpoint.</li>
+        </ol>
+        <p>Checkpoints land under <span class="file-ref">external/ckpts/online_dagger_mixed_opd/&lt;RUN_TAG&gt;/</span>, per-task eval JSONL + failure-class summaries under <span class="file-ref">external/results/eval/swe_agent_online_dagger_mixed_opd/&lt;RUN_TAG&gt;/</span>, and training logs under <span class="file-ref">external/logs/</span>. Re-running the same command <strong>auto-resumes</strong> from <code>resume_state.json</code> — it skips completed rollouts, reloads weights + optimizer state, and re-opens the same W&amp;B run. For the full walk-through and knob catalog, read the <a href="https://github.com/StACx-StandAloneComplex/stacx/blob/main/scripts/train/swe/QUICKSTART_OPD.md">DAgger-OPD quickstart</a> and the <a href="recipes.html">Algorithm Recipes</a> page.</p>
+      </section>
+
+      <!-- Section 6: Where to go next -->
+      <section class="content-section" id="next">
+        <h2><span class="num">6</span> Where to go next</h2>
+        <p>The rest of the docs go deep on each engine. Start with the recipe you plan to run, then the component pages behind it.</p>
+        <div class="feature-grid">
+          <a class="card-link feature-item" href="architecture.html"><h4>Trainer Architecture</h4><p>The 3-layer trainer: StacxTrainer → RoleWorkers → WorkerPool / TrainWorker.</p></a>
+          <a class="card-link feature-item" href="recipes.html"><h4>Algorithm Recipes</h4><p>DAgger, GRPO, SFT, and OPD — how each recipe wires roles and losses.</p></a>
+          <a class="card-link feature-item" href="backends.html"><h4>Backends &amp; Infrastructure</h4><p>Megatron (TP / PP / CP) and FSDP behind one interface; process groups, checkpointing, weight sync.</p></a>
+          <a class="card-link feature-item" href="rollout.html"><h4>Rollout Architecture</h4><p>The RolloutManager pipeline, from data source to training samples.</p></a>
+          <a class="card-link feature-item" href="rollout-scheduler.html"><h4>Task Scheduler</h4><p>Resource pools, agent lifecycle, and schedule strategies.</p></a>
+          <a class="card-link feature-item" href="rollout-inference.html"><h4>Inference Backend</h4><p>SGLang serving and weight-sync for rollout generation.</p></a>
+          <a class="card-link feature-item" href="environment.html"><h4>Environment Architecture</h4><p>The ROCK-based sandbox engine and its REST API.</p></a>
+          <a class="card-link feature-item" href="env-sandbox.html"><h4>Sandbox Management</h4><p>Container lifecycle, sessions, and resource scheduling.</p></a>
+          <a class="card-link feature-item" href="https://github.com/StACx-StandAloneComplex/stacx/blob/main/scripts/train/swe/QUICKSTART_OPD.md"><h4>DAgger-OPD Quickstart</h4><p>Copy-paste walk-through for the dagger + aggrevate recipes.</p></a>
+          <a class="card-link feature-item" href="https://github.com/StACx-StandAloneComplex/stacx/blob/main/scripts/train/swe/ENV_REFERENCE.md"><h4>Env-var Reference</h4><p>Every STACX_* knob sorted into user / constant / internal buckets.</p></a>
+        </div>
+      </section>
+    </div>
+  </div>
+<button class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark mode">Dark</button>
+<script>
+(function() {
+  var toggle = document.getElementById('themeToggle');
+  var saved = localStorage.getItem('stacx-theme');
+  if (saved === 'dark') {
+    document.documentElement.setAttribute('data-theme', 'dark');
+    toggle.textContent = 'Light';
+  }
+  toggle.addEventListener('click', function() {
+    var current = document.documentElement.getAttribute('data-theme');
+    if (current === 'dark') {
+      document.documentElement.removeAttribute('data-theme');
+      toggle.textContent = 'Dark';
+      localStorage.setItem('stacx-theme', 'light');
+    } else {
+      document.documentElement.setAttribute('data-theme', 'dark');
+      toggle.textContent = 'Light';
+      localStorage.setItem('stacx-theme', 'dark');
+    }
+  });
+})();
+</script>
+<script>
+(function(){
+  var nav=document.getElementById('docsNav'),btn=document.querySelector('.nav-toggle');
+  if(!nav||!btn)return;
+  btn.addEventListener('click',function(e){e.stopPropagation();var open=nav.getAttribute('data-open')==='true';nav.setAttribute('data-open',String(!open));btn.setAttribute('aria-expanded',String(!open));});
+  document.addEventListener('click',function(e){if(nav.getAttribute('data-open')==='true'&&!nav.contains(e.target))nav.setAttribute('data-open','false');});
+})();
+</script>
+</body>
+</html>
