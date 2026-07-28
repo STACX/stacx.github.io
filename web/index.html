@@ -5,9 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <script>document.documentElement.classList.add('js');</script>
 <title>STACX — Modular Infrastructure for End-to-End Agentic RL</title>
-<meta name="description" content="STACX (STandAloneCompleX) is a modular infrastructure for end-to-end agentic reinforcement learning over LLMs, decoupling Trainer, Rollout, and Environment engines.">
+<meta name="description" content="STACX (STand Alone CompleX) is a modular framework for agentic training, evaluation, and reinforcement learning, decoupling Trainer, Rollout, and Environment engines.">
 <meta property="og:title" content="STACX — STandAloneCompleX">
-<meta property="og:description" content="A modular infrastructure for end-to-end agentic reinforcement learning over LLMs and agentic tasks.">
+<meta property="og:description" content="STand Alone CompleX — a modular framework for agentic training, evaluation, and reinforcement learning.">
 <meta property="og:type" content="website">
 <meta property="og:image" content="static/images/stacx-logo.png">
 <link rel="icon" type="image/png" href="static/images/stacx-logo.png">
@@ -22,8 +22,8 @@
 <nav class="nav" id="nav">
   <div class="nav__inner">
     <a class="brand" href="#home" aria-label="STACX home">
-      <span class="brand__mark" aria-hidden="true"></span>
-      <span>STACX</span>
+      <img class="brand__mark" src="static/images/stacx-icon.png" alt="" aria-hidden="true">
+      <img class="brand__word" src="static/images/stacx-wordmark.png" alt="STACX">
     </a>
     <div class="nav__links" id="navLinks">
       <a href="#motivation">Motivation</a>
@@ -35,9 +35,8 @@
       <a href="#experiments">Experiments</a>
       <a href="#citation">Cite</a>
     </div>
-    <a class="nav__cta" href="https://github.com/StACx-StandAloneComplex/stacx/tree/main" target="_blank" rel="noopener">
+    <a class="nav__gh" href="https://github.com/StACx-StandAloneComplex/stacx/tree/main" target="_blank" rel="noopener" aria-label="STACX on GitHub">
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .5C5.7.5.5 5.7.5 12c0 5.1 3.3 9.4 7.9 10.9.6.1.8-.2.8-.5v-2c-3.2.7-3.9-1.4-3.9-1.4-.5-1.3-1.3-1.7-1.3-1.7-1.1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.7 1.3 3.4 1 .1-.8.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.6 18.3 5 18.3 5c.6 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.3c0 .3.2.6.8.5 4.6-1.5 7.9-5.8 7.9-10.9C23.5 5.7 18.3.5 12 .5z"/></svg>
-      <span class="long">Code</span>
     </a>
     <button class="nav__toggle" id="navToggle" aria-label="Toggle menu">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18" stroke-linecap="round"/></svg>
@@ -50,11 +49,10 @@
   <div class="hero__bg" aria-hidden="true"></div>
   <div class="wrap">
     <img class="hero__logo reveal" src="static/images/stacx-logo.png" alt="STACX logo">
-    <h1 class="reveal d1"><span class="accent">STACX</span></h1>
-    <span class="hero__full reveal d1">STandAloneCompleX</span>
+    <h1 class="sr-only">STACX — STandAloneCompleX</h1>
     <p class="hero__tagline reveal d2">
-      A <b>modular infrastructure</b> for end-to-end agentic reinforcement learning over
-      <b>LLMs</b> and <b>agentic tasks</b>.
+      A <b>Modular Infrastructure</b> for <b>End-to-End</b><br>
+      <b>Agentic Reinforcement Learning</b>.
     </p>
 
     <div class="authors reveal d2">
@@ -67,7 +65,7 @@
         <span class="pi">Lab PI:</span> <a href="https://bo-dai.github.io/" target="_blank" rel="noopener">Bo Dai</a>
         &nbsp;&middot;&nbsp; <span class="gt">Georgia Institute of Technology</span>
       </div>
-      <div class="author-roles"><span class="lead-key">*</span> Core Contributor &nbsp;&nbsp; <span class="lead-key">&dagger;</span> Agent Lead &amp; Project Lead &nbsp;&nbsp; <span class="lead-key">&Dagger;</span> Training Lead</div>
+      <div class="author-roles"><span class="lead-key">*</span> Core Contributor &nbsp;&nbsp; <span class="lead-key">&dagger;</span> Agent Systems &amp; Project Lead &nbsp;&nbsp; <span class="lead-key">&Dagger;</span> Training Lead</div>
     </div>
 
     <div class="btn-row reveal d3">
