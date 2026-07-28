@@ -1023,7 +1023,7 @@ bash scripts/train/swe/online_dagger/dagger_4b.sh        <span class="cm"># dagg
           <li>Launches the student training container on <strong>GPUs 4–7</strong>.</li>
           <li>Runs <strong>5 rollouts × 512 tasks</strong> (≈1 epoch); per iter: rollout → finish-only filter → teacher force-decode (K3 logprobs) → 3 train passes → SGLang weight sync → eval on 3 datasets → save checkpoint.</li>
         </ol>
-        <p>Checkpoints land under <span class="file-ref">external/ckpts/online_dagger_mixed_opd/&lt;RUN_TAG&gt;/</span>, per-task eval JSONL + failure-class summaries under <span class="file-ref">external/results/eval/swe_agent_online_dagger_mixed_opd/&lt;RUN_TAG&gt;/</span>, and training logs under <span class="file-ref">external/logs/</span>. Re-running the same command <strong>auto-resumes</strong> from <code>resume_state.json</code> — it skips completed rollouts, reloads weights + optimizer state, and re-opens the same W&amp;B run. For the full walk-through and knob catalog, read the <a href="https://github.com/StACx-StandAloneComplex/stacx/blob/main/scripts/train/swe/QUICKSTART_OPD.md">DAgger-OPD quickstart</a> and the <a href="recipes.html">Algorithm Recipes</a> page.</p>
+        <p>Checkpoints land under <span class="file-ref">external/ckpts/online_dagger_mixed_opd/&lt;RUN_TAG&gt;/</span>, per-task eval JSONL + failure-class summaries under <span class="file-ref">external/results/eval/swe_agent_online_dagger_mixed_opd/&lt;RUN_TAG&gt;/</span>, and training logs under <span class="file-ref">external/logs/</span>. Re-running the same command <strong>auto-resumes</strong> from <code>resume_state.json</code> — it skips completed rollouts, reloads weights + optimizer state, and re-opens the same W&amp;B run. For the full walk-through and knob catalog, read the <a href="https://github.com/STACX/stacx/blob/main/scripts/train/swe/QUICKSTART_OPD.md">DAgger-OPD quickstart</a> and the <a href="recipes.html">Algorithm Recipes</a> page.</p>
       </section>
 
       <!-- Section 6: Where to go next -->
@@ -1039,8 +1039,8 @@ bash scripts/train/swe/online_dagger/dagger_4b.sh        <span class="cm"># dagg
           <a class="card-link feature-item" href="rollout-inference.html"><h4>Inference Backend</h4><p>SGLang serving and weight-sync for rollout generation.</p></a>
           <a class="card-link feature-item" href="environment.html"><h4>Environment Architecture</h4><p>The ROCK-based sandbox engine and its REST API.</p></a>
           <a class="card-link feature-item" href="env-sandbox.html"><h4>Sandbox Management</h4><p>Container lifecycle, sessions, and resource scheduling.</p></a>
-          <a class="card-link feature-item" href="https://github.com/StACx-StandAloneComplex/stacx/blob/main/scripts/train/swe/QUICKSTART_OPD.md"><h4>DAgger-OPD Quickstart</h4><p>Copy-paste walk-through for the dagger + aggrevate recipes.</p></a>
-          <a class="card-link feature-item" href="https://github.com/StACx-StandAloneComplex/stacx/blob/main/scripts/train/swe/ENV_REFERENCE.md"><h4>Env-var Reference</h4><p>Every STACX_* knob sorted into user / constant / internal buckets.</p></a>
+          <a class="card-link feature-item" href="https://github.com/STACX/stacx/blob/main/scripts/train/swe/QUICKSTART_OPD.md"><h4>DAgger-OPD Quickstart</h4><p>Copy-paste walk-through for the dagger + aggrevate recipes.</p></a>
+          <a class="card-link feature-item" href="https://github.com/STACX/stacx/blob/main/scripts/train/swe/ENV_REFERENCE.md"><h4>Env-var Reference</h4><p>Every STACX_* knob sorted into user / constant / internal buckets.</p></a>
         </div>
       </section>
     </div>

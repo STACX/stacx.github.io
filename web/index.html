@@ -35,7 +35,7 @@
       <a href="#experiments">Experiments</a>
       <a href="#citation">Cite</a>
     </div>
-    <a class="nav__gh" href="https://github.com/StACx-StandAloneComplex/stacx/tree/main" target="_blank" rel="noopener" aria-label="STACX on GitHub">
+    <a class="nav__gh" href="https://github.com/STACX/stacx/tree/main" target="_blank" rel="noopener" aria-label="STACX on GitHub">
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .5C5.7.5.5 5.7.5 12c0 5.1 3.3 9.4 7.9 10.9.6.1.8-.2.8-.5v-2c-3.2.7-3.9-1.4-3.9-1.4-.5-1.3-1.3-1.7-1.3-1.7-1.1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.7 1.3 3.4 1 .1-.8.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.6 18.3 5 18.3 5c.6 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.3c0 .3.2.6.8.5 4.6-1.5 7.9-5.8 7.9-10.9C23.5 5.7 18.3.5 12 .5z"/></svg>
     </a>
     <button class="nav__toggle" id="navToggle" aria-label="Toggle menu">
@@ -69,7 +69,7 @@
     </div>
 
     <div class="btn-row reveal d3">
-      <a class="btn btn--brand" href="https://github.com/StACx-StandAloneComplex/stacx/tree/main" target="_blank" rel="noopener">
+      <a class="btn btn--brand" href="https://github.com/STACX/stacx/tree/main" target="_blank" rel="noopener">
         <svg viewBox="0 0 24 24"><path d="M12 .5C5.7.5.5 5.7.5 12c0 5.1 3.3 9.4 7.9 10.9.6.1.8-.2.8-.5v-2c-3.2.7-3.9-1.4-3.9-1.4-.5-1.3-1.3-1.7-1.3-1.7-1.1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.7 1.3 3.4 1 .1-.8.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.6 18.3 5 18.3 5c.6 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.3c0 .3.2.6.8.5 4.6-1.5 7.9-5.8 7.9-10.9C23.5 5.7 18.3.5 12 .5z"/></svg>
         Code
       </a>
@@ -1110,7 +1110,7 @@
         <div class="code exp-code">
           <div class="code__bar"><span class="d"></span><span class="d"></span><span class="d"></span><span class="name">rl_engine/examples/retool/scripts/rl.sh</span></div>
           <pre><span class="c"># Tool-integrated math RL: GRPO on DAPO-Math-17K with the ReTool scaffold</span>
-git clone https://github.com/StACx-StandAloneComplex/stacx.git &amp;&amp; cd stacx
+git clone https://github.com/STACX/stacx.git &amp;&amp; cd stacx
 
 <span class="c"># 1. Start a slime container with repo + data + model mounts</span>
 docker run --gpus all -d --name stacx_retool --network host --shm-size 16g \
@@ -1199,7 +1199,7 @@ docker exec -it stacx_retool bash -c \
         <div class="code exp-code">
           <div class="code__bar"><span class="d"></span><span class="d"></span><span class="d"></span><span class="name">scripts/train/swe/</span></div>
           <pre><span class="c"># SWE-agent post-training: Qwen3-4B/8B student × Qwen3-Coder-30B teacher</span>
-git clone https://github.com/StACx-StandAloneComplex/stacx.git &amp;&amp; cd stacx
+git clone https://github.com/STACX/stacx.git &amp;&amp; cd stacx
 
 <span class="c"># Stage models + data under external/, then start the ROCK sandbox admin</span>
 <span class="c"># (one-time setup — see scripts/train/swe/QUICKSTART_OPD.md)</span>
@@ -1260,7 +1260,7 @@ bash scripts/train/swe/online_dagger/aggrevate_4b.sh  <span class="c"># AggreVaT
         <div class="code exp-code">
           <div class="code__bar"><span class="d"></span><span class="d"></span><span class="d"></span><span class="name">rl_engine/examples/shared/docker_run_eval.sh</span></div>
           <pre><span class="c"># Rollout-only eval: BENCH ∈ swebench | terminal_bench | seta | kernel_bench | algotune</span>
-git clone https://github.com/StACx-StandAloneComplex/stacx.git &amp;&amp; cd stacx
+git clone https://github.com/STACX/stacx.git &amp;&amp; cd stacx
 
 <span class="c"># 1. Download the Harbor task tree, convert → tasks.jsonl, build images</span>
 python rl_engine/examples/shared/download_tasks.py &lt;bench&gt;@&lt;ver&gt; \
@@ -1316,7 +1316,7 @@ BENCH=&lt;bench&gt; SCAFFOLD=openhands SGLANG_ROUTER_PORT=9001 \
   author       = {STACX Contributors},
   title        = {STACX: A Modular Infrastructure for End-to-End Agentic Reinforcement Learning},
   year         = {2026},
-  howpublished = {\url{https://github.com/StACx-StandAloneComplex/stacx}},
+  howpublished = {\url{https://github.com/STACX/stacx}},
   urldate      = {2026-07-15}
 }</pre>
     </div>
@@ -1348,7 +1348,7 @@ BENCH=&lt;bench&gt; SCAFFOLD=openhands SGLANG_ROUTER_PORT=9001 \
         </div>
         <div class="footer__col">
           <h5>Resources</h5>
-          <a href="https://github.com/StACx-StandAloneComplex/stacx/tree/main" target="_blank" rel="noopener">Code</a>
+          <a href="https://github.com/STACX/stacx/tree/main" target="_blank" rel="noopener">Code</a>
           <a href="#citation">Cite</a>
         </div>
       </div>

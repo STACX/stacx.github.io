@@ -6,11 +6,11 @@ models, and agentic tasks — deployed side by side from one GitHub Pages repo:
 
 | Site | Folder | Published URL |
 | --- | --- | --- |
-| Project page | `web/` | <https://stacx-standalonecomplex.github.io/stacx_page/web/> |
-| Documentation | `docs/` | <https://stacx-standalonecomplex.github.io/stacx_page/docs/> |
+| Project page | `web/` | <https://stacx.github.io/web/> |
+| Documentation | `docs/` | <https://stacx.github.io/docs/> |
 
 The root `index.html` is a redirect to `web/`, so the short URL
-`https://stacx-standalonecomplex.github.io/stacx_page/` keeps working as the project-page
+`https://stacx.github.io/` keeps working as the project-page
 entry point. Plain HTML/CSS/JS with **no build step**.
 
 ## Structure
